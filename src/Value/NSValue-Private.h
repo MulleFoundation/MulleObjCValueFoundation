@@ -1,5 +1,5 @@
 //
-//  NSValue+Private.h
+//  NSValue-Private.h
 //  MulleObjCStandardFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
