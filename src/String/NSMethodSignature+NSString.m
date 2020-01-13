@@ -1,6 +1,6 @@
 //
 //  NSMethodSignature+NSString.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -33,12 +33,13 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "MulleObjCFoundationBase.h"
+#import "import.h"
+
 
 // other files in this library
 #import "NSString+Sprintf.h"
 
-// other libraries of MulleObjCStandardFoundation
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
 

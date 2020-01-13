@@ -1,6 +1,6 @@
 //
 //  _MulleObjCConcreteValue.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -39,10 +39,8 @@
 
 // other files in this library
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationException.h"
-
 // std-c and dependencies
+#import "import-private.h"
 #include <string.h>
 
 
@@ -57,12 +55,12 @@
    size_t                    type_size;
 
    if( ! bytes)
-      MulleObjCThrowInvalidArgumentException( @"empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
    if( ! type)
-      MulleObjCThrowInvalidArgumentException( @"empty type");
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty type");
 
    NSGetSizeAndAlignment( type, &size, NULL);
-   NSParameterAssert( size);
+   assert( size);
 
    type_size = strlen( type) + 1;
    extra     = size + type_size;
@@ -93,7 +91,7 @@
 - (void) getValue:(void *) bytes
 {
    if( ! bytes)
-      MulleObjCThrowInvalidArgumentException( @"empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
 
    memcpy( bytes, _MulleObjCConcreteValueBytes( self), _size);
 }
@@ -103,9 +101,9 @@
              size:(NSUInteger) size
 {
    if( ! bytes && size)
-      MulleObjCThrowInvalidArgumentException( @"empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
    if( size != _size)
-      MulleObjCThrowInvalidArgumentException( @"size should be %ld bytes on this platform", _size);
+      MulleObjCThrowInvalidArgumentExceptionCString( "size should be %ld bytes on this platform", _size);
 
    memcpy( bytes, _MulleObjCConcreteValueBytes( self), _size);
 }

@@ -1,6 +1,6 @@
 //
 //  NSNull.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -37,8 +37,9 @@
 
 // other files in this library
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationBase.h"
+// other libraries of MulleObjCValueFoundation
+#import "import.h"
+
 // std-c and dependencies
 
 

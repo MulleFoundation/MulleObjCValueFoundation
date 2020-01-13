@@ -1,6 +1,6 @@
 //
 //  NSObject+NSString.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -33,16 +33,18 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "MulleObjCFoundationBase.h"
+#import "import.h"
+
 
 // other files in this library
 #import "NSString.h"
 #import "NSString+Sprintf.h"
-#import "NSString+Search.h"
+#import "NSString+Sprintf.h"
 #import "NSStringObjCFunctions.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationBase.h"
+// other libraries of MulleObjCValueFoundation
+#import "import.h"
+
 
 // std-c and dependencies
 #include <ctype.h>
@@ -88,12 +90,6 @@
 - (char *) cStringDescription
 {
    return( [[self description] cStringDescription]);
-}
-
-
-- (NSComparisonResult) mulleCompareDescription:(id) other;
-{
-   return( [[self description] compare:[other description]]);
 }
 
 

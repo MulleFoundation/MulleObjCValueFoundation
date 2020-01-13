@@ -1,13 +1,15 @@
 //
 //  NS+NSCoder.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 12.04.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
 //
 
-#import "MulleObjCFoundationValue.h"
+#import "NSDate.h"
+
+#import "import.h"
 
 
-@interface NSDate (NSCoder) <NSCoding>
+@interface NSDate( NSCoder) <NSCoding>
 @end

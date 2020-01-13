@@ -1,6 +1,6 @@
 //
 //  NSObjCStringFunctions.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 28.03.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
@@ -11,7 +11,7 @@
 #import "NSString.h"
 #import "NSString+Sprintf.h"
 
-#import "NSException.h"
+#import "import-private.h"
 
 
 @class NSString;
@@ -37,7 +37,7 @@ NSString   *NSStringFromClass( Class cls)
    {
       if( ! cls)
          return( nil);
-      MulleObjCThrowInternalInconsistencyException( @"unknown class %p", cls);
+      MulleObjCThrowInternalInconsistencyExceptionCString( "unknown class %p", cls);
    }
 
    return( [NSString stringWithUTF8String:s]);
@@ -53,7 +53,7 @@ NSString   *NSStringFromSelector( SEL sel)
    {
       if( ! sel)
          return( nil);
-      MulleObjCThrowInternalInconsistencyException( @"unknown selector id %08x (register selector first)", (uint32_t ) sel);
+      MulleObjCThrowInternalInconsistencyExceptionCString( "unknown selector id %08x (register selector first)", (uint32_t ) sel);
    }
    return([NSString stringWithUTF8String:s]);
 }
@@ -68,7 +68,7 @@ NSString   *NSStringFromProtocol( PROTOCOL proto)
    {
       if( ! proto)
          return( nil);
-      MulleObjCThrowInternalInconsistencyException( @"unknown protocol id %08x", (uint32_t ) proto);
+      MulleObjCThrowInternalInconsistencyExceptionCString( "unknown protocol id %08x", (uint32_t ) proto);
    }
    return([NSString stringWithUTF8String:s]);
 }

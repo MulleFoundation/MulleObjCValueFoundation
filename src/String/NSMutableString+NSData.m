@@ -1,6 +1,6 @@
 //
 //  NSMutableString+NSData.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -39,7 +39,7 @@
 // other files in this library
 #import "NSString+NSData.h"
 
-// other libraries of MulleObjCStandardFoundation
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
 

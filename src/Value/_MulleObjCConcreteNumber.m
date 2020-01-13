@@ -1,6 +1,6 @@
 //
 //  _MulleObjCConcreteNumber.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -36,119 +36,14 @@
 
 #import "_MulleObjCConcreteNumber.h"
 
+#include <limits.h>
+#include <float.h>
+
 // other files in this library
 
-// other libraries of MulleObjCStandardFoundation
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
-
-
-@implementation _MulleObjCInt8Number : NSNumber
-
-+ (instancetype) newWithInt8:(int8_t) value
-{
-   _MulleObjCInt8Number  *obj;
-
-   obj = NSAllocateObject( self, 0, NULL);
-   obj->_value = value;
-   return( obj);
-}
-
-- (int32_t) _int32Value     {  return( (int32_t) _value); }
-- (int64_t) _int64Value     {  return( (int64_t) _value); }
-
-- (BOOL) boolValue          { return( _value ? YES : NO); }
-- (char) charValue          { return( (char) _value); }
-- (short) shortValue        { return( _value); }
-- (int) intValue            { return( _value); }
-- (long) longValue          { return( _value); }
-- (NSInteger) integerValue  { return( _value); }
-- (long long) longLongValue { return( _value); }
-
-- (unsigned char) unsignedCharValue   { return( (unsigned char) _value); }
-- (unsigned short) unsignedShortValue { return( (unsigned short) _value); }
-- (unsigned int) unsignedIntValue     { return( (unsigned int) _value); }
-- (unsigned long) unsignedLongValue   { return( (unsigned long) _value); }
-- (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
-- (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
-
-- (double) doubleValue            { return( (double) _value); }
-- (long double) longDoubleValue   { return( (long double) _value); }
-
-
-- (void) getValue:(void *) value
-{
-   *(int8_t *) value = _value;
-}
-
-
-- (char *) objCType
-{
-   return( @encode( int8_t));
-}
-
-- (NSUInteger) hash
-{
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
-}
-
-@end
-
-
-@implementation _MulleObjCInt16Number : NSNumber
-
-+ (instancetype) newWithInt16:(int16_t) value
-{
-   _MulleObjCInt16Number  *obj;
-
-   obj = NSAllocateObject( self, 0, NULL);
-   obj->_value = value;
-   return( obj);
-}
-
-
-- (int32_t) _int32Value     {  return( (int32_t) _value); }
-- (int64_t) _int64Value     {  return( (int64_t) _value); }
-
-- (BOOL) boolValue          { return( _value ? YES : NO); }
-- (char) charValue          { return( (char) _value); }
-- (short) shortValue        { return( (short) _value); }
-- (int) intValue            { return( _value); }
-- (long) longValue          { return( _value); }
-- (NSInteger) integerValue  { return( _value); }
-- (long long) longLongValue { return( _value); }
-
-- (unsigned char) unsignedCharValue   { return( (uint8_t) _value); }
-- (unsigned short) unsignedShortValue { return( (unsigned short) _value); }
-- (unsigned int) unsignedIntValue     { return( (unsigned int) _value); }
-- (unsigned long) unsignedLongValue   { return( (unsigned long) _value); }
-- (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
-- (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
-
-- (double) doubleValue            { return( (double) _value); }
-- (long double) longDoubleValue   { return( (long double) _value); }
-
-
-- (void) getValue:(void *) value
-{
-   *(int16_t *) value = _value;
-}
-
-
-- (char *) objCType
-{
-   return( @encode( int16_t));
-}
-
-- (NSUInteger) hash
-{
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
-}
-
-@end
-
-
-
 @implementation _MulleObjCInt32Number : NSNumber
 
 + (instancetype) newWithInt32:(int32_t) value
@@ -179,6 +74,7 @@
 - (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
+// 32 bit conversions should pose no problem
 - (double) doubleValue            { return( (double) _value); }
 - (long double) longDoubleValue   { return( (long double) _value); }
 
@@ -191,8 +87,18 @@
 
 - (char *) objCType
 {
+   if( _value >= CHAR_MIN && _value <= CHAR_MAX)
+      return( @encode( char));
+   if( _value >= SHRT_MIN && _value <= SHRT_MAX)
+      return( @encode( short));
+   if( _value >= INT_MIN && _value <= INT_MAX)
+      return( @encode( int));
+
+   if( sizeof( long) == sizeof( NSInteger))
+      return( @encode( long));
    return( @encode( int32_t));
 }
+
 
 - (NSUInteger) hash
 {
@@ -215,7 +121,6 @@
 }
 
 
-
 - (int32_t) _int32Value     {  return( (int32_t) _value); }
 - (int64_t) _int64Value     {  return( (int64_t) _value); }
 
@@ -234,7 +139,15 @@
 - (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
-- (double) doubleValue            { return( (double) _value); }
+//
+// 32 bit conversions should pose no problem
+// the conversion from LLONG_MAX to double will be invalid though
+//
+- (double) doubleValue
+{
+   return( (double) _value);
+}
+
 - (long double) longDoubleValue   { return( (long double) _value); }
 
 
@@ -309,6 +222,12 @@
 
 - (char *) objCType
 {
+   if( _value <= UCHAR_MAX)
+      return( @encode( unsigned char));
+   if( _value <= USHRT_MAX)
+      return( @encode( unsigned short));
+   if( sizeof( unsigned long) == sizeof( NSInteger))
+      return( @encode( unsigned long));
    return( @encode( uint32_t));
 }
 
@@ -438,6 +357,8 @@
 
 - (char *) objCType
 {
+   if( _value >= FLT_MIN && _value <= FLT_MAX)
+      return( @encode( float));
    return( @encode( double));
 }
 

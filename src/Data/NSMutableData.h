@@ -1,6 +1,6 @@
 //
 //  NSMutableData.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -35,7 +35,8 @@
 //
 #import "NSData.h"
 
-#import "MulleObjCFoundationBase.h"
+#import "import.h"
+
 
 
 @interface NSData ( NSMutableCopying) < NSMutableCopying>

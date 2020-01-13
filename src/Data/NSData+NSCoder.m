@@ -1,13 +1,16 @@
 //
 //  NSData+NSCoder.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 28.03.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
 //
 #import "NSData+NSCoder.h"
 
-#import "NSCoder.h"
+#import "NSMutableData.h"
+
+#import "import-private.h"
+
 
 
 @implementation NSData( NSCoder)

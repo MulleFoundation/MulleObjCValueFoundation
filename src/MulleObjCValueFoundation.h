@@ -1,6 +1,6 @@
 //
 //  MulleObjCFoundation.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -37,18 +37,34 @@
 #import "import.h"
 
 // keep this in sync with MULLE_OBJC_VERSION, else pain! (why ?)
-#define MULLE_OBJC_STANDARD_FOUNDATION_VERSION   ((0 << 20) | (16 << 8) | 0)
+#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (16 << 8) | 0)
 
-#import "MulleObjCFoundationCore.h"
+#import "NSData+NSCoder.h"
+#import "NSData.h"
+#import "NSDate+NSCoder.h"
+#import "NSDate.h"
+#import "NSDateFactory.h"
+#import "NSLock+NSDate.h"
+#import "NSMutableData.h"
+#import "NSMutableString.h"
+#import "NSNull.h"
+#import "NSNumber+NSCoder.h"
+#import "NSNumber+NSString.h"
+#import "NSNumber.h"
+#import "NSObject+NSString.h"
+#import "NSString+ClassCluster.h"
+#import "NSString+NSCoder.h"
+#import "NSString+NSData.h"
+#import "NSString+Sprintf.h"
+#import "NSString.h"
+#import "NSStringObjCFunctions.h"
+#import "NSThread+NSDate.h"
+#import "NSValue+NSCoder.h"
+#import "NSValue.h"
 
-#import "MulleObjCFoundationArchiver.h"
-#import "MulleObjCFoundationLocale.h"
-#import "MulleObjCFoundationNotification.h"
-#import "MulleObjCFoundationPropertyList.h"
-#import "MulleObjCFoundationUndo.h"
+#import "mulle_sprintf_object.h"
 
-
-#import "MulleObjCLoader+MulleObjCStandardFoundation.h"
+#import "MulleObjCLoader+MulleObjCValueFoundation.h"
 
 #if MULLE_OBJC_VERSION < ((0 << 20) | (14 << 8) | 0)
 # error "MulleObjC is too old"

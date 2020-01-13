@@ -1,6 +1,6 @@
 //
 //  NSData.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -33,7 +33,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "MulleObjCFoundationBase.h"
+#import "import.h"
+
 
 
 enum

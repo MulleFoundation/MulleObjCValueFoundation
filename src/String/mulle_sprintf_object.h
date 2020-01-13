@@ -1,6 +1,6 @@
 //
 //  mulle_sprintf_object.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -33,6 +33,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#include <mulle-sprintf/mulle-sprintf.h>
+#include "include.h"
 
 void  mulle_sprintf_register_object_functions( struct mulle_sprintf_conversion *tables);

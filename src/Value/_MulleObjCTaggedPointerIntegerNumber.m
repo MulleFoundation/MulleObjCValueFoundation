@@ -1,6 +1,6 @@
 //
 //  _MulleObjCTaggedPointerIntegerNumber.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -92,6 +92,19 @@
 
 - (char *) objCType
 {
+   NSInteger   value;
+
+   value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+
+   if( value >= CHAR_MIN && value <= CHAR_MAX)
+      return( @encode( char));
+   if( value >= SHRT_MIN && value <= SHRT_MAX)
+      return( @encode( short));
+   if( value >= INT_MIN && value <= INT_MAX)
+      return( @encode( int));
+   if( value >= LONG_MIN && value <= LONG_MAX)
+      return( @encode( long));
+
    return( @encode( NSInteger));
 }
 

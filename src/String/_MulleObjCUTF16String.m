@@ -1,6 +1,6 @@
 //
 //  _MulleObjCUTF16String.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -36,19 +36,15 @@
 
 #import "NSString.h"
 
-#include <mulle-utf/mulle-utf.h>
-
-
 #import "_MulleObjCUTF16String.h"
 
 // other files in this library
 #import "NSString+NSData.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationException.h"
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
-#import <mulle-buffer/mulle-buffer.h>
+#import "import-private.h"
 
 
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
@@ -116,7 +112,7 @@ static void   grab_utf32( id self,
    mulle_utf16_t    *sentinel;
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeWithLength( range, length);
+   MulleObjCValidateRangeAgainstLength( range, length);
 
    storage  = &storage[ range.location];
    sentinel = &storage[ range.length];
@@ -154,7 +150,7 @@ static void   grab_utf32( id self,
 
    length = [self length];
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeWithLength( range, length);
+   MulleObjCValidateRangeAgainstLength( range, length);
 
    if( range.length == length)
       return( self);
@@ -190,7 +186,7 @@ static void   grab_utf32( id self,
 {
    _MulleObjCGenericUTF16String   *obj;
 
-   NSParameterAssert( mulle_utf16_strnlen( chars, length) == length);
+   assert( mulle_utf16_strnlen( chars, length) == length);
 
    obj = NSAllocateObject( self, (length * sizeof( mulle_utf16_t)) - sizeof( obj->_storage), NULL);
    memcpy( obj->_storage, chars, length * sizeof( mulle_utf16_t));
@@ -223,7 +219,7 @@ static void   grab_utf32( id self,
 {
    _MulleObjCAllocatorUTF16String   *obj;
 
-   NSParameterAssert( mulle_utf16_strnlen( chars, length) == length);
+   assert( mulle_utf16_strnlen( chars, length) == length);
 
    obj             = NSAllocateObject( self, 0, NULL);
    obj->_storage   = chars;
@@ -265,7 +261,7 @@ static void   grab_utf32( id self,
 {
    _MulleObjCSharedUTF16String  *data;
 
-   NSParameterAssert( mulle_utf16_strnlen( (mulle_utf16_t *) chars, length) == length);
+   assert( mulle_utf16_strnlen( (mulle_utf16_t *) chars, length) == length);
 
    data                 = NSAllocateObject( self, 0, NULL);
    data->_storage       = chars;

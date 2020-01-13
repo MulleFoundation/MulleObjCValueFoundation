@@ -1,6 +1,6 @@
 //
 //  NSValue.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -38,14 +38,11 @@
 // other files in this library
 #import "_MulleObjCConcreteValue.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationException.h"
 
 // std-c and dependencies
+#import "import-private.h"
 #include <string.h>
 #include <stdint.h>
-#include <mulle-container/mulle-container.h>
-
 
 
 #define MulleObjCValueAllocPlaceholderHash         0x331bd8f6291d398e  // MulleObjCValueAllocPlaceholder
@@ -106,7 +103,7 @@
           withObjCType:(char *) type
 {
    return( [[[self alloc] initWithBytes:bytes
-                              objCType:type] autorelease]);
+                               objCType:type] autorelease]);
 }
 
 
@@ -134,8 +131,10 @@
 
 + (instancetype) valueWithNonretainedObject:(id) obj
 {
+   static char   assign_obj[ 2] = { _C_ASSIGN_ID, 0 };
+
    return( [[[self alloc] initWithBytes:&obj
-                               objCType:@encode( id)] autorelease]);
+                               objCType:assign_obj] autorelease]);
 }
 
 
@@ -147,17 +146,18 @@
    return( size);
 }
 
+
 - (void) getValue:(void *) bytes
              size:(NSUInteger) size
 {
    NSUInteger   real;
 
    if( ! bytes && size)
-      MulleObjCThrowInvalidArgumentException( @"NULL bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "NULL bytes");
 
    NSGetSizeAndAlignment( [self objCType], &real, NULL);
    if( real != size)
-      MulleObjCThrowInvalidArgumentException( @"size should be %ld bytes on this platform", real);
+      MulleObjCThrowInvalidArgumentExceptionCString( "size should be %ld bytes on this platform", real);
 
    [self getValue:bytes];
 }
@@ -191,6 +191,7 @@
              size:sizeof( NSRange)];
    return( range);
 }
+
 
 - (id) copy
 {
@@ -232,7 +233,7 @@
    NSUInteger   otherSize;
    BOOL         flag;
 
-   NSParameterAssert( [other isKindOfClass:[NSValue class]]);
+   assert( [other isKindOfClass:[NSValue class]]);
 
    type  = [self objCType];
    oType = [other objCType];

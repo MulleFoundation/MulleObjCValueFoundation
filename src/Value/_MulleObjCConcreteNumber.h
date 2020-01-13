@@ -1,6 +1,6 @@
 //
 //  _MulleObjCConcreteNumber.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -38,26 +38,6 @@
 
 
 // TODO: coalesce into 8 into 16 and add a @encode ?
-@interface _MulleObjCInt8Number : NSNumber <MulleObjCImmutable>
-{
-   int8_t  _value;
-}
-
-+ (instancetype) newWithInt8:(int8_t) value;
-
-@end
-
-
-@interface _MulleObjCInt16Number : NSNumber <MulleObjCImmutable>
-{
-   int16_t  _value;
-}
-
-+ (instancetype) newWithInt16:(int16_t) value;
-
-@end
-
-
 @interface _MulleObjCInt32Number : NSNumber <MulleObjCImmutable>
 {
    int32_t  _value;
@@ -79,7 +59,7 @@
 
 
 #pragma mark -
-#pragma mark unsigned variants (8/16 superflous)
+#pragma mark unsigned variants
 
 
 @interface _MulleObjCUInt32Number : NSNumber <MulleObjCImmutable>
