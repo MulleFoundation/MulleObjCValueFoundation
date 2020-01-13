@@ -1,16 +1,28 @@
-# MulleObjCStandardFoundation
+# MulleObjCValueFoundation
 
-🚤  Platform-independent Objective-C classes, like NSString, NSArray, NSNotificationCenter
+💶 Value classes NSNumber, NSString, NSDate, NSData
 
 These classes build on **MulleObjC** and **mulle-core** to provide the usual
-classes expected in a Foundation library, that require no more than the
-standard C libraries.
+value classes expected in a Foundation library.
+
+## Immutable Classes
+
+Class      | Description
+-----------|-----------------
+`NSData`   |
+`NSDate`   |
+`NSString` |
+
+Class             | Description
+------------------|-----------------
+`NSMutableData`   |
+`NSMutableString` |
 
 
 
 Build Status | Release Version
 -------------|-----------------------------------
-[![Build Status](https://travis-ci.org/MulleFoundation/MulleObjCStandardFoundation.svg?branch=release)](https://travis-ci.org/MulleFoundation/MulleObjCStandardFoundation) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleFoundation/MulleObjCStandardFoundation.svg) [![Build Status](https://travis-ci.org/MulleFoundation/MulleObjCStandardFoundation.svg?branch=release)](https://travis-ci.org/MulleFoundation/MulleObjCStandardFoundation)
+[![Build Status](https://travis-ci.org/MulleFoundation/MulleObjCValueFoundation.svg?branch=release)](https://travis-ci.org/MulleFoundation/MulleObjCValueFoundation) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleFoundation/MulleObjCValueFoundation.svg) [![Build Status](https://travis-ci.org/MulleFoundation/MulleObjCValueFoundation.svg?branch=release)](https://travis-ci.org/MulleFoundation/MulleObjCValueFoundation)
 
 
 ## Install

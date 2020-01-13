@@ -1,6 +1,6 @@
 //
 //  NSString+NSData.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -37,17 +37,13 @@
 #import "NSString+NSData.h"
 
 // other files in this library
+#import "NSMutableData.h"
 #import "NSString+ClassCluster.h"
 #import "_MulleObjCUTF16String.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationBase.h"
-#import "MulleObjCFoundationData.h"
-#import "MulleObjCFoundationException.h"
-
 // std-c and dependencies
-#include <mulle-utf/mulle-utf.h>
-#include <mulle-buffer/mulle-buffer.h>
+#import "import-private.h"
+
 
 enum
 {
@@ -123,7 +119,7 @@ enum
       return( YES);
 
    length = [self length];
-   MulleObjCValidateRangeWithLength( range, length);
+   MulleObjCValidateRangeAgainstLength( range, length);
 
    // do leftover (in unichar)
    if( leftover)
@@ -210,7 +206,7 @@ enum
                  range:NSMakeRange( 0, tmp_length)];
 
    if( mulle_utf32_information( tmp_buf, tmp_length, &info))
-      MulleObjCThrowInvalidArgumentException( @"invalid UTF32");
+      MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF32");
 
    utf16total = info.utf16len;
    if( prefixWithBOM)
@@ -380,14 +376,14 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    switch( encoding)
    {
    default :
-      MulleObjCThrowInvalidArgumentException( @"encoding %s (%ld) is not supported",
+      MulleObjCThrowInvalidArgumentExceptionCString( "encoding %s (%ld) is not supported",
          MulleStringEncodingCStringDescription( encoding),
          (long) encoding);
 
    case NSASCIIStringEncoding  :
       data = [self _asciiData];
       if( ! data)
-         MulleObjCThrowInvalidArgumentException( @"Can not convert this string to ASCII");
+         MulleObjCThrowInvalidArgumentExceptionCString( "Can not convert this string to ASCII");
       return( data);
 
    case NSUTF8StringEncoding  :
@@ -443,7 +439,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    id                              old;
 
    if( mulle_utf16_information( chars, length, &info))
-      MulleObjCThrowInvalidArgumentException( @"invalid UTF16");
+      MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF16");
 
    allocator = MulleObjCObjectGetAllocator( self);
 
@@ -541,12 +537,12 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 
 {
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentException( @"null bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "null bytes");
 
    switch( encoding)
    {
    default :
-      MulleObjCThrowInvalidArgumentException( @"encoding %s (%ld) is not supported",
+      MulleObjCThrowInvalidArgumentExceptionCString( "encoding %s (%ld) is not supported",
          MulleStringEncodingCStringDescription( encoding),
          (long) encoding);
 
@@ -627,7 +623,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    allocator = flag ? &mulle_stdlib_allocator : NULL;
 
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentException( @"null bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "null bytes");
 
    // has zero termination ?
    switch( encoding)
@@ -666,7 +662,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
                                            length:length
                                        sharingObject:owner]);
    case NSUnicodeStringEncoding :
-      NSParameterAssert( (length & (sizeof( mulle_utf32_t) - 1)) == 0);
+      assert( (length & (sizeof( mulle_utf32_t) - 1)) == 0);
       return( [self mulleInitWithCharactersNoCopy:bytes
                                        length:length / sizeof( mulle_utf32_t)
                                 sharingObject:owner]);
@@ -721,7 +717,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 
    length = [self mulleUTF8StringLength];
    if( mulle_utf8_information( s, length, &info))
-      MulleObjCThrowInternalInconsistencyException( @"supposed UTF8 is not UTF8");
+      MulleObjCThrowInternalInconsistencyExceptionCString( "supposed UTF8 is not UTF8");
 
    switch( encoding)
    {

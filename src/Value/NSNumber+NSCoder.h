@@ -1,14 +1,17 @@
 //
 //  NSNumber+NSCoder.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 09.05.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
 //
 
-#import "NSValue+NSCoder.h"
+#import "NSNumber.h"
+
+#import "import.h"
 
 
-@interface NSNumber( NSCoder) <NSCoding>
+// inherits NSCoding from NSValue
+@interface NSNumber( NSCoder)
 
 @end

@@ -1,6 +1,6 @@
 //
 //  _MulleObjCConcreteMutableData.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -38,10 +38,8 @@
 
 // other files in this library
 
-// other libraries of MulleObjCStandardFoundation
-#import "NSException.h"
-
 // std-c and dependencies
+#import "import-private.h"
 
 
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
@@ -130,7 +128,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    struct mulle_allocator          *allocator;
 
    if( ! buf && length)
-      MulleObjCThrowInvalidArgumentException( @"empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
 
    data = NSAllocateObject( self, 0, NULL);
 
@@ -149,7 +147,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    _MulleObjCConcreteMutableData   *data;
 
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentException( @"empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
 
    data = NSAllocateObject( self, 0, NULL);
 
@@ -222,7 +220,7 @@ static void   *validated_range_pointer( _MulleObjCConcreteMutableData *self, NSR
    len     = range.location + range.length;
    buf_len = mulle_buffer_get_length( &self->_storage);
 
-   MulleObjCValidateRangeWithLength( range, buf_len);
+   MulleObjCValidateRangeAgainstLength( range, buf_len);
    return( p);
 }
 

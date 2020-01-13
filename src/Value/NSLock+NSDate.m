@@ -1,6 +1,6 @@
 //
 //  NSLock+NSDate.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -38,7 +38,7 @@
 // other files in this library
 #import "NSDate.h"
 
-// other libraries of MulleObjCStandardFoundation
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
 

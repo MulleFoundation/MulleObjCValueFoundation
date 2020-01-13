@@ -1,6 +1,6 @@
 //
 //  NSString.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -37,21 +37,17 @@
 
 // other files in this library
 #import "NSString+ClassCluster.h"
-#import "NSString+Search.h"
 #import "_MulleObjCTaggedPointerChar5String.h"
 #import "_MulleObjCTaggedPointerChar7String.h"
 #import "_MulleObjCASCIIString.h"
 #import "_MulleObjCUTF16String.h"
 #import "_MulleObjCUTF32String.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationBase.h"
-#import "NSException.h"
-#import "NSAssertionHandler.h"
-
 // std-c and dependencies
-#import <mulle-utf/mulle-utf.h>
+#import "import-private.h"
+
 #import <ctype.h>
+#import <string.h>
 #import <MulleObjC/private/mulle-objc-universefoundationinfo-private.h>
 
 #if MULLE_UTF_VERSION < ((1 << 20) | (0 << 8) | 0)
@@ -300,7 +296,7 @@ NSString  *MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 {
    char   *s;
 
-   NSParameterAssert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterPlaceholderObject]);
 
    s = [other UTF8String];
    return( [self initWithUTF8String:s]);
@@ -339,7 +335,7 @@ static void   grab_utf8( id self,
                          NSUInteger dst_len)
 {
    if( dst_len < len)
-      MulleObjCThrowInvalidArgumentException( @"destination buffer too small");
+      MulleObjCThrowInvalidArgumentExceptionCString( "destination buffer too small");
 
    memcpy( dst, storage, len);
    assert( ! memchr( storage, 0, len));
@@ -509,7 +505,10 @@ static void   grab_utf8( id self,
    if( ! range.location && range.length == length)
       return( self);
 
-   MulleObjCValidateRangeWithLength( range, length);
+   MulleObjCValidateRangeAgainstLength( range, length);
+
+   if( ! range.length)
+      return( @"");
 
    allocator = MulleObjCObjectGetAllocator( self);
    bytes     = mulle_allocator_malloc( allocator, range.length * sizeof( unichar));
@@ -547,6 +546,48 @@ static void   grab_utf8( id self,
    if( ! [other __isNSString])
       return( NO);
    return( [self isEqualToString:other]);
+}
+
+
+- (BOOL) isEqualToString:(NSString *) other
+{
+   NSUInteger     len;
+   mulle_utf8_t   *ours;
+   mulle_utf8_t   *theirs;
+
+   if( self == other)
+      return( YES);
+
+   len = [self length];
+   if( len != [other length])
+      return( NO);
+
+   ours   = [self mulleFastUTF8Characters];
+   theirs = [other mulleFastUTF8Characters];
+   if( ours && theirs)
+      return( ! memcmp( ours, theirs, len));
+
+   {
+      auto unichar   their_buf[ 32];
+      auto unichar   our_buf[ 32];
+      NSRange        range;
+
+      range.location = 0;
+      while( len)
+      {
+         range.length = len > 32 ? 32 : len;
+         [self getCharacters:our_buf
+                       range:range];
+         [other getCharacters:their_buf
+                        range:range];
+         if( memcmp( their_buf, our_buf, range.length * sizeof( unichar)))
+            return( NO);
+
+         len            -= range.length;
+         range.location += range.length;
+      }
+   }
+   return( YES);
 }
 
 
@@ -727,6 +768,63 @@ static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
    return( [NSString mulleStringWithUTF8CharactersNoCopy:buf.characters
                                                   length:buf.length
                                                allocator:allocator]);
+}
+
+
+#pragma mark -
+#pragma mark simplest substring
+
+- (BOOL) hasPrefix:(NSString *) prefix
+{
+   size_t         prefix_len;
+   size_t         len;
+   size_t         p_len;
+   mulle_utf8_t   *s;
+   mulle_utf8_t   *p_s;
+
+   prefix_len = [prefix length];
+   len        = [self length];
+   if( len < prefix_len)
+      return( NO);
+
+   len = [self mulleUTF8StringLength];
+   s   = [self mulleFastUTF8Characters];
+   if( ! s)
+      s = (mulle_utf8_t *) [self UTF8String];
+
+   p_len = [prefix mulleUTF8StringLength];
+   p_s   = [prefix mulleFastUTF8Characters];
+   if( ! p_s)
+      p_s = (mulle_utf8_t *) [prefix UTF8String];
+
+   return( ! strncmp( (char *) s, (char *) p_s, prefix_len));
+}
+
+
+- (BOOL) hasSuffix:(NSString *) suffix
+{
+   size_t         suffix_len;
+   size_t         len;
+   size_t         s_len;
+   mulle_utf8_t   *s;
+   mulle_utf8_t   *s_s;
+
+   suffix_len = [suffix length];
+   len        = [self length];
+   if( len < suffix_len)
+      return( NO);
+
+   len = [self mulleUTF8StringLength];
+   s   = [self mulleFastUTF8Characters];
+   if( ! s)
+      s = (mulle_utf8_t *) [self UTF8String];
+
+   s_len = [suffix mulleUTF8StringLength];
+   s_s   = [suffix mulleFastUTF8Characters];
+   if( ! s_s)
+      s_s = (mulle_utf8_t *) [suffix UTF8String];
+
+   return( ! strncmp( (char *) &s[ len - s_len], (char *) s_s, s_len));
 }
 
 

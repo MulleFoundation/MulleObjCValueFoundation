@@ -1,6 +1,6 @@
 //
 //  NSValue+NSString.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -37,16 +37,16 @@
 #import "NSValue.h"
 
 // other files in this library
-
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationString.h"
+#import "NSObject+NSString.h"
+#import "NSString.h"
+#import "NSString+Sprintf.h"
 
 // std-c dependencies
-#include <mulle-buffer/mulle-buffer.h>
+#import "import-private.h"
 #include <stdint.h>
 
 
-@implementation NSValue (NSString)
+@implementation NSValue( NSString)
 
 - (NSString *) mulleDebugContentsDescription
 {

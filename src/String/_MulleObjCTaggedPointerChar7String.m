@@ -1,6 +1,6 @@
 //
 //  _MulleObjCTaggedPointerChar7String.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -36,14 +36,13 @@
 
 #import "NSString.h"
 
-#include <mulle-utf/mulle-utf.h>
-#include <assert.h>
-
+// other files in this library
+#import "NSMutableData.h"
 #import "_MulleObjCTaggedPointerChar7String.h"
 
-#import "MulleObjCFoundationData.h"
-
-#import "MulleObjCFoundationException.h"
+// std-c and dependencies
+#import "import-private.h"
+#include <assert.h>
 
 
 #ifdef __MULLE_OBJC_TPS__
@@ -128,7 +127,7 @@ static void   grab_utf8( id self,
    uintptr_t   value;
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeWithLength( range, len);
+   MulleObjCValidateRangeAgainstLength( range, len);
 
    value = _MulleObjCTaggedPointerChar7ValueFromString( self);
    if( range.location)
@@ -172,7 +171,7 @@ static void   grab_utf32( id self,
 
 
 - (void) mulleGetUTF8Characters:(mulle_utf8_t *) buf
-                  maxLength:(NSUInteger) maxLength
+                      maxLength:(NSUInteger) maxLength
 {
    NSUInteger   length;
 
@@ -197,6 +196,40 @@ static void   grab_utf32( id self,
 }
 
 
+- (BOOL) isEqualToString:(NSString *) other
+{
+   NSUInteger     length;
+   mulle_utf8_t   *ours;
+   mulle_utf8_t   *theirs;
+   uintptr_t      value;
+   unsigned int   i;
+   mulle_utf8_t   c;
+
+   if( self == other)
+      return( YES);
+
+   value  = _MulleObjCTaggedPointerChar7ValueFromString( self);
+   length = (NSUInteger) mulle_char7_strlen( value);
+
+   if( length != [other length])
+      return( NO);
+
+   {
+      mulle_utf8_t   buf[ length];  // 64 bit can hold 64 / 7 = chars
+
+      [other mulleGetUTF8Characters:buf
+                          maxLength:length];
+      for( i = 0; i < length; i++)
+      {
+         c = mulle_char7_get( value, i);
+         if( c != buf[ i])
+            return( NO);
+      }
+   }
+   return( YES);
+}
+
+
 - (NSUInteger) mulleUTF8StringLength
 {
    return( MulleObjCTaggedPointerChar7StringGetLength( self));
@@ -206,18 +239,14 @@ static void   grab_utf32( id self,
 - (char *) UTF8String
 {
    NSUInteger      len;
-   NSMutableData   *data;
    mulle_utf8_t    *s;
 
    len  = MulleObjCTaggedPointerChar7StringGetLength( self);
-   data = [NSMutableData dataWithLength:len + 1];
-   s    = [data mutableBytes];
-
+   s    = MulleObjCAutoreleasedCalloc( len + 1, sizeof( mulle_utf8_t));
    grab_utf8( self,
               len,
               s,
               NSMakeRange( 0, len));
-   s[ len] = 0;
    return( (char *) s);
 }
 
@@ -231,7 +260,7 @@ static void   grab_utf32( id self,
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeWithLength( range, length);
+   MulleObjCValidateRangeAgainstLength( range, length);
 
    value = _MulleObjCTaggedPointerChar7ValueFromString( self);
    value = mulle_char7_substring( value,

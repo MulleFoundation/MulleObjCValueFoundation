@@ -1,6 +1,6 @@
 //
 //  NSString+ClassCluster.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -52,6 +52,10 @@
 
 - (instancetype) mulleInitWithUTF8Characters:(mulle_utf8_t *) s
                                       length:(NSUInteger) len;
+
+// lenient, if UTF8 is corrupt returns nil and doesn't raise
+- (instancetype) mulleInitOrNilWithUTF8Characters:(mulle_utf8_t *) s
+                                           length:(NSUInteger) len;
 
 - (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) s
                                             length:(NSUInteger) length

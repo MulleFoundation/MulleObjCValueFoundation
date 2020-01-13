@@ -1,6 +1,6 @@
 //
 //  NSString+ClassCluster.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -43,13 +43,10 @@
 #import "_MulleObjCUTF16String.h"
 #import "_MulleObjCUTF32String.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "NSAssertionHandler.h"
-#import "NSException.h"
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
-#include <mulle-sprintf/mulle-sprintf.h>
-
+#import "import-private.h"
 
 
 @implementation NSString( ClassCluster)
@@ -66,7 +63,7 @@ static void   _NSThrowInvalidUTF8Exception( mulle_utf8_t *s,
 
    invalid = (mulle_utf8_t *) info->invalid;
    if( s > invalid)
-      MulleObjCThrowInvalidArgumentException( @"UTF8 internal corruption, no data can be shown");
+      MulleObjCThrowInvalidArgumentExceptionCString( "UTF8 internal corruption, no data can be shown");
 
    p   = invalid;
    p  -= 8;
@@ -82,7 +79,7 @@ static void   _NSThrowInvalidUTF8Exception( mulle_utf8_t *s,
    mulle_buffer_add_string( &buffer, " > ");
    mulle_buffer_hexdump_line( &buffer, invalid, len, (size_t) (invalid - s), mulle_buffer_hexdump_no_offset|mulle_buffer_hexdump_no_ascii);
    mulle_buffer_zero_last_byte( &buffer);
-   MulleObjCThrowInvalidArgumentException( @"Invalid UTF8: %s", space);
+   MulleObjCThrowInvalidArgumentExceptionCString( "Invalid UTF8: %s", space);
 }
 
 
@@ -101,7 +98,7 @@ static void   _NSThrowInvalidUTF32Exception( mulle_utf32_t *s,
    {
       if( allocator)
          mulle_allocator_free( allocator, s);
-      MulleObjCThrowInvalidArgumentException( @"UTF32 internal corruption, no data can be shown");
+      MulleObjCThrowInvalidArgumentExceptionCString( "UTF32 internal corruption, no data can be shown");
    }
 
    p   = invalid;
@@ -122,7 +119,7 @@ static void   _NSThrowInvalidUTF32Exception( mulle_utf32_t *s,
    if( allocator)
       mulle_allocator_free( allocator, s);
 
-   MulleObjCThrowInvalidArgumentException( @"Invalid UTF32 (0x%x): %s", *invalid, space);
+   MulleObjCThrowInvalidArgumentExceptionCString( "Invalid UTF32 (0x%x): %s", *invalid, space);
 }
 
 
@@ -224,6 +221,31 @@ static NSString  *MulleObjCNewUTF32StringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
+static NSString  *newStringOrNilWithUTF8Characters( mulle_utf8_t *buf,
+                                                    NSUInteger len,
+                                                    struct mulle_allocator *allocator)
+{
+   struct mulle_utf_information   info;
+
+   if( mulle_utf8_information( buf, len, &info))
+      return( nil);
+
+#ifdef __MULLE_OBJC_TPS__
+   if( info.is_ascii && info.utf8len <= mulle_char7_get_maxlength())
+      return( MulleObjCTaggedPointerChar7StringWithASCIICharacters( (char *) info.start, info.utf8len));
+   if( info.is_char5 && info.utf8len <= mulle_char5_get_maxlength())
+      return( MulleObjCTaggedPointerChar5StringWithASCIICharacters( (char *) info.start, info.utf8len));
+#endif
+
+   if( info.is_ascii)
+      return( MulleObjCNewASCIIStringWithASCIICharacters( (char *) info.start, info.utf8len));
+
+   if( info.is_utf15)
+      return( MulleObjCNewUTF16StringWithUTF8Characters( info.start, info.utf8len, allocator));
+
+   return( MulleObjCNewUTF32StringWithUTF8Characters( info.start, info.utf8len, allocator));
+}
+
 
 static NSString  *newStringWithUTF8Characters( mulle_utf8_t *buf,
                                                NSUInteger len,
@@ -278,10 +300,10 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 {
    struct mulle_allocator  *allocator;
 
-   NSParameterAssert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterPlaceholderObject]);
 
    if( ! s)
-      MulleObjCThrowInvalidArgumentException( @"argument must not be null");
+      MulleObjCThrowInvalidArgumentExceptionCString( "argument must not be null");
 
    allocator = MulleObjCObjectGetAllocator( self);
    self      = newStringWithUTF8Characters( (mulle_utf8_t *) s,
@@ -297,7 +319,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
    struct mulle_allocator  *allocator;
    id                      old;
 
-   NSParameterAssert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterPlaceholderObject]);
 
    allocator = MulleObjCObjectGetAllocator( self);
    self      = (id) newStringWithUTF32Characters( s, len, allocator);
@@ -311,7 +333,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 {
    struct mulle_allocator   *allocator;
 
-   NSParameterAssert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterPlaceholderObject]);
 
    allocator = flag ? &mulle_stdlib_allocator : NULL;
    self      = [self mulleInitWithCharactersNoCopy:chars
@@ -334,6 +356,20 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 
    allocator = MulleObjCObjectGetAllocator( self);
    self      = (id) newStringWithUTF8Characters( s, len, allocator);
+   return( self);
+}
+
+
+//
+// as above but will return nil, if UTF8 is wrong
+//
+- (instancetype) mulleInitOrNilWithUTF8Characters:(mulle_utf8_t *) s
+                                            length:(NSUInteger) len
+{
+   struct mulle_allocator  *allocator;
+
+   allocator = MulleObjCObjectGetAllocator( self);
+   self      = (id) newStringOrNilWithUTF8Characters( s, len, allocator);
    return( self);
 }
 
@@ -383,7 +419,7 @@ static NSString  *
    struct mulle_allocator         *allocator;
    void                           *utf;
 
-   NSCParameterAssert( info);
+   assert( info);
 
    // need to copy it, because it's not ASCII
 
@@ -501,7 +537,7 @@ static NSString *
    struct mulle_utf_information   info;
 
    if( ! object)
-      MulleObjCThrowInvalidArgumentException( @"object is nil");
+      MulleObjCThrowInvalidArgumentExceptionCString( "object is nil");
 
    if( mulle_utf8_information( s, length, &info))
       _NSThrowInvalidUTF8Exception( s, length, &info);
@@ -529,7 +565,7 @@ static NSString *
    struct mulle_utf_information   info;
 
    if( ! object)
-      MulleObjCThrowInvalidArgumentException( @"object is nil");
+      MulleObjCThrowInvalidArgumentExceptionCString( "object is nil");
 
    if( mulle_utf32_information( s, length, &info))
       _NSThrowInvalidUTF32Exception( s, length, &info, NULL);

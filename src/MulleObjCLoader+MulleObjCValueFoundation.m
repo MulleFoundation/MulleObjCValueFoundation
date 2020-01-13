@@ -1,15 +1,15 @@
 //
 //  MulleObjCLoader+Foundation.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 11.05.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
 //
 
-#import "MulleObjCLoader+MulleObjCStandardFoundation.h"
+#import "MulleObjCLoader+MulleObjCValueFoundation.h"
 
 
-@implementation MulleObjCLoader( MulleObjCStandardFoundation)
+@implementation MulleObjCLoader( MulleObjCValueFoundation)
 
 + (struct _mulle_objc_dependency *) dependencies
 {

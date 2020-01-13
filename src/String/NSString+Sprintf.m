@@ -1,6 +1,6 @@
 //
 //  NSString+Sprintf.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -39,11 +39,8 @@
 // other files in this library
 #import "NSString+ClassCluster.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "NSException.h"
-
 // std-c and dependencies
-#include <mulle-sprintf/mulle-sprintf.h>
+#import "import-private.h"
 #include <stdarg.h>
 
 
@@ -132,7 +129,7 @@ static id   string_from_buffer( NSString *self,
    auto char                space[ 512];
 
    if( ! format)
-      MulleObjCThrowInvalidArgumentException( @"format is nil");
+      MulleObjCThrowInvalidArgumentExceptionCString( "format is nil");
 
    allocator = MulleObjCObjectGetAllocator( self);
    mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), allocator);
@@ -157,7 +154,7 @@ static id   string_from_buffer( NSString *self,
    auto char                space[ 512];
 
    if( ! format)
-      MulleObjCThrowInvalidArgumentException( @"format is nil");
+      MulleObjCThrowInvalidArgumentExceptionCString( "format is nil");
 
    allocator = MulleObjCObjectGetAllocator( self);
    mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), allocator);

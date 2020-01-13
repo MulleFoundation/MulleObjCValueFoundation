@@ -1,6 +1,6 @@
 //
 //  NSNumber+NSString.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -37,11 +37,11 @@
 #import "NSNumber+NSString.h"
 
 // other files in this library
-
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationString.h"
+#import "NSString.h"
+#import "NSString+Sprintf.h"
 
 // std-c dependencies
+#import "import-private.h"
 
 
 @implementation NSNumber (NSString)
@@ -93,3 +93,16 @@
 }
 
 @end
+
+//
+// Not sure how compatible this is...
+//
+// @implementation MulleObjCBoolNumber( NSString)
+//
+//
+// - (NSString *) description
+// {
+//    return( _value ? @"YES" : @"NO");
+// }
+//
+// @end

@@ -1,6 +1,6 @@
 //
 //  mulle_sprintf_object.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -39,7 +39,7 @@
 #import "NSString.h"
 #import "NSString+ClassCluster.h"
 
-// other libraries of MulleObjCStandardFoundation
+// other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
 

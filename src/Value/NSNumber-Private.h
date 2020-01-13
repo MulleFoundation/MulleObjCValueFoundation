@@ -1,9 +1,9 @@
 //
-//  NSValue.h
+//  NSNumber-Private.h
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2011 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2011 Codeon GmbH.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2020 Codeon GmbH.
 //  All rights reserved.
 //
 //
@@ -33,40 +33,18 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "import.h"
 
+// here and not in +Classcluster for +initialize
 
-
-@interface NSValue : NSObject < MulleObjCClassCluster, MulleObjCValue>
+enum _NSNumberClassClusterNumberType
 {
-}
-
-+ (instancetype) value:(void *) bytes
-          withObjCType:(char *) type;
-+ (instancetype) valueWithBytes:(void *) bytes
-                       objCType:(char *) type;
-+ (instancetype) valueWithPointer:(void *) pointer;
-+ (instancetype) valueWithRange:(NSRange) range;
-
-+ (instancetype) valueWithNonretainedObject:(id) obj;
-
-- (BOOL) isEqual:(id) other;
-- (BOOL) isEqualToValue:(id) other;
-
-- (NSRange) rangeValue;
-- (void *) pointerValue;
-- (id) nonretainedObjectValue;
-
-- (void) getValue:(void *) value
-             size:(NSUInteger) size;
-@end
-
-
-@interface NSValue (Subclasses)
-
-- (char *) objCType;
-- (instancetype) initWithBytes:(void *) bytes
-                      objCType:(char *) type;
-- (void) getValue:(void *) bytes;
-
-@end
+//   _NSNumberClassClusterInt8Type       = 0,
+//   _NSNumberClassClusterInt16Type      = 1,
+   _NSNumberClassClusterInt32Type      = 2,
+   _NSNumberClassClusterInt64Type      = 3,
+   _NSNumberClassClusterUInt32Type     = 4,
+   _NSNumberClassClusterUInt64Type     = 5,
+   _NSNumberClassClusterDoubleType     = 6,
+   _NSNumberClassClusterLongDoubleType = 7,
+   _NSNumberClassClusterNumberTypeMax
+};

@@ -1,6 +1,6 @@
 //
 //  _MulleObjCConcreteMutableData.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
@@ -33,10 +33,9 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #import "NSMutableData.h"
-#import <mulle-buffer/mulle-buffer.h>
 
+#import "import.h"
 
 
 @interface _MulleObjCConcreteMutableData : NSMutableData

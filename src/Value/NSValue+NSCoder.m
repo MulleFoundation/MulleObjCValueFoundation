@@ -1,16 +1,16 @@
 //
 //  NSValue+NSCoder.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 28.03.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
 //
 #import "NSValue+NSCoder.h"
 
-#import "NSCoder.h"
-
 #import "_MulleObjCConcreteValue.h"
 #import "_MulleObjCConcreteValue-Private.h"
+
+#import "import-private.h"
 
 
 @implementation NSValue (NSCoder)

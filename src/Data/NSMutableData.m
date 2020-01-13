@@ -1,6 +1,6 @@
 //
 //  NSMutableData.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -38,10 +38,8 @@
 // other files in this library
 #import "_MulleObjCConcreteMutableData.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "NSException.h"
-
 // std-c and dependencies
+#import "import-private.h"
 
 
 @implementation NSObject( _NSMutableData)
@@ -202,7 +200,7 @@
    uint8_t      *bytes;
 
    length = [self length];
-   MulleObjCValidateRangeWithLength( range, length);
+   MulleObjCValidateRangeAgainstLength( range, length);
 
    diff = (NSInteger) replacementLength - (NSInteger) range.length;
 

@@ -1,12 +1,15 @@
 //
 //  NS+NSCoder.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Created by Nat! on 12.04.17.
 //  Copyright © 2017 Mulle kybernetiK. All rights reserved.
 //
 
-#import "MulleObjCFoundationString.h"
+#import "NSString.h"
 
-@interface NSString (NSCoder) <NSCoding> // invisible NSCoding, is it bad ?
+#import "import.h"
+
+
+@interface NSString( NSCoder) <NSCoding> // invisible NSCoding, is it bad ?
 @end

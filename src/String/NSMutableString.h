@@ -1,6 +1,6 @@
 //
 //  NSMutableString.h
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -35,7 +35,7 @@
 //
 #import "NSString.h"
 
-#import "NSMutableCopying.h"
+#import "import.h"
 
 
 @interface NSMutableString : NSString
@@ -61,11 +61,6 @@
 - (void) replaceCharactersInRange:(NSRange) aRange
                        withString:(NSString *) replacement;
 
-- (void) replaceOccurrencesOfString:(NSString *) s
-                         withString:(NSString *) replacement
-                            options:(NSStringCompareOptions) options
-                              range:(NSRange) range;
-
 - (void) deleteCharactersInRange:(NSRange) aRange;
 
 // here nil is allowed and clears the NSMutableString(!)
@@ -78,4 +73,10 @@
 
 
 @interface NSString ( NSMutableString) < NSMutableCopying>
+
+- (NSString *) stringByAppendingString:(NSString *) other;
+
+- (NSString *) mulleStringByRemovingPrefix:(NSString *) other;
+- (NSString *) mulleStringByRemovingSuffix:(NSString *) other;
+
 @end

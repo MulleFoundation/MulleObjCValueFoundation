@@ -1,6 +1,6 @@
 //
 //  NSMutableString.m
-//  MulleObjCStandardFoundation
+//  MulleObjCValueFoundation
 //
 //  Copyright (c) 2011 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
@@ -37,16 +37,10 @@
 
 // other files in this library
 #import "NSString+ClassCluster.h"
-#import "NSString+Search.h"
 #import "NSString+Sprintf.h"
 
-// other libraries of MulleObjCStandardFoundation
-#import "MulleObjCFoundationBase.h"
-#import "NSException.h"
-
-
 // std-c and dependencies
-#include <mulle-buffer/mulle-buffer.h>
+#import "import-private.h"
 
 
 @implementation NSObject( _NSMutableString)
@@ -446,7 +440,7 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
    NSString     *s;
    NSUInteger   grab_len;
 
-   MulleObjCValidateRangeWithLength( range, _length);
+   MulleObjCValidateRangeAgainstLength( range, _length);
 
    p        = &_storage[ 0];
    sentinel = &p[ _count];
@@ -598,41 +592,6 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-
-- (void) replaceOccurrencesOfString:(NSString *) s
-                         withString:(NSString *) replacement
-                            options:(NSStringCompareOptions) options
-                              range:(NSRange) range
-{
-   NSRange      found;
-   NSUInteger   r_length;
-   NSUInteger   end;
-
-   MulleObjCValidateRangeWithLength( range, _length);
-
-   r_length = [replacement length];
-   options &= NSLiteralSearch|NSCaseInsensitiveSearch|NSNumericSearch;
-
-   for(;;)
-   {
-      found = [self rangeOfString:s
-                          options:options
-                            range:range];
-      if( ! found.length)
-         return;
-
-      [self replaceCharactersInRange:found
-                          withString:replacement];
-
-      // mover over to end for next check
-      end             = range.location + range.length;
-      range.location  = found.location + found.length;
-      range.length    = end - range.location;
-
-      // adjust for change in length due to replacement
-      range.location += r_length - found.length;
-   }
-}
 
 
 // rrrong, if storage is smaller than prefix!
@@ -803,61 +762,6 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
                                                  length:combined_len
                                               allocator:MulleObjCObjectGetAllocator( self)] autorelease];
    return( s);
-}
-
-
-
-- (NSString *) stringByReplacingOccurrencesOfString:(NSString *) s
-                                         withString:(NSString *) replacement
-{
-   NSMutableString   *copy;
-   NSRange           found;
-
-   found = [self rangeOfString:s];
-   if( ! found.length)
-      return( self);
-
-   copy = [NSMutableString stringWithString:self];
-   [copy replaceOccurrencesOfString:s
-                         withString:replacement
-                            options:NSLiteralSearch
-                              range:NSMakeRange( 0, [copy length])];
-   return( copy);
-}
-
-
-- (NSString *) stringByReplacingOccurrencesOfString:(NSString *) s
-                                         withString:(NSString *) replacement
-                                            options:(NSUInteger) options
-                                              range:(NSRange) range
-{
-   NSMutableString   *copy;
-   NSRange           found;
-
-   found = [self rangeOfString:s
-                       options:options
-                         range:range];
-   if( ! found.length)
-      return( self);
-
-   copy = [NSMutableString stringWithString:self];
-   [copy replaceOccurrencesOfString:s
-                         withString:replacement
-                            options:options
-                              range:range];
-   return( copy);
-}
-
-
-- (NSString *) stringByReplacingCharactersInRange:(NSRange) range
-                                       withString:(NSString *) replacement
-{
-   NSMutableString   *copy;
-
-   copy = [NSMutableString stringWithString:self];
-   [copy replaceCharactersInRange:range
-                         withString:replacement];
-   return( copy);
 }
 
 
