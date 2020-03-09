@@ -93,7 +93,7 @@
 }
 
 
-- (instancetype) _mulleInitWithNonZeroedAllocatedCapacity:(NSUInteger) capacity;
+- (instancetype) mulleInitWithNonZeroedAllocatedCapacity:(NSUInteger) capacity;
 {
    self = [_MulleObjCConcreteMutableData _mulleNewWithNonZeroedAllocatedCapacity:capacity];
    return( self);
@@ -165,20 +165,20 @@
 }
 
 
-+ (instancetype) _mulleNonZeroedDataWithLength:(NSUInteger) length
++ (instancetype) mulleNonZeroedDataWithLength:(NSUInteger) length
 {
    NSMutableData   *data;
 
    data = [self dataWithCapacity:length];
-   [data _mulleSetLengthDontZero:length];
+   [data mulleSetLengthDontZero:length];
    return( data);
 }
 
 
-- (instancetype) _mulleInitNonZeroedDataWithLength:(NSUInteger) length;
+- (instancetype) mulleInitNonZeroedDataWithLength:(NSUInteger) length;
 {
    [self init];
-   [self _mulleSetLengthDontZero:length];
+   [self mulleSetLengthDontZero:length];
    return( self);
 }
 
@@ -200,7 +200,7 @@
    uint8_t      *bytes;
 
    length = [self length];
-   MulleObjCValidateRangeAgainstLength( range, length);
+   range  = MulleObjCValidateRangeAgainstLength( range, length);
 
    diff = (NSInteger) replacementLength - (NSInteger) range.length;
 

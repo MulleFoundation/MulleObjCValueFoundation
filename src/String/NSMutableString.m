@@ -440,7 +440,7 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
    NSString     *s;
    NSUInteger   grab_len;
 
-   MulleObjCValidateRangeAgainstLength( range, _length);
+   range    = MulleObjCValidateRangeAgainstLength( range, _length);
 
    p        = &_storage[ 0];
    sentinel = &p[ _count];
@@ -689,7 +689,7 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    if( _shadow)
       return( (char *) _shadow);
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    mulle_buffer_init_with_static_bytes( &buffer, tmp, sizeof( tmp), allocator);
    mulleConvertStringsToUTF8( _storage, _count, &buffer);
@@ -760,7 +760,7 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
 
    s = [[[NSString alloc] mulleInitWithUTF8CharactersNoCopy:buf
                                                  length:combined_len
-                                              allocator:MulleObjCObjectGetAllocator( self)] autorelease];
+                                              allocator:MulleObjCInstanceGetAllocator( self)] autorelease];
    return( s);
 }
 

@@ -131,7 +131,7 @@ static id   string_from_buffer( NSString *self,
    if( ! format)
       MulleObjCThrowInvalidArgumentExceptionCString( "format is nil");
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), allocator);
    c_format  = [format UTF8String];
    if( mulle_mvsprintf( &buffer, (char *) c_format, arguments) < 0)
@@ -156,7 +156,7 @@ static id   string_from_buffer( NSString *self,
    if( ! format)
       MulleObjCThrowInvalidArgumentExceptionCString( "format is nil");
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), allocator);
    c_format  = [format UTF8String];
    if( mulle_vsprintf( &buffer, (char *) c_format, va_list) < 0)
@@ -183,3 +183,35 @@ static id   string_from_buffer( NSString *self,
 }
 
 @end
+
+
+char   *MulleObjC_vasprintf( char *format, va_list args)
+{
+   char                  *s;
+   struct mulle_buffer   buffer;
+
+   if( ! format)
+      return( NULL);
+
+   mulle_buffer_init( &buffer, NULL);
+   mulle_vsprintf( &buffer, format, args);
+   mulle_buffer_add_byte( &buffer, 0);
+   s = mulle_buffer_extract_all( &buffer);
+   mulle_buffer_done( &buffer);
+
+   MulleObjCAutoreleaseAllocation( s, NULL);
+
+   return( s);
+}
+
+
+char   *MulleObjC_asprintf( char *format, ...)
+{
+   va_list   args;
+   char      *s;
+
+   va_start( args, format);
+   s = MulleObjC_vasprintf( format, args);
+   va_end( args);
+   return( s);
+}

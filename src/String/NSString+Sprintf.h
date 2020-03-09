@@ -58,3 +58,13 @@
 
 
 @end
+
+
+// Return with the default mulle_allocator c-strings that are already
+// autoreleased!
+//
+// These functions are similiar to asprintf and vasprintf but use
+// a different calling signature.
+
+char   *MulleObjC_vasprintf( char *format, va_list args);
+char   *MulleObjC_asprintf( char *format, ...);

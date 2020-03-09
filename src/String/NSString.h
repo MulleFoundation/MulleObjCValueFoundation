@@ -37,11 +37,11 @@
 
 enum
 {
-   NSCaseInsensitiveSearch = 0x001,
-   NSLiteralSearch         = 0x002,
-   NSBackwardsSearch       = 0x004,
-   NSAnchoredSearch        = 0x008,
-   NSNumericSearch         = 0x040
+   NSCaseInsensitiveSearch         = 0x001,
+   NSLiteralSearch                 = 0x002,
+   NSBackwardsSearch               = 0x004,
+   NSAnchoredSearch                = 0x008,
+   NSNumericSearch                 = 0x040,
 };
 
 typedef NSUInteger   NSStringCompareOptions;

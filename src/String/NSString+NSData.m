@@ -119,7 +119,7 @@ enum
       return( YES);
 
    length = [self length];
-   MulleObjCValidateRangeAgainstLength( range, length);
+   range  = MulleObjCValidateRangeAgainstLength( range, length);
 
    // do leftover (in unichar)
    if( leftover)
@@ -149,7 +149,7 @@ enum
    mulle_utf8_t    *sentinel;
 
    length   = [self mulleUTF8StringLength];
-   data     = [NSMutableData _mulleNonZeroedDataWithLength:length];
+   data     = [NSMutableData mulleNonZeroedDataWithLength:length];
    p        = [data mutableBytes];
    sentinel = &p[ length];
    [self mulleGetUTF8Characters:p
@@ -163,14 +163,13 @@ enum
 }
 
 
-
 - (NSData *) _utf8Data
 {
    NSUInteger      length;
    NSMutableData   *data;
 
    length = [self mulleUTF8StringLength];
-   data   = [NSMutableData _mulleNonZeroedDataWithLength:length];
+   data   = [NSMutableData mulleNonZeroedDataWithLength:length];
    [self mulleGetUTF8Characters:[data mutableBytes]
                       maxLength:length];
    return( data);
@@ -199,7 +198,7 @@ enum
    size_t                         size;
 
    tmp_length = [self length];
-   tmp_data   = [NSMutableData _mulleNonZeroedDataWithLength:tmp_length * sizeof( mulle_utf32_t)];
+   tmp_data   = [NSMutableData mulleNonZeroedDataWithLength:tmp_length * sizeof( mulle_utf32_t)];
    tmp_buf    = [tmp_data mutableBytes];
 
    [self getCharacters:tmp_buf
@@ -215,7 +214,7 @@ enum
       ++utf16total;
 
    size = utf16total * sizeof( mulle_utf16_t);
-   data = [NSMutableData _mulleNonZeroedDataWithLength:size];
+   data = [NSMutableData mulleNonZeroedDataWithLength:size];
    buf  = [data mutableBytes];
 
    mulle_buffer_init_inflexible_with_static_bytes( &buffer, buf, size);
@@ -280,7 +279,7 @@ enum
    if( terminateWithZero)
       ++total;
 
-   data    = [NSMutableData _mulleNonZeroedDataWithLength:total * sizeof( mulle_utf32_t)];
+   data    = [NSMutableData mulleNonZeroedDataWithLength:total * sizeof( mulle_utf32_t)];
    p = buf = [data mutableBytes];
 
    if( prefixWithBOM)
@@ -441,7 +440,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    if( mulle_utf16_information( chars, length, &info))
       MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF16");
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    if( info.is_ascii)
    {
@@ -499,7 +498,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    mulle_utf16_t   *buf;
    mulle_utf16_t   *sentinel;
 
-   buf      = [[NSMutableData _mulleNonZeroedDataWithLength:length * sizeof( mulle_utf16_t)] mutableBytes];
+   buf      = [[NSMutableData mulleNonZeroedDataWithLength:length * sizeof( mulle_utf16_t)] mutableBytes];
    p        = buf;
    sentinel = &p[ length];
 
@@ -519,7 +518,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    mulle_utf32_t   *buf;
    mulle_utf32_t   *sentinel;
 
-   buf      = [[NSMutableData _mulleNonZeroedDataWithLength:length * sizeof( mulle_utf32_t)] mutableBytes];
+   buf      = [[NSMutableData mulleNonZeroedDataWithLength:length * sizeof( mulle_utf32_t)] mutableBytes];
    p        = buf;
    sentinel = &p[ length];
 
@@ -609,6 +608,14 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    return( [self initWithBytes:bytes
                         length:length
                       encoding:encoding]);
+}
+
+
++ (instancetype) mulleStringWithData:(NSData *) data
+                            encoding:(NSStringEncoding) encoding
+{
+   return( [[[self alloc] initWithData:data
+                              encoding:encoding] autorelease]);
 }
 
 

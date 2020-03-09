@@ -100,12 +100,18 @@
 
 //   config->numbersubclasses[ _NSNumberClassClusterInt8Type]       = [_MulleObjCInt8Number class];
 //   config->numbersubclasses[ _NSNumberClassClusterInt16Type]      = [_MulleObjCInt16Number class];
-   config->numbersubclasses[ _NSNumberClassClusterInt32Type]      = [_MulleObjCInt32Number class];
-   config->numbersubclasses[ _NSNumberClassClusterInt64Type]      = [_MulleObjCInt64Number class];
-   config->numbersubclasses[ _NSNumberClassClusterUInt32Type]     = [_MulleObjCUInt32Number class];
-   config->numbersubclasses[ _NSNumberClassClusterUInt64Type]     = [_MulleObjCUInt64Number class];
-   config->numbersubclasses[ _NSNumberClassClusterDoubleType]     = [_MulleObjCDoubleNumber class];
-   config->numbersubclasses[ _NSNumberClassClusterLongDoubleType] = [_MulleObjCLongDoubleNumber class];
+   config->numbersubclasses[ _NSNumberClassClusterInt32Type]      =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCInt32Number));
+   config->numbersubclasses[ _NSNumberClassClusterInt64Type]      =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCInt64Number));
+   config->numbersubclasses[ _NSNumberClassClusterUInt32Type]     =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCUInt32Number));
+   config->numbersubclasses[ _NSNumberClassClusterUInt64Type]     =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCUInt64Number));
+   config->numbersubclasses[ _NSNumberClassClusterDoubleType]     =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCDoubleNumber));
+   config->numbersubclasses[ _NSNumberClassClusterLongDoubleType] =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCLongDoubleNumber));
 }
 
 

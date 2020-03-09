@@ -76,7 +76,8 @@ NSString   *NSStringFromProtocol( PROTOCOL proto)
 
 NSString   *NSStringFromRange( NSRange range)
 {
-   return( [NSString stringWithFormat:@"%lu, %lu", range.location, range.length]);
+   // Apple does it with {}
+   return( [NSString stringWithFormat:@"{ %lu, %lu }", range.location, range.length]);
 }
 
 

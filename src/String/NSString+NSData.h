@@ -133,6 +133,9 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 #pragma mark -
 #pragma mark mulle additions
 
++ (instancetype) mulleStringWithData:(NSData *) data
+                            encoding:(NSStringEncoding) encoding;
+
 - (instancetype) mulleInitWithBytesNoCopy:(void *) bytes
                                    length:(NSUInteger) length
                                  encoding:(NSStringEncoding) encoding
