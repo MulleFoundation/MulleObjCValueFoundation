@@ -83,7 +83,7 @@
 
    if( ! _shadow)
    {
-      mulle_buffer_init( &buf, MulleObjCObjectGetAllocator( self));
+      mulle_buffer_init( &buf, MulleObjCInstanceGetAllocator( self));
       mulle_utf32_bufferconvert_to_utf8( [self _fastUTF32Characters],
                                          [self _UTF32StringLength],
                                          &buf,
@@ -105,7 +105,7 @@ static void   grab_utf32( id self,
                           NSRange range)
 {
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeAgainstLength( range, length);
+   range = MulleObjCValidateRangeAgainstLength( range, length);
 
    memcpy( dst, &storage[ range.location], range.length * sizeof( mulle_utf32_t));
 }
@@ -138,7 +138,7 @@ static void   grab_utf32( id self,
    NSUInteger      length;
 
    length = [self length];
-   MulleObjCValidateRangeAgainstLength( range, length);
+   range = MulleObjCValidateRangeAgainstLength( range, length);
 
    s = [self _fastUTF32Characters];
    assert( s);

@@ -80,7 +80,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 
    data = NSAllocateObject( self, 0, NULL);
 
-   allocator = MulleObjCObjectGetAllocator( data);
+   allocator = MulleObjCInstanceGetAllocator( data);
    mulle_buffer_init_with_capacity( &data->_storage, capacity, allocator);
 
    return( data);
@@ -96,14 +96,12 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 
    data = NSAllocateObject( self, 0, NULL);
 
-   allocator = MulleObjCObjectGetAllocator( data);
+   allocator = MulleObjCInstanceGetAllocator( data);
    mulle_buffer_init_with_capacity( &data->_storage, capacity, allocator);
-   _mulle_buffer_grow( (struct _mulle_buffer *) &data->_storage, capacity, allocator);
+   _mulle__buffer_grow( (struct mulle__buffer *) &data->_storage, capacity, allocator);
 
    return( data);
 }
-
-
 
 
 + (instancetype) mulleNewWithLength:(NSUInteger) length
@@ -113,7 +111,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 
    data = NSAllocateObject( self, 0, NULL);
 
-   allocator = MulleObjCObjectGetAllocator( data);
+   allocator = MulleObjCInstanceGetAllocator( data);
    mulle_buffer_init_with_capacity( &data->_storage, length, allocator);
    mulle_buffer_set_length( &data->_storage, length);
 
@@ -132,7 +130,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 
    data = NSAllocateObject( self, 0, NULL);
 
-   allocator = MulleObjCObjectGetAllocator( data);
+   allocator = MulleObjCInstanceGetAllocator( data);
    mulle_buffer_init_with_capacity( &data->_storage, length, allocator);
    append_bytes( data, buf, length);
 
@@ -210,18 +208,19 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 }
 
 
-static void   *validated_range_pointer( _MulleObjCConcreteMutableData *self, NSRange range)
+static void   *
+   validated_range_pointer( _MulleObjCConcreteMutableData *self, NSRange *range)
 {
    unsigned char  *p;
    NSUInteger     len;
    size_t         buf_len;
 
    p       = mulle_buffer_get_bytes( &self->_storage);
-   len     = range.location + range.length;
    buf_len = mulle_buffer_get_length( &self->_storage);
 
-   MulleObjCValidateRangeAgainstLength( range, buf_len);
-   return( p);
+   *range  = MulleObjCValidateRangeAgainstLength( *range, buf_len);
+
+   return( &p[ range->location]);
 }
 
 
@@ -230,7 +229,7 @@ static void   *validated_range_pointer( _MulleObjCConcreteMutableData *self, NSR
 {
    void  *p;
 
-   p = validated_range_pointer( self, range);
+   p = validated_range_pointer( self, &range);
    memmove( p, bytes, range.length);
 }
 
@@ -239,7 +238,7 @@ static void   *validated_range_pointer( _MulleObjCConcreteMutableData *self, NSR
 {
    void  *p;
 
-   p = validated_range_pointer( self, range);
+   p = validated_range_pointer( self, &range);
    memset( p, 0, range.length);
 }
 
@@ -262,7 +261,7 @@ static void   *validated_range_pointer( _MulleObjCConcreteMutableData *self, NSR
 }
 
 
-- (void) _mulleSetLengthDontZero:(NSUInteger) length
+- (void) mulleSetLengthDontZero:(NSUInteger) length
 {
    NSUInteger   curr_length;
 

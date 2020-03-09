@@ -73,7 +73,7 @@ static void   grab_utf32( id self,
    mulle_utf8_t    *sentinel;
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeAgainstLength( range, len);
+   range    = MulleObjCValidateRangeAgainstLength( range, len);
 
    storage  = &storage[ range.location];
    sentinel = &storage[ range.length];
@@ -150,7 +150,7 @@ static void   grab_utf8( id self,
    length = [self length];
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeAgainstLength( range, length);
+   range = MulleObjCValidateRangeAgainstLength( range, length);
 
    s = [self mulleFastUTF8Characters];
    assert( s);
@@ -531,7 +531,7 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
 
    if( ! _shadow)
    {
-      mulle_buffer_init( &buffer, MulleObjCObjectGetAllocator( self));
+      mulle_buffer_init( &buffer, MulleObjCInstanceGetAllocator( self));
       mulle_buffer_add_bytes( &buffer, _storage, _length);
       mulle_buffer_add_byte( &buffer, 0);
       _shadow = mulle_buffer_extract_all( &buffer);
@@ -544,7 +544,7 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
 - (void) dealloc
 {
    if( _shadow)
-      mulle_allocator_free( MulleObjCObjectGetAllocator( self), _shadow);
+      mulle_allocator_free( MulleObjCInstanceGetAllocator( self), _shadow);
 
    NSDeallocateObject( self);
 }

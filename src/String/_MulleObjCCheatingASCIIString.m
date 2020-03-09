@@ -69,7 +69,7 @@ NSString  *MulleObjCNewASCIIStringWithASCIICharacters( char *s, NSUInteger lengt
    struct mulle_allocator   *allocator;
    char                     *s;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    mulle_buffer_init( &buffer, allocator);
    mulle_buffer_add_bytes( &buffer, _storage, _length);

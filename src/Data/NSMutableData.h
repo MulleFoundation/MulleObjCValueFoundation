@@ -55,6 +55,11 @@
 
 - (void) setData:(NSData *) aData;
 
+// mulle additions
++ (instancetype) mulleNonZeroedDataWithLength:(NSUInteger) length;
+- (instancetype) mulleInitNonZeroedDataWithLength:(NSUInteger) length;
+- (instancetype) mulleInitWithNonZeroedAllocatedCapacity:(NSUInteger) capacity;
+
 @end
 
 
@@ -77,14 +82,7 @@
 
 - (void) setLength:(NSUInteger) length;
 
-@end
-
-
-@interface NSMutableData( _Private)
-
-+ (instancetype) _mulleNonZeroedDataWithLength:(NSUInteger) length;
-- (instancetype) _mulleInitNonZeroedDataWithLength:(NSUInteger) length;
-- (void) _mulleSetLengthDontZero:(NSUInteger) length;
-- (instancetype) _mulleInitWithNonZeroedAllocatedCapacity:(NSUInteger) capacity;
+// mulle additions
+- (void) mulleSetLengthDontZero:(NSUInteger) length;
 
 @end

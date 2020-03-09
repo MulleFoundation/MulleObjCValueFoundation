@@ -305,7 +305,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
    if( ! s)
       MulleObjCThrowInvalidArgumentExceptionCString( "argument must not be null");
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    self      = newStringWithUTF8Characters( (mulle_utf8_t *) s,
                                              mulle_utf8_strlen( (mulle_utf8_t *) s),
                                              allocator);
@@ -321,7 +321,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 
    assert( [self __isClassClusterPlaceholderObject]);
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    self      = (id) newStringWithUTF32Characters( s, len, allocator);
    return( self);
 }
@@ -354,7 +354,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 {
    struct mulle_allocator  *allocator;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    self      = (id) newStringWithUTF8Characters( s, len, allocator);
    return( self);
 }
@@ -368,7 +368,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 {
    struct mulle_allocator  *allocator;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    self      = (id) newStringOrNilWithUTF8Characters( s, len, allocator);
    return( self);
 }
@@ -423,7 +423,7 @@ static NSString  *
 
    // need to copy it, because it's not ASCII
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    mulle_buffer_init( &buffer, allocator);
 
    // convert it to UTF16

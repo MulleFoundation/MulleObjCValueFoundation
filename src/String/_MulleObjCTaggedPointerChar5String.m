@@ -127,7 +127,7 @@ static void   grab_utf8( id self,
    uintptr_t   value;
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeAgainstLength( range, len);
+   range = MulleObjCValidateRangeAgainstLength( range, len);
 
    value = _MulleObjCTaggedPointerChar5ValueFromString( self);
    if( range.location)
@@ -242,7 +242,7 @@ static void   grab_utf32( id self,
    mulle_utf8_t    *s;
 
    len  = MulleObjCTaggedPointerChar5StringGetLength( self);
-   s    = MulleObjCAutoreleasedCalloc( len + 1, sizeof( mulle_utf8_t));
+   s    = MulleObjCCallocAutoreleased( len + 1, sizeof( mulle_utf8_t));
    grab_utf8( self,
               len,
               s,
@@ -259,7 +259,7 @@ static void   grab_utf32( id self,
    length = MulleObjCTaggedPointerChar5StringGetLength( self);
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   MulleObjCValidateRangeAgainstLength( range, length);
+   range = MulleObjCValidateRangeAgainstLength( range, length);
 
    value = _MulleObjCTaggedPointerChar5ValueFromString( self);
    value = mulle_char5_substring( value,

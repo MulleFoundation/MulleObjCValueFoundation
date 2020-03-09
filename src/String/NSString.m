@@ -142,6 +142,7 @@ enum _NSStringClassClusterStringSize
 + (void) initialize
 {
    struct _mulle_objc_universefoundationinfo   *config;
+   struct _mulle_objc_universe                 *universe;
 
    if( self != [NSString class])
       return;
@@ -150,17 +151,29 @@ enum _NSStringClassClusterStringSize
 
    assert( _MULLE_OBJC_FOUNDATIONINFO_N_STRINGSUBCLASSES >= _NSStringClassClusterStringSizeMax);
 
-   config = _mulle_objc_universe_get_universefoundationinfo( MulleObjCObjectGetUniverse( self));
+   universe = MulleObjCObjectGetUniverse( self);
+   config   = _mulle_objc_universe_get_universefoundationinfo( universe);
 
+   //
+   // as we are the root class of this class cluster, we initialize before the
+   // others. So we don't want to trigger subclasses +initialize with "class"
+   // because that would recurse down back to us.
+   //
    config->stringsubclasses[ 0] = NULL;
-   config->stringsubclasses[ _NSStringClassClusterStringSize256OrLess] = [_MulleObjCTinyASCIIString class];
-   config->stringsubclasses[ _NSStringClassClusterStringSizeOther]     = [_MulleObjCGenericASCIIString class];
+   config->stringsubclasses[ _NSStringClassClusterStringSize256OrLess] =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCTinyASCIIString));
+   config->stringsubclasses[ _NSStringClassClusterStringSizeOther]     =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCGenericASCIIString));
 
 #ifdef HAVE_FIXED_LENGTH_ASCII_SUBCLASSES
-   config->stringsubclasses[ _NSStringClassClusterStringSize3]  = [_MulleObjC03LengthASCIIString class];
-   config->stringsubclasses[ _NSStringClassClusterStringSize7]  = [_MulleObjC07LengthASCIIString class];
-   config->stringsubclasses[ _NSStringClassClusterStringSize11] = [_MulleObjC11LengthASCIIString class];
-   config->stringsubclasses[ _NSStringClassClusterStringSize15] = [_MulleObjC15LengthASCIIString class];
+   config->stringsubclasses[ _NSStringClassClusterStringSize3]  =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjC03LengthASCIIString));
+   config->stringsubclasses[ _NSStringClassClusterStringSize7]  =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjC07LengthASCIIString));
+   config->stringsubclasses[ _NSStringClassClusterStringSize11] =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjC11LengthASCIIString));
+   config->stringsubclasses[ _NSStringClassClusterStringSize15] =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjC15LengthASCIIString));
 #endif
 }
 
@@ -502,15 +515,15 @@ static void   grab_utf8( id self,
    NSUInteger               length;
 
    length = [self length];
+   range  = MulleObjCValidateRangeAgainstLength( range, length);
+
    if( ! range.location && range.length == length)
       return( self);
-
-   MulleObjCValidateRangeAgainstLength( range, length);
 
    if( ! range.length)
       return( @"");
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
    bytes     = mulle_allocator_malloc( allocator, range.length * sizeof( unichar));
 
    [self getCharacters:bytes
@@ -687,7 +700,7 @@ static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
    struct mulle_allocator   *allocator;
    struct mulle_utf8_data   buf;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    len = [self mulleUTF8StringLength];
    s   = [self mulleFastUTF8Characters];
@@ -708,7 +721,7 @@ static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
    struct mulle_allocator   *allocator;
    struct mulle_utf8_data   buf;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    len = [self mulleUTF8StringLength];
    s   = [self mulleFastUTF8Characters];
@@ -733,7 +746,7 @@ static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
    struct mulle_allocator   *allocator;
    struct mulle_utf8_data   buf;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    len = [self mulleUTF8StringLength];
    s   = [self mulleFastUTF8Characters];
@@ -758,7 +771,7 @@ static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
    struct mulle_allocator   *allocator;
    struct mulle_utf8_data   buf;
 
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    len = [self mulleUTF8StringLength];
    s   = [self mulleFastUTF8Characters];

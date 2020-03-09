@@ -76,7 +76,7 @@ static inline unsigned int   hex( unsigned int c)
       return( @"<>");
 
    bytes     = [self bytes];
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    mulle_buffer_init( &buffer, allocator);
 
@@ -139,7 +139,7 @@ static inline unsigned int   hex( unsigned int c)
       return( @"<>");
 
    bytes     = [self bytes];
-   allocator = MulleObjCObjectGetAllocator( self);
+   allocator = MulleObjCInstanceGetAllocator( self);
 
    mulle_buffer_init( &buffer, allocator);
 
