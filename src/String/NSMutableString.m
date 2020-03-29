@@ -517,10 +517,20 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
    s = [NSString stringWithFormat:format
                   mulleVarargList:args];
    mulle_vararg_end( args);
-
-   if( s)
-      [self appendString:s];
+   [self appendString:s];
 }
+
+
+- (void) mulleAppendFormat:(NSString *) format
+                 arguments:(mulle_vararg_list) args
+{
+   NSString   *s;
+
+   s = [NSString stringWithFormat:format
+                  mulleVarargList:args];
+   [self appendString:s];
+}
+
 
 
 - (void) mulleAppendCharacters:(unichar *) buf

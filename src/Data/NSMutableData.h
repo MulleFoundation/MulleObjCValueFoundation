@@ -51,8 +51,8 @@
 + (instancetype) dataWithCapacity:(NSUInteger) aNumItems;
 + (instancetype) dataWithLength:(NSUInteger) length;
 - (instancetype) initWithLength:(NSUInteger) length;
-- (void) appendData:(NSData *) otherData;
 
+- (void) appendData:(NSData *) otherData;
 - (void) setData:(NSData *) aData;
 
 // mulle additions

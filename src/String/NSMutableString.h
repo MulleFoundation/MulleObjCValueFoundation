@@ -68,7 +68,8 @@
 
 - (void) mulleAppendCharacters:(unichar *) buf
                         length:(NSUInteger) length;
-
+- (void) mulleAppendFormat:(NSString *) format
+                 arguments:(mulle_vararg_list) args;
 @end
 
 
