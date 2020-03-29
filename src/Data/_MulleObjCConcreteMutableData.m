@@ -176,6 +176,20 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 
 - (void *) mutableBytes
 {
+   size_t    length;
+   void      *bytes;
+
+   bytes = mulle_buffer_get_bytes( &_storage);
+   if( bytes)
+      return( bytes);
+
+   //
+   // if initialized with capacity, now is the time
+   // to setup the buffer. Not sure this delayed action is ever worth it
+   // though
+   //
+   length = mulle_buffer_get_capacity( &_storage);
+   mulle_buffer_set_length( &_storage, length);
    return( mulle_buffer_get_bytes( &_storage));
 }
 
