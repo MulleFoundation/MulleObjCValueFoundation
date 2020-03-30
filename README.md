@@ -2,7 +2,8 @@
 
 💶 Value classes NSNumber, NSString, NSDate, NSData
 
-These classes build on **MulleObjC** and **mulle-core** to provide the usual
+These classes build on [MulleObjC](//github.com/mulle-objc/MulleObjC) and
+[mulle-core](//github.com/mulle-objc/mulle-core) to provide the usual
 value classes expected in a Foundation library.
 
 ## Immutable Classes
