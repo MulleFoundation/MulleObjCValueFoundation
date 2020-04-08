@@ -40,7 +40,7 @@ matrix:
 #
 
 script:
-   - '[ ! -f .travis.d/script ] || .travis.d/script'
+   - '[ ! -f .travis.d/script ] || source .travis.d/script'
 
 # before_cache:
 #    - '[ ! -f .travis.d/before_cache ] || source .travis.d/before_cache'
