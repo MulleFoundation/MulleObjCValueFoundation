@@ -144,4 +144,7 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 - (instancetype) mulleInitWithDataNoCopy:(NSData *) s
                             encoding:(NSStringEncoding) encoding;
 
+// why is this here ?
+- (instancetype) mulleInitWithUTF16Characters:(mulle_utf16_t *) chars
+                                       length:(NSUInteger) length;
 @end
