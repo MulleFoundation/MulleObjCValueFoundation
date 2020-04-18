@@ -121,9 +121,6 @@ typedef mulle_utf32_t  unichar;
 
 - (char *) UTF8String;
 
-- (NSString *) uppercaseString;
-- (NSString *) lowercaseString;
-- (NSString *) capitalizedString;
 
 - (BOOL) hasPrefix:(NSString *) prefix;
 - (BOOL) hasSuffix:(NSString *) suffix;
@@ -136,7 +133,6 @@ typedef mulle_utf32_t  unichar;
 - (NSUInteger) mulleUTF8StringLength;
 - (mulle_utf8_t *) mulleFastASCIICharacters;  // known 7 bit only
 - (mulle_utf8_t *) mulleFastUTF8Characters;
-- (NSString *) mulleDecapitalizedString;
 
 + (instancetype) mulleStringWithCharactersNoCopy:(unichar *) s
                                           length:(NSUInteger) len
