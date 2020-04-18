@@ -610,179 +610,6 @@ static void   grab_utf8( id self,
 }
 
 
-#pragma mark -
-#pragma mark case conversion
-
-
-// ctype_convert will always add a zero (at buf[ len])
-static struct mulle_utf8_data   character_convert( mulle_utf8_t *src,
-                                                   NSUInteger len,
-                                                   mulle_utf32_t (*f_conversion)( mulle_utf32_t),
-                                                   struct mulle_allocator *allocator)
-{
-   mulle_utf8_t            *p;
-   mulle_utf8_t            *sentinel;
-   mulle_utf32_t           c;
-   struct mulle_utf8_data  buf;
-
-   // mulle_utf32_t can become 4 bytes max
-   buf.length     = (len * 4) + 1;
-   buf.characters = mulle_allocator_malloc( allocator, buf.length);
-   p              = buf.characters;
-
-   sentinel = &src[ len];
-   while( src < sentinel)
-   {
-      c = mulle_utf8_next_utf32character( &src);
-      c = (*f_conversion)( c);
-      p = mulle_utf32_as_utf8( c, p);
-   }
-
-   *p++ = 0;
-   assert( p <= &buf.characters[ buf.length]);
-
-   buf.length     = p - buf.characters;
-   buf.characters = mulle_allocator_realloc( allocator, buf.characters, buf.length);
-   return( buf);
-}
-
-
-static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
-                                              NSUInteger len,
-                                              mulle_utf32_t (*f1_conversion)( mulle_utf32_t),
-                                              mulle_utf32_t (*f2_conversion)( mulle_utf32_t),
-                                              struct mulle_allocator *allocator)
-{
-   int                     is_start;
-   mulle_utf32_t           c;
-   mulle_utf8_t            *p;
-   mulle_utf8_t            *sentinel;
-   struct mulle_utf8_data  buf;
-
-   is_start = 1;
-
-   // mulle_utf32_t can become 4 bytes max
-   buf.length     = (len * 4) + 1;
-   buf.characters = mulle_allocator_malloc( allocator, buf.length);
-   p              = buf.characters;
-
-   sentinel = &src[ len];
-   while( src < sentinel)
-   {
-      c = mulle_utf8_next_utf32character( &src);
-      if( mulle_utf32_is_whitespace( c))
-         is_start = 1;
-      else
-      {
-         if( is_start)
-         {
-            c = (*f1_conversion)( c);
-            is_start = 0;
-         }
-         else
-            c = (*f2_conversion)( c);
-      }
-      p = mulle_utf32_as_utf8( c, p);
-   }
-   *p++ = 0;
-   assert( p <= &buf.characters[ buf.length]);
-
-   buf.length     = p - buf.characters;
-   buf.characters = mulle_allocator_realloc( allocator, buf.characters, buf.length);
-   return( buf);
-}
-
-
-- (NSString *) lowercaseString
-{
-   mulle_utf8_t             *s;
-   NSUInteger               len;
-   struct mulle_allocator   *allocator;
-   struct mulle_utf8_data   buf;
-
-   allocator = MulleObjCInstanceGetAllocator( self);
-
-   len = [self mulleUTF8StringLength];
-   s   = [self mulleFastUTF8Characters];
-   if( ! s)
-      s = (mulle_utf8_t *) [self UTF8String];
-
-   buf = character_convert( s, len, mulle_utf32_tolower, allocator);
-   return( [NSString mulleStringWithUTF8CharactersNoCopy:buf.characters
-                                                  length:buf.length
-                                               allocator:allocator]);
-}
-
-
-- (NSString *) uppercaseString
-{
-   mulle_utf8_t             *s;
-   NSUInteger               len;
-   struct mulle_allocator   *allocator;
-   struct mulle_utf8_data   buf;
-
-   allocator = MulleObjCInstanceGetAllocator( self);
-
-   len = [self mulleUTF8StringLength];
-   s   = [self mulleFastUTF8Characters];
-   if( ! s)
-      s = (mulle_utf8_t *) [self UTF8String];
-
-   buf = character_convert( s, len, mulle_utf32_toupper, allocator);
-   return( [NSString mulleStringWithUTF8CharactersNoCopy:buf.characters
-                                                  length:buf.length
-                                               allocator:allocator]);
-}
-
-
-//
-// this should do:
-// a fOO bar -> A Foo Bar
-//
-- (NSString *) capitalizedString
-{
-   NSUInteger               len;
-   mulle_utf8_t             *s;
-   struct mulle_allocator   *allocator;
-   struct mulle_utf8_data   buf;
-
-   allocator = MulleObjCInstanceGetAllocator( self);
-
-   len = [self mulleUTF8StringLength];
-   s   = [self mulleFastUTF8Characters];
-   if( ! s)
-      s = (mulle_utf8_t *) [self UTF8String];
-   buf = word_convert( s, len, mulle_utf32_toupper, mulle_utf32_tolower, allocator);
-   return( [NSString mulleStringWithUTF8CharactersNoCopy:buf.characters
-                                                  length:buf.length
-                                               allocator:allocator]);
-}
-
-
-//
-// this should do:
-// A fOO BaR -> a fOO baR
-// Why ? because otherwise it's just like lowercase
-//
-- (NSString *) mulleDecapitalizedString
-{
-   NSUInteger               len;
-   mulle_utf8_t             *s;
-   struct mulle_allocator   *allocator;
-   struct mulle_utf8_data   buf;
-
-   allocator = MulleObjCInstanceGetAllocator( self);
-
-   len = [self mulleUTF8StringLength];
-   s   = [self mulleFastUTF8Characters];
-   if( ! s)
-      s = (mulle_utf8_t *) [self UTF8String];
-   buf = word_convert( s, len, mulle_utf32_tolower, mulle_utf32_nop, allocator);
-   return( [NSString mulleStringWithUTF8CharactersNoCopy:buf.characters
-                                                  length:buf.length
-                                               allocator:allocator]);
-}
-
 
 #pragma mark -
 #pragma mark simplest substring
@@ -844,7 +671,7 @@ static struct mulle_utf8_data   word_convert( mulle_utf8_t *src,
 #pragma mark -
 #pragma mark numerical values
 
-static mulle_utf8_t   *UTF8StringWithLeadingSpacesRemoved( NSString *self)
+static mulle_utf8_t   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
 {
    mulle_utf8_t   *s;
    mulle_utf8_t   *old;
@@ -858,40 +685,43 @@ static mulle_utf8_t   *UTF8StringWithLeadingSpacesRemoved( NSString *self)
       old = s;
       c   = _mulle_utf8_next_utf32character( &s);
 
-      if( ! mulle_utf32_is_whitespace( c))
+      if( ! isspace( c))
          return( old);
    }
    return( s);
 }
 
 
+//
+// the C functions are assumed to work with ASCII only anyway
+//
 - (double) doubleValue
 {
-   return( strtod( (char *) UTF8StringWithLeadingSpacesRemoved( self), NULL));
+   return( strtod( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL));
 }
 
 
 - (float) floatValue
 {
-   return( strtof( (char *) UTF8StringWithLeadingSpacesRemoved( self), NULL));
+   return( strtof( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL));
 }
 
 
 - (int) intValue
 {
-   return( (int) strtol( (char *) UTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
+   return( (int) strtol( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
 }
 
 
-- (long long) longLongValue;
+- (long long) longLongValue
 {
-   return( strtoll( (char *) UTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
+   return( strtoll( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
 }
 
 
 - (NSInteger) integerValue
 {
-   return( strtol( (char *) UTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
+   return( strtol( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
 }
 
 
@@ -899,7 +729,7 @@ static mulle_utf8_t   *UTF8StringWithLeadingSpacesRemoved( NSString *self)
 {
    char  *s;
 
-   s = (char *) UTF8StringWithLeadingSpacesRemoved( self);
+   s = (char *) mulleUTF8StringWithLeadingSpacesRemoved( self);
 
    if( *s == '+' || *s == '-')
       ++s;

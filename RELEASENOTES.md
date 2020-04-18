@@ -1,3 +1,7 @@
+### 0.17.1
+
+* moved unicode functionality to MulleObjCUnicodeFoundation, basic ctype functionality remains
+
 ## 0.17.0
 
 * adapt to `MulleObjCValidateRangeAgainstLength` returning a value now (`-1` can be used instead of `[self length]` in NSRange)
