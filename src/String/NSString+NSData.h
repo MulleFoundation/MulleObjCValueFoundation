@@ -39,29 +39,44 @@
 @class NSData;
 
 
-// maybe more later. should ensure that the enums have same numeric values as
-// in AppleFoundation
+//
+// Maybe more later. Should ensure that the enums have same numeric values as
+// in AppleFoundation.
+//
+// NSStringEncodings used internally are NSASCIIStringEncoding,
+// NSUTF8StringEncoding, NSUTF16StringEncoding and NSUTF32StringEncoding.
+// NSUTF16StringEncoding and NSUTF32StringEncoding are represented internally
+// only in the host specific format.
+//
+// The "special" ..Endian.. encodings are only used for importing and exporting
+// strings via -initWithData: and dataUsingEncoding and the like.
+//
+// NSStringEncoding conversions never escape any characters. If the conversion
+// would result in a lack of information, then the conversion fails.
+// Specifically there is no attempt to change accented characters to non-
+// accented ones, like the Apple foundation does on a conversion to
+// NSASCIIStringEncoding.
 //
 
 enum
 {
-   NSASCIIStringEncoding             = 1,
-   NSNEXTSTEPStringEncoding          = 2,    // no support
-   NSJapaneseEUCStringEncoding       = 3,    // no support
-   NSUTF8StringEncoding              = 4,
-   NSISOLatin1StringEncoding         = 5,    // no support
-   NSSymbolStringEncoding            = 6,    // no support
-   NSNonLossyASCIIStringEncoding     = 7,    // no support (stooopid ?)
-   NSShiftJISStringEncoding          = 8,    // no support
-   NSISOLatin2StringEncoding         = 9,    // no support
-   NSUTF16StringEncoding             = 10,
-   NSWindowsCP1251StringEncoding     = 11,    // no support
-   NSWindowsCP1252StringEncoding     = 12,    // no support
-   NSWindowsCP1253StringEncoding     = 13,    // no support
-   NSWindowsCP1254StringEncoding     = 14,    // no support
-   NSWindowsCP1250StringEncoding     = 15,    // no support
-   NSISO2022JPStringEncoding         = 21,    // no support
-   NSMacOSRomanStringEncoding        = 30,    // no support
+   NSASCIIStringEncoding         = 1,
+   NSNEXTSTEPStringEncoding      = 2,    // no support
+   NSJapaneseEUCStringEncoding   = 3,    // no support
+   NSUTF8StringEncoding          = 4,
+   NSISOLatin1StringEncoding     = 5,    // no support
+   NSSymbolStringEncoding        = 6,    // no support
+   NSNonLossyASCIIStringEncoding = 7,    // no support
+   NSShiftJISStringEncoding      = 8,    // no support
+   NSISOLatin2StringEncoding     = 9,    // no support
+   NSUTF16StringEncoding         = 10,
+   NSWindowsCP1251StringEncoding = 11,   // no support
+   NSWindowsCP1252StringEncoding = 12,   // no support
+   NSWindowsCP1253StringEncoding = 13,   // no support
+   NSWindowsCP1254StringEncoding = 14,   // no support
+   NSWindowsCP1250StringEncoding = 15,   // no support
+   NSISO2022JPStringEncoding     = 21,   // no support
+   NSMacOSRomanStringEncoding    = 30,   // no support
 };
 
 // too big for enums
@@ -88,6 +103,7 @@ typedef NSUInteger   NSStringEncodingConversionOptions;
 
 char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 
+
 @interface NSString (NSData)
 
 - (NSStringEncoding) fastestEncoding;
@@ -99,7 +115,7 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 
 - (NSData *) _dataUsingEncoding:(NSStringEncoding) encoding
                   prefixWithBOM:(BOOL) withBOM
-              terminateWithZero:(BOOL)  withTerminatingZero;
+              terminateWithZero:(BOOL) withTerminatingZero;
 
 - (instancetype) initWithData:(NSData *) data
                      encoding:(NSUInteger) encoding;
@@ -119,7 +135,9 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 // for subclasses this is easier sometimes
 - (NSUInteger) lengthOfBytesUsingEncoding:(NSStringEncoding) encoding;
 
+//
 // the generic routine is slow
+//
 - (BOOL) getBytes:(void *) buffer
         maxLength:(NSUInteger) maxLength
        usedLength:(NSUInteger *) usedLength
@@ -130,8 +148,7 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 
 - (NSUInteger) lengthOfBytesUsingEncoding:(NSStringEncoding) encoding;
 
-#pragma mark -
-#pragma mark mulle additions
+#pragma mark - mulle additions
 
 + (instancetype) mulleStringWithData:(NSData *) data
                             encoding:(NSStringEncoding) encoding;
@@ -142,7 +159,7 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
                             sharingObject:(id) owner;
 
 - (instancetype) mulleInitWithDataNoCopy:(NSData *) s
-                            encoding:(NSStringEncoding) encoding;
+                                encoding:(NSStringEncoding) encoding;
 
 // why is this here ?
 - (instancetype) mulleInitWithUTF16Characters:(mulle_utf16_t *) chars

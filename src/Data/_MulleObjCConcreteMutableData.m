@@ -174,29 +174,59 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 }
 
 
-- (void *) mutableBytes
+- (NSUInteger) length
 {
-   size_t    length;
-   void      *bytes;
+   return( mulle_buffer_get_length( &_storage));
+}
 
-   bytes = mulle_buffer_get_bytes( &_storage);
-   if( bytes)
-      return( bytes);
 
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( mulle_buffer_get_bytes( &_storage),
+                             mulle_buffer_get_length( &_storage));
+   return( data);
+}
+
+
+static struct mulle_data   mulleGetMutableData( _MulleObjCConcreteMutableData *self)
+{
+   struct mulle_data   data;
+
+   data.bytes = mulle_buffer_get_bytes( &self->_storage);
+   if( data.bytes)
+   {
+      data.length = mulle_buffer_get_length( &self->_storage);
+      return( data);
+   }
    //
    // if initialized with capacity, now is the time
    // to setup the buffer. Not sure this delayed action is ever worth it
    // though
    //
-   length = mulle_buffer_get_capacity( &_storage);
-   mulle_buffer_set_length( &_storage, length);
-   return( mulle_buffer_get_bytes( &_storage));
+   data.length = mulle_buffer_get_capacity( &self->_storage);
+   mulle_buffer_set_length( &self->_storage, data.length);
+   data.bytes  = mulle_buffer_get_bytes( &self->_storage);
+   return( data);
 }
 
 
-- (NSUInteger) length
+- (void *) mutableBytes
 {
-   return( mulle_buffer_get_length( &_storage));
+   struct mulle_data   data;
+
+   data = mulleGetMutableData( self);
+   return( data.bytes);
+}
+
+
+- (struct mulle_data) mulleMutableData
+{
+   struct mulle_data   data;
+
+   data = mulleGetMutableData( self);
+   return( data);
 }
 
 

@@ -37,6 +37,10 @@
 #import "NSString.h"
 
 
+//
+// None of these routines are lenient, if the characters are not proper
+// UTF or ASCII. They will raise and exception.
+//
 @interface NSString( ClassCluster)
 
 - (instancetype) initWithCharacters:(unichar *) s
@@ -81,8 +85,26 @@
 
 @end
 
-NSString  *MulleObjCNewASCIIStringWithASCIICharacters( char *s,
-                                                       NSUInteger length);
-NSString  *MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
-                                                       NSUInteger length);
+NSString  *_MulleObjCNewASCIIStringWithASCIICharacters( char *s,
+                                                        NSUInteger length,
+                                                        struct _mulle_objc_universe *universe);
+NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
+                                                        NSUInteger length,
+                                                        struct _mulle_objc_universe *universe);
+
+
+static inline NSString  *
+   MulleObjCNewASCIIStringWithASCIICharacters( char *s,
+                                               NSUInteger length)
+{
+   return( _MulleObjCNewASCIIStringWithASCIICharacters( s, length, MulleObjCGetUniverse()));
+}
+
+
+static inline NSString  *
+   MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
+                                               NSUInteger length)
+{
+   return( _MulleObjCNewASCIIStringWithUTF32Characters( s, length, MulleObjCGetUniverse()));
+}
 

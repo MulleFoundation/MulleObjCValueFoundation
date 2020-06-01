@@ -43,6 +43,8 @@
 
 
 NSString  *MulleObjCTaggedPointerChar7StringWithASCIICharacters( char *s, NSUInteger length);
+NSString  *MulleObjCTaggedPointerChar7StringWithUTF16Characters( mulle_utf16_t *s, NSUInteger length);
+NSString  *MulleObjCTaggedPointerChar7StringWithCharacters( unichar *s, NSUInteger length);
 
 
 static inline NSString   *_MulleObjCTaggedPointerChar7StringFromValue( NSUInteger value)

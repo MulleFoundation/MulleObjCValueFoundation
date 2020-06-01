@@ -90,6 +90,15 @@ static inline void   *get_bytes( id self)
 
 - (NSUInteger) length { return( 8); }
 
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( get_bytes( self), 8);
+   return( data);
+}
+
+
 @end
 
 
@@ -105,6 +114,14 @@ static inline void   *get_bytes( id self)
 }
 
 - (NSUInteger) length { return( 16); }
+
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( get_bytes( self), 16);
+   return( data);
+}
 
 @end
 
@@ -153,6 +170,15 @@ static inline void   *get_bytes( id self)
 - (NSUInteger) length
 {
    return( _length);
+}
+
+
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( _storage, _length);
+   return( data);
 }
 
 
@@ -224,6 +250,16 @@ static inline void   *get_bytes( id self)
    return( _length + 1);
 }
 
+
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( _storage, _length + 1);
+   return( data);
+}
+
+
 @end
 
 
@@ -255,5 +291,15 @@ static inline void   *get_bytes( id self)
 {
    return( _length + 0x100 + 1);
 }
+
+
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( _storage, _length + 0x100 + 1);
+   return( data);
+}
+
 
 @end

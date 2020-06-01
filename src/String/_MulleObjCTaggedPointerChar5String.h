@@ -54,6 +54,8 @@
 
 
 NSString  *MulleObjCTaggedPointerChar5StringWithASCIICharacters( char *s, NSUInteger length);
+NSString  *MulleObjCTaggedPointerChar5StringWithUTF16Characters( mulle_utf16_t *s, NSUInteger length);
+NSString  *MulleObjCTaggedPointerChar5StringWithCharacters( unichar *s, NSUInteger length);
 
 
 static inline NSString   *_MulleObjCTaggedPointerChar5StringFromValue( NSUInteger value)

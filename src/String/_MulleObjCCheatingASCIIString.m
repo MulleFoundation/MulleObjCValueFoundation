@@ -34,6 +34,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #import "NSString.h"
+#import "NSString+ClassCluster.h"
 #import "_MulleObjCASCIIString.h"
 
 #import "_MulleObjCCheatingASCIIString.h"
@@ -54,11 +55,11 @@
 //
 // the only way to keep a cheating string
 //
-NSString  *MulleObjCNewASCIIStringWithASCIICharacters( char *s, NSUInteger length);
-
 - (id) copy
 {
-   return( MulleObjCNewASCIIStringWithASCIICharacters( _storage, _length));
+   return( _MulleObjCNewASCIIStringWithASCIICharacters( _storage,
+                                                        _length,
+                                                        MulleObjCObjectGetUniverse( self)));
 }
 
 

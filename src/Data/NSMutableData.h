@@ -72,6 +72,7 @@
 - (void) increaseLengthBy:(NSUInteger) extraLength;
 
 - (void *) mutableBytes;
+- (struct mulle_data) mulleMutableData;
 - (void) resetBytesInRange:(NSRange) range;
 
 - (void) replaceBytesInRange:(NSRange) range

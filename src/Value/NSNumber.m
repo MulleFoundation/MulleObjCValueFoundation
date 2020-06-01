@@ -472,7 +472,7 @@ static inline id   initWithDouble( NSNumber *self, double value)
    //
    // Then the cast can not "overflow"
    //
-   if( value >= (double) -((1L<<52)+1) && value <= (double) ((1L<<52)+1))
+   if( value >= (double) -((1LL<<52)+1) && value <= (double) ((1LL<<52)+1))
    {
       ll_val = (long long) value;
       if( (double) ll_val == value)
@@ -495,7 +495,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    unsigned long long                          ull_val;
 
    // see comment above
-   if( value >= (double) -((1L<<52)+1) && value <= (double) ((1L<<52)+1))
+   if( value >= (double) -((1LL<<52)+1) && value <= (double) ((1LL<<52)+1))
    {
       ll_val = (long long) value;
       if( (long double) ll_val == value)

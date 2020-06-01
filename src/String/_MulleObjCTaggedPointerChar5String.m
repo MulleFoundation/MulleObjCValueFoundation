@@ -63,11 +63,37 @@ NSString  *MulleObjCTaggedPointerChar5StringWithASCIICharacters( char *s, NSUInt
 {
    uintptr_t   value;
 
+   assert( length);
    assert( [_MulleObjCTaggedPointerChar5String isTaggedPointerEnabled]);
 
    value = mulle_char5_encode( s, (size_t) length);
    return( _MulleObjCTaggedPointerChar5StringFromValue( value));
 }
+
+
+NSString  *MulleObjCTaggedPointerChar5StringWithUTF16Characters( mulle_utf16_t *s, NSUInteger length)
+{
+   uintptr_t   value;
+
+   assert( length);
+   assert( [_MulleObjCTaggedPointerChar5String isTaggedPointerEnabled]);
+
+   value = mulle_char5_encode_utf16( s, (size_t) length);
+   return( _MulleObjCTaggedPointerChar5StringFromValue( value));
+}
+
+
+NSString  *MulleObjCTaggedPointerChar5StringWithCharacters( unichar *s, NSUInteger length)
+{
+   uintptr_t   value;
+
+   assert( length);
+   assert( [_MulleObjCTaggedPointerChar5String isTaggedPointerEnabled]);
+
+   value = mulle_char5_encode_utf32( s, (size_t) length);
+   return( _MulleObjCTaggedPointerChar5StringFromValue( value));
+}
+
 
 
 static inline NSUInteger  MulleObjCTaggedPointerChar5StringGetLength( _MulleObjCTaggedPointerChar5String *self)
@@ -102,86 +128,51 @@ static inline NSUInteger  MulleObjCTaggedPointerChar5StringGetLength( _MulleObjC
 }
 
 
-struct buffer
+static NSUInteger   grab_utf8( id self, NSUInteger length, mulle_utf8_t *dst, NSRange range)
 {
-   char     *s;
-   size_t   n;
-};
+   uintptr_t      value;
+   mulle_utf8_t   tmp[ mulle_char5_maxlength64];
 
-
-//
-// len will be #bytes
-//
-static void  buffer_add( struct buffer *p, void *bytes, size_t len)
-{
-   memcpy( &p->s[ p->n], bytes, len);
-   p->n += len;
-}
-
-
-static void   grab_utf8( id self,
-                         NSUInteger len,
-                         mulle_utf8_t *dst,
-                         NSRange range)
-{
-   uintptr_t   value;
+   assert( length <= mulle_char5_maxlength64);
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   range = MulleObjCValidateRangeAgainstLength( range, len);
-
+   range = MulleObjCValidateRangeAgainstLength( range, length);
    value = _MulleObjCTaggedPointerChar5ValueFromString( self);
    if( range.location)
    {
-      mulle_utf8_t   buf[ len];
-
-      mulle_char5_decode( value, (char *) buf, len);
-      memcpy( dst, &buf[ range.location], range.length);
-      return;
+      mulle_char5_decode( value, (char *) tmp, length);
+      memcpy( dst, &tmp[ range.location], range.length);
+      return( range.length);
    }
 
    mulle_char5_decode( value, (char *) dst, range.length);
-}
-
-
-static void   grab_utf32( id self,
-                          NSUInteger len,
-                          mulle_utf32_t *dst,
-                          NSRange range)
-{
-   mulle_utf8_t    buf[ len];
-   struct buffer   ctxt;
-
-   grab_utf8( self, len, buf, range);
-
-   ctxt.s = (char *) dst;
-   ctxt.n = 0;
-
-   mulle_utf8_bufferconvert_to_utf32( buf, range.length, &ctxt, (void (*)()) buffer_add);
+   return( range.length);
 }
 
 
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {
-   grab_utf32( self,
-               MulleObjCTaggedPointerChar5StringGetLength( self),
-               buf,
-               range);
+   NSUInteger      length;
+   NSUInteger      value;
+   mulle_utf8_t    tmp[ mulle_char5_maxlength64];
+
+   length = MulleObjCTaggedPointerChar5StringGetLength( self);
+   length = grab_utf8( self, length, tmp, range);
+   _mulle_utf8_convert_to_utf32( tmp, length, buf);
 }
 
 
-- (void) mulleGetUTF8Characters:(mulle_utf8_t *) buf
-                  maxLength:(NSUInteger) maxLength
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
 {
    NSUInteger   length;
 
    length = MulleObjCTaggedPointerChar5StringGetLength( self);
    if( length > maxLength)
       length = maxLength;
-   grab_utf8( self,
-              length,
-              buf,
-              NSMakeRange( 0, length));
+   length = grab_utf8( self, length, buf, NSMakeRange( 0, length));
+   return( length);
 }
 
 
@@ -190,15 +181,19 @@ static void   grab_utf32( id self,
 - (NSUInteger) hash
 {
    uintptr_t   value;
+   uintptr_t   hash;
 
    value = _MulleObjCTaggedPointerChar5ValueFromString( self);
-   return( _mulle_char5_fnv1a( value));
+   hash  = _mulle_char5_fnv1a( value);
+   // hash  = (hash << 4) | (hash >> (sizeof( uintptr_t) * 8 - 4));
+   return( (NSUInteger) hash);
 }
 
 
 - (BOOL) isEqualToString:(NSString *) other
 {
    NSUInteger     length;
+   NSUInteger     otherLength;
    mulle_utf8_t   *ours;
    mulle_utf8_t   *theirs;
    uintptr_t      value;
@@ -208,20 +203,23 @@ static void   grab_utf32( id self,
    if( self == other)
       return( YES);
 
-   value  = _MulleObjCTaggedPointerChar5ValueFromString( self);
-   length = (NSUInteger) mulle_char5_strlen( value);
+   value       = _MulleObjCTaggedPointerChar5ValueFromString( self);
+   length      = (NSUInteger) mulle_char5_strlen( value);
+   otherLength = [other length];
 
-   if( length != [other length])
+   if( length != otherLength)
       return( NO);
 
    {
-      mulle_utf8_t   buf[ length];  // 64 bit can hold 64 / 7 = chars
+      mulle_utf8_t   buf[ mulle_char5_maxlength64 * 4];
+                                   // other is known to have same length
+                                   // and each unichar canexpand into 4 chars
 
       [other mulleGetUTF8Characters:buf
-                          maxLength:length];
+                          maxLength:sizeof( buf)];
       for( i = 0; i < length; i++)
       {
-         c = mulle_char5_get( value, i);
+         c = mulle_char5_next( &value);
          if( c != buf[ i])
             return( NO);
       }
@@ -238,15 +236,12 @@ static void   grab_utf32( id self,
 
 - (char *) UTF8String
 {
-   NSUInteger      len;
+   NSUInteger      length;
    mulle_utf8_t    *s;
 
-   len  = MulleObjCTaggedPointerChar5StringGetLength( self);
-   s    = MulleObjCCallocAutoreleased( len + 1, sizeof( mulle_utf8_t));
-   grab_utf8( self,
-              len,
-              s,
-              NSMakeRange( 0, len));
+   length  = MulleObjCTaggedPointerChar5StringGetLength( self);
+   s       = MulleObjCCallocAutoreleased( length + 1, sizeof( mulle_utf8_t));
+   grab_utf8( self, length, s, NSMakeRange( 0, length));
    return( (char *) s);
 }
 

@@ -35,7 +35,9 @@ set( PUBLIC_HEADERS
 src/Data/_MulleObjCConcreteMutableData.h
 src/Data/_MulleObjCDataSubclasses.h
 src/Data/NSData+NSCoder.h
+src/Data/NSData+Unicode.h
 src/Data/NSData.h
+src/Data/NSMutableData+Unicode.h
 src/Data/NSMutableData.h
 src/MulleObjCLoader+MulleObjCValueFoundation.h
 src/MulleObjCValueFoundation.h
@@ -46,6 +48,7 @@ src/String/_MulleObjCTaggedPointerChar7String.h
 src/String/_MulleObjCUTF16String.h
 src/String/_MulleObjCUTF32String.h
 src/String/NSConstantString.h
+src/String/NSMutableData+NSString.h
 src/String/NSMutableString.h
 src/String/NSObject+NSString.h
 src/String/NSString+ClassCluster.h

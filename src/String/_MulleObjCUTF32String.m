@@ -49,15 +49,8 @@
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 
 
-@interface _MulleObjCUTF32String ( Future)
-
-// these are **not** zero terminated
-- (mulle_utf32_t *) _fastUTF32Characters;
-
-@end
-
-
 @implementation _MulleObjCUTF32String
+
 
 - (NSUInteger) length
 {
@@ -65,29 +58,33 @@
 }
 
 
-- (NSUInteger) _UTF32StringLength
-{
-   return( _length);
-}
-
-
 - (NSUInteger) mulleUTF8StringLength
 {
-   return( mulle_utf32_utf8length( [self _fastUTF32Characters], _length));
+   struct mulle_utf32_data   data;
+   BOOL                      flag;
+
+   flag = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
+   return( mulle_utf32_utf8length( data.characters, data.length));
 }
 
 
 - (char *) UTF8String
 {
-   struct mulle_buffer  buf;
+   struct mulle_buffer       buf;
+   struct mulle_utf32_data   data;
+   BOOL                      flag;
 
    if( ! _shadow)
    {
+      flag = [self mulleFastGetUTF32Data:&data];
+      assert( flag);
+
       mulle_buffer_init( &buf, MulleObjCInstanceGetAllocator( self));
-      mulle_utf32_bufferconvert_to_utf8( [self _fastUTF32Characters],
-                                         [self _UTF32StringLength],
+      mulle_utf32_bufferconvert_to_utf8( data.characters,
+                                         data.length,
                                          &buf,
-                                         (void (*)()) mulle_buffer_add_bytes);
+                                         (mulle_utf_add_bytes_function_t) mulle_buffer_add_bytes);
 
       mulle_buffer_add_byte( &buf, 0);
       _shadow = mulle_buffer_extract_all( &buf);
@@ -97,31 +94,44 @@
 }
 
 
-static void   grab_utf32( id self,
-                          SEL sel,
-                          mulle_utf32_t *storage,
-                          NSUInteger length,
-                          mulle_utf32_t *dst,
-                          NSRange range)
-{
-   // check both because of overflow range.length == (unsigned) -1 f.e.
-   range = MulleObjCValidateRangeAgainstLength( range, length);
-
-   memcpy( dst, &storage[ range.location], range.length * sizeof( mulle_utf32_t));
-}
-
-
-
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {
-   grab_utf32( self,
-               _cmd,
-               [self _fastUTF32Characters],
-               [self length],
-               buf,
-               range);
+   struct mulle_utf32_data   data;
+   BOOL                      flag;
+
+   flag = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
+
+   // check both because of overflow range.length == (unsigned) -1 f.e.
+   range = MulleObjCValidateRangeAgainstLength( range, data.length);
+   memcpy( buf, &data.characters[ range.location], range.length * sizeof( mulle_utf32_t));
 }
+
+
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+{
+   struct mulle_utf8_conversion_context   ctxt;
+   struct mulle_utf32_data                data;
+   BOOL                                   flag;
+
+   flag = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
+
+   ctxt.buf      = buf;
+   ctxt.sentinel = &buf[ maxLength];
+
+   mulle_utf32_bufferconvert_to_utf8( data.characters,
+                                      data.length,
+                                      &ctxt,
+                                      mulle_utf8_conversion_context_add_bytes);
+   if( ctxt.buf > ctxt.sentinel)
+      MulleObjCThrowInvalidArgumentExceptionCString( "destination buffer too small");
+   assert( ! memchr( buf, 0, ctxt.buf - buf));
+   return( ctxt.buf - buf);
+}
+
 
 
 - (void) dealloc
@@ -134,17 +144,22 @@ static void   grab_utf32( id self,
 
 - (NSString *) substringWithRange:(NSRange) range
 {
-   mulle_utf32_t   *s;
-   NSUInteger      length;
+   mulle_utf32_t             *s;
+   NSUInteger                length;
+   struct mulle_utf32_data   data;
+   BOOL                      flag;
 
-   length = [self length];
-   range = MulleObjCValidateRangeAgainstLength( range, length);
+   flag = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
 
-   s = [self _fastUTF32Characters];
-   assert( s);
+   range  = MulleObjCValidateRangeAgainstLength( range, data.length);
+   if( range.length == data.length)
+      return( self);
 
-   s = &s[ range.location];
+   if( ! range.length)
+      return( @"");
 
+   s = &data.characters[ range.location];
    return( [[_MulleObjCSharedUTF32String newWithUTF32CharactersNoCopy:s
                                                                length:range.length
                                                         sharingObject:self] autorelease]);
@@ -187,10 +202,19 @@ static void   grab_utf32( id self,
 }
 
 
-- (mulle_utf32_t *) _fastUTF32Characters
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) data
 {
-   return( _storage);
+   data->characters = _storage;
+   data->length     = _length;
+   return( YES);
 }
+
+
+- (NSUInteger) hash
+{
+   return( MulleObjCStringHashUTF32( _storage, _length));
+}
+
 
 @end
 
@@ -221,9 +245,17 @@ static void   grab_utf32( id self,
 }
 
 
-- (mulle_utf32_t *) _fastUTF32Characters
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) data
 {
-   return( _storage);
+   data->characters = _storage;
+   data->length     = _length;
+   return( YES);
+}
+
+
+- (NSUInteger) hash
+{
+   return( MulleObjCStringHashUTF32( _storage, _length));
 }
 
 
@@ -241,8 +273,8 @@ static void   grab_utf32( id self,
 @implementation _MulleObjCSharedUTF32String
 
 + (instancetype) newWithUTF32CharactersNoCopy:(mulle_utf32_t *) chars
-                                      length:(NSUInteger) length
-                               sharingObject:(id) sharingObject
+                                       length:(NSUInteger) length
+                                sharingObject:(id) sharingObject
 {
    _MulleObjCSharedUTF32String  *data;
 
@@ -265,9 +297,17 @@ static void   grab_utf32( id self,
 }
 
 
-- (mulle_utf32_t *) _fastUTF32Characters
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) data
 {
-   return( _storage);
+   data->characters = _storage;
+   data->length     = _length;
+   return( YES);
+}
+
+
+- (NSUInteger) hash
+{
+   return( MulleObjCStringHashUTF32( _storage, _length));
 }
 
 
