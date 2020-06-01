@@ -45,11 +45,6 @@
    NSUInteger     _length;
 }
 
-- (mulle_utf16_t *) _fastUTF16Characters;
-- (mulle_utf8_t *) mulleFastUTF8Characters;
-- (NSUInteger) _UTF16StringLength;
-- (mulle_utf8_t *) UTF8String;
-
 @end
 
 

@@ -117,7 +117,6 @@
 + (instancetype) newWithASCIICharactersNoCopy:(char *) chars
                                        length:(NSUInteger) length
                                     allocator:(struct mulle_allocator *) allocator;
-
 @end
 
 
@@ -130,7 +129,6 @@
 + (instancetype) newWithASCIICharactersNoCopy:(char *) chars
                                        length:(NSUInteger) length
                                 sharingObject:(id) sharingObject;
-
 @end
 
 
@@ -140,6 +138,5 @@
 + (instancetype) newWithZeroTerminatedASCIICharactersNoCopy:(char *) chars
                                                      length:(NSUInteger) length
                                                   allocator:(struct mulle_allocator *) allocator;
-
 @end
 

@@ -81,16 +81,20 @@
    return( _storage);
 }
 
-// the compiler may place UTF8 in here
-- (mulle_utf8_t *) mulleFastASCIICharacters
+// the compiler may NOT place UTF8 chars into a NSConstantString
+- (BOOL) mulleFastGetASCIIData:(struct mulle_utf8_data *) space
 {
-   return( NULL);
+   space->characters = (mulle_utf8_t *) _storage;
+   space->length     = _length;
+   return( YES);
 }
 
 
-- (mulle_utf8_t *) mulleFastUTF8Characters
+- (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8_data *) space
 {
-   return( (mulle_utf8_t *) _storage);
+   space->characters = (mulle_utf8_t *) _storage;
+   space->length     = _length;
+   return( YES);
 }
 
 

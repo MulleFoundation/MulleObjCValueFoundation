@@ -436,4 +436,13 @@ static void   *mulle_memrmem( unsigned char *a, size_t a_len,
    return( 0);
 }
 
+
+- (struct mulle_data) mulleData
+{
+   struct mulle_data   data;
+
+   data = mulle_data_make( 0, 0);
+   return( data);
+}
+
 @end

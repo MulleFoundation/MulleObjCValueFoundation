@@ -105,6 +105,7 @@ typedef mulle_utf32_t  unichar;
 - (NSInteger) integerValue;
 - (BOOL) boolValue;
 
+- (BOOL) isEqualToString:(NSString *) other;
 
 //
 // UTF32
@@ -131,8 +132,19 @@ typedef mulle_utf32_t  unichar;
 @interface NSString( MulleAdditions)
 
 - (NSUInteger) mulleUTF8StringLength;
-- (mulle_utf8_t *) mulleFastASCIICharacters;  // known 7 bit only
-- (mulle_utf8_t *) mulleFastUTF8Characters;
+
+// returns NO, if ASCII data could not be provided. You will get pointers
+// into private memory, which is not necessarily 0 terminated
+- (BOOL) mulleFastGetASCIIData:(struct mulle_utf8_data *) space;
+
+// returns NO, if UTF8 data can not be provided w/o conversion.
+// You will get pointers into private memory, which is not necessarily
+// 0 terminated.
+
+- (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8_data *) space;
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16_data *) space;
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) space;
+
 
 + (instancetype) mulleStringWithCharactersNoCopy:(unichar *) s
                                           length:(NSUInteger) len
@@ -144,7 +156,6 @@ typedef mulle_utf32_t  unichar;
 + (instancetype) mulleStringWithStrings:(NSString *) s, ...;
 + (instancetype) mulleStringWithString:(NSString *) s
                       mulleVarargList:(mulle_vararg_list) args;
-
 
 //
 // UTF8
@@ -175,8 +186,8 @@ typedef mulle_utf32_t  unichar;
 
 - (void) getCharacters:(unichar *) buffer
                  range:(NSRange) range;
-- (void) mulleGetUTF8Characters:(mulle_utf8_t *) buffer
-                      maxLength:(NSUInteger) length;
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buffer
+                            maxLength:(NSUInteger) length;
 
 @end
 
@@ -222,22 +233,80 @@ static inline NSRange   MulleObjCGetHashStringRange( NSUInteger length)
    return( NSMakeRange( offset, length));
 }
 
-
-static inline NSUInteger   MulleObjCStringHashRange( void *buf, NSRange range)
+// the
+static inline NSUInteger   _mulle_fnv1a_utf8( mulle_utf8_t *buf, size_t len)
 {
-   if( ! buf)
-      return( -1);
-   return( _mulle_objc_fnv1a( &((char *)buf)[ range.location], range.length));
+   return( _mulle_objc_fnv1a( buf, len));
 }
 
 
+uintptr_t   _mulle_fnv1a_utf16( mulle_utf16_t *buf, size_t len);
+uintptr_t   _mulle_fnv1a_utf32( mulle_utf32_t *buf, size_t len);
 
-static inline NSUInteger   MulleObjCStringHash( mulle_utf8_t *buf, NSUInteger length)
+
+static inline NSUInteger   MulleObjCStringHashRangeUTF8( mulle_utf8_t *buf, NSRange range)
+{
+   uintptr_t   hash;
+
+   if( ! buf)
+      return( -1);
+   hash  = _mulle_fnv1a_utf8( &buf[ range.location], range.length);
+   // hash = (hash << 4) | (hash >> (sizeof( uintptr_t) * 8 - 4));
+   return( (NSUInteger) hash);
+}
+
+
+static inline NSUInteger   MulleObjCStringHashRangeUTF16( mulle_utf16_t *buf, NSRange range)
+{
+   uintptr_t   hash;
+
+   if( ! buf)
+      return( -1);
+   hash = _mulle_fnv1a_utf16( &buf[ range.location], range.length);
+   // hash = (hash << 4) | (hash >> (sizeof( uintptr_t) * 8 - 4));
+   return( (NSUInteger) hash);
+}
+
+
+static inline NSUInteger   MulleObjCStringHashRangeUTF32( mulle_utf32_t *buf, NSRange range)
+{
+   uintptr_t   hash;
+
+   if( ! buf)
+      return( -1);
+   hash = _mulle_fnv1a_utf32( &buf[ range.location], range.length);
+   // hash = (hash << 4) | (hash >> (sizeof( uintptr_t) * 8 - 4));
+   return( (NSUInteger) hash);
+}
+
+
+static inline NSUInteger   MulleObjCStringHashUTF8( mulle_utf8_t *buf, NSUInteger length)
 {
    NSRange   range;
 
    range = MulleObjCGetHashStringRange( length);
-   return( MulleObjCStringHashRange( buf, range));
+   return( MulleObjCStringHashRangeUTF8( buf, range));
 }
 
+
+static inline NSUInteger   MulleObjCStringHashUTF16( mulle_utf16_t *buf, NSUInteger length)
+{
+   NSRange   range;
+
+   range = MulleObjCGetHashStringRange( length);
+   return( MulleObjCStringHashRangeUTF16( buf, range));
+}
+
+
+static inline NSUInteger   MulleObjCStringHashUTF32( mulle_utf32_t *buf, NSUInteger length)
+{
+   NSRange   range;
+
+   range = MulleObjCGetHashStringRange( length);
+   return( MulleObjCStringHashRangeUTF32( buf, range));
+}
+
+
+// a safe version to get converted or raw UTF8 characters from a string
+struct mulle_utf8_data  NSStringGetUTF8Data( NSString *self);
 

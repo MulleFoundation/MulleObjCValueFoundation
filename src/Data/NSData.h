@@ -1,4 +1,5 @@
 //
+//
 //  NSData.h
 //  MulleObjCValueFoundation
 //
@@ -106,5 +107,6 @@ enum
 
 - (NSUInteger) length;
 - (void *) bytes;
+- (struct mulle_data) mulleData;
 
 @end

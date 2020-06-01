@@ -1,9 +1,9 @@
 //
-//  MulleObjCFoundation.h
+//  NSMutableData+Unicode.m
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2016 Codeon GmbH.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2020 Codeon GmbH.
 //  All rights reserved.
 //
 //
@@ -33,42 +33,21 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
+// prefer a local NSMutableData over one in import.h
+#ifdef __has_include
+# if __has_include( "NSMutableData.h")
+#  import "NSMutableData.h"
+# endif
+#endif
 
+// we wan't "import.h" always anyway
 #import "import.h"
 
-// keep this in sync with MULLE_OBJC_VERSION, else pain! (why ?)
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (17 << 8) | 2)
 
-#import "NSData+NSCoder.h"
-#import "NSData.h"
-#import "NSData+Unicode.h"
-#import "NSDate+NSCoder.h"
-#import "NSDate.h"
-#import "NSDateFactory.h"
-#import "NSLock+NSDate.h"
-#import "NSMutableData.h"
-#import "NSMutableData+NSString.h"
-#import "NSMutableData+Unicode.h"
-#import "NSMutableString.h"
-#import "NSNull.h"
-#import "NSNumber+NSCoder.h"
-#import "NSNumber+NSString.h"
-#import "NSNumber.h"
-#import "NSObject+NSString.h"
-#import "NSString+ClassCluster.h"
-#import "NSString+NSCoder.h"
-#import "NSString+NSData.h"
-#import "NSString+Sprintf.h"
-#import "NSString.h"
-#import "NSStringObjCFunctions.h"
-#import "NSThread+NSDate.h"
-#import "NSValue+NSCoder.h"
-#import "NSValue.h"
+@interface NSMutableData( Unicode)
 
-#import "mulle_sprintf_object.h"
 
-#import "MulleObjCLoader+MulleObjCValueFoundation.h"
+- (void) mulleSwapUTF16Characters;
+- (void) mulleSwapUTF32Characters;
 
-#if MULLE_OBJC_VERSION < ((0 << 20) | (14 << 8) | 0)
-# error "MulleObjC is too old"
-#endif
+@end

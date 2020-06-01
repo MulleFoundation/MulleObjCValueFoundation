@@ -67,7 +67,6 @@
 + (instancetype) newWithUTF32CharactersNoCopy:(mulle_utf32_t *) chars
                                        length:(NSUInteger) length
                                     allocator:(struct mulle_allocator *) allocator;
-
 @end
 
 

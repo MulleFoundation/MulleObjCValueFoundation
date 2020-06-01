@@ -1,9 +1,9 @@
 //
-//  MulleObjCFoundation.h
+//  NSMutableData+Unicode.m
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2016 Codeon GmbH.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2020 Codeon GmbH.
 //  All rights reserved.
 //
 //
@@ -33,42 +33,48 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
-#import "import.h"
-
-// keep this in sync with MULLE_OBJC_VERSION, else pain! (why ?)
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (17 << 8) | 2)
-
-#import "NSData+NSCoder.h"
-#import "NSData.h"
-#import "NSData+Unicode.h"
-#import "NSDate+NSCoder.h"
-#import "NSDate.h"
-#import "NSDateFactory.h"
-#import "NSLock+NSDate.h"
-#import "NSMutableData.h"
-#import "NSMutableData+NSString.h"
 #import "NSMutableData+Unicode.h"
-#import "NSMutableString.h"
-#import "NSNull.h"
-#import "NSNumber+NSCoder.h"
-#import "NSNumber+NSString.h"
-#import "NSNumber.h"
-#import "NSObject+NSString.h"
-#import "NSString+ClassCluster.h"
-#import "NSString+NSCoder.h"
-#import "NSString+NSData.h"
-#import "NSString+Sprintf.h"
-#import "NSString.h"
-#import "NSStringObjCFunctions.h"
-#import "NSThread+NSDate.h"
-#import "NSValue+NSCoder.h"
-#import "NSValue.h"
 
-#import "mulle_sprintf_object.h"
+#import "import-private.h"
 
-#import "MulleObjCLoader+MulleObjCValueFoundation.h"
 
-#if MULLE_OBJC_VERSION < ((0 << 20) | (14 << 8) | 0)
-# error "MulleObjC is too old"
-#endif
+
+@implementation NSMutableData( Unicode)
+
+- (void) mulleSwapUTF16Characters
+{
+   mulle_utf16_t        *p;
+   mulle_utf16_t        *buf;
+   mulle_utf16_t        *sentinel;
+   struct mulle_data    data;
+
+   data     = [self mulleMutableData];
+   p        = data.bytes;
+   sentinel = &p[ data.length / sizeof( mulle_utf16_t)];
+
+   while( p < sentinel)
+   {
+      *p = MulleObjCSwapUInt16( *p);
+      ++p;
+   }
+}
+
+
+- (void) mulleSwapUTF32Characters
+{
+   mulle_utf32_t        *p;
+   mulle_utf32_t        *sentinel;
+   struct mulle_data    data;
+
+   data     = [self mulleMutableData];
+   p        = data.bytes;
+   sentinel = &p[ data.length / sizeof( mulle_utf32_t)];
+
+   while( p < sentinel)
+   {
+      *p = MulleObjCSwapUInt32( *p);
+      ++p;
+   }
+}
+
+@end

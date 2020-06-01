@@ -37,6 +37,9 @@
 
 
 // named NSConstantString, because it's compatible...
+//
+// NSConstantString can not contain UTF8 characters though.
+//
 @interface NSConstantString : _MulleObjCASCIIString
 {
    char           *_storage;   // ivar #0:: must be defined EXACTLY like this

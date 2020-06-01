@@ -1,9 +1,9 @@
 //
-//  MulleObjCFoundation.h
-//  MulleObjCValueFoundation
+//  NSData+Unicode.h
+//  MulleObjCStandardFoundation
 //
-//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2016 Codeon GmbH.
+//  Copyright (c) 2011 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2011 Codeon GmbH.
 //  All rights reserved.
 //
 //
@@ -33,42 +33,22 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
-#import "import.h"
-
-// keep this in sync with MULLE_OBJC_VERSION, else pain! (why ?)
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (17 << 8) | 2)
-
-#import "NSData+NSCoder.h"
 #import "NSData.h"
-#import "NSData+Unicode.h"
-#import "NSDate+NSCoder.h"
-#import "NSDate.h"
-#import "NSDateFactory.h"
-#import "NSLock+NSDate.h"
-#import "NSMutableData.h"
-#import "NSMutableData+NSString.h"
-#import "NSMutableData+Unicode.h"
-#import "NSMutableString.h"
-#import "NSNull.h"
-#import "NSNumber+NSCoder.h"
-#import "NSNumber+NSString.h"
-#import "NSNumber.h"
-#import "NSObject+NSString.h"
-#import "NSString+ClassCluster.h"
-#import "NSString+NSCoder.h"
-#import "NSString+NSData.h"
-#import "NSString+Sprintf.h"
-#import "NSString.h"
-#import "NSStringObjCFunctions.h"
-#import "NSThread+NSDate.h"
-#import "NSValue+NSCoder.h"
-#import "NSValue.h"
 
-#import "mulle_sprintf_object.h"
+typedef enum
+{
+   _MulleObjCNoByteOrderMark,
+   _MulleObjCUTF8ByteOrderMark,
+   _MulleObjCUTF16LittleEndianByteOrderMark,
+   _MulleObjCUTF16BigEndianByteOrderMark
+} _MulleObjCByteOrderMark;
 
-#import "MulleObjCLoader+MulleObjCValueFoundation.h"
 
-#if MULLE_OBJC_VERSION < ((0 << 20) | (14 << 8) | 0)
-# error "MulleObjC is too old"
-#endif
+@interface NSData( Unicode)
+
+- (_MulleObjCByteOrderMark) _byteOrderMark;
+- (NSData *) mulleConvertedUTF16ToUTF8Data;
+- (NSData *) mulleSwappedUTF16CharacterData;
+- (NSData *) mulleSwappedUTF32CharacterData;
+
+@end

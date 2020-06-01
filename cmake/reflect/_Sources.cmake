@@ -9,7 +9,9 @@ set( SOURCES
 src/Data/_MulleObjCConcreteMutableData.m
 src/Data/_MulleObjCDataSubclasses.m
 src/Data/NSData+NSCoder.m
+src/Data/NSData+Unicode.m
 src/Data/NSData.m
+src/Data/NSMutableData+Unicode.m
 src/Data/NSMutableData.m
 src/String/_MulleObjCASCIIString.m
 src/String/_MulleObjCCheatingASCIIString.m
@@ -20,6 +22,7 @@ src/String/_MulleObjCUTF32String.m
 src/String/NSConstantString.m
 src/String/NSData+NSString.m
 src/String/NSMethodSignature+NSString.m
+src/String/NSMutableData+NSString.m
 src/String/NSMutableString+NSData.m
 src/String/NSMutableString.m
 src/String/NSObject+NSString.m
