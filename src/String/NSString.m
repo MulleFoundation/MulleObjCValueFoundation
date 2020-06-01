@@ -575,6 +575,8 @@ static void   grab_utf8( mulle_utf8_t *storage,
 
 - (BOOL) isEqual:(id) other
 {
+   if( self == other)
+      return( YES);
    if( ! [other __isNSString])
       return( NO);
    return( [self isEqualToString:other]);
@@ -583,22 +585,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 
 - (BOOL) isEqualToString:(NSString *) other
 {
-   NSUInteger               len;
-//   mulle_utf8_t             *ours;
-//   mulle_utf8_t             *theirs;
-//   struct mulle_utf8_data   data;
-//   struct mulle_utf8_data   otherData;
-
-   if( self == other)
-      return( YES);
-
-// runs faster without this
-//   if( [self mulleFastGetUTF8Data:&data] && [other mulleFastGetUTF8Data:&otherData])
-//   {
-//      if( data.length != otherData.length)
-//         return( NO);
-//      return( ! memcmp( data.characters, otherData.characters, data.length));
-//   }
+   NSUInteger   len;
 
    len = [self length];
    if( len != [other length])
