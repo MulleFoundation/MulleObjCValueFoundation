@@ -33,14 +33,14 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #import "NSString.h"
+
+// other files in this library
 #import "_MulleObjCTaggedPointerChar5String.h"
+//#import "NSMutableData.h"
 
-#import "NSMutableData.h"
-
+// std-c and dependencies
 #import "import-private.h"
-
 #include <assert.h>
 
 
@@ -199,10 +199,12 @@ static NSUInteger   grab_utf8( id self, NSUInteger length, mulle_utf8_t *dst, NS
    uintptr_t      value;
    unsigned int   i;
    mulle_utf8_t   c;
+   mulle_utf8_t   buf[ mulle_char5_maxlength64 * 4];
 
-   if( self == other)
-      return( YES);
-
+   //
+   // Out main concern is isEqual: and we don't want to duplicate the == other
+   // test here
+   //
    value       = _MulleObjCTaggedPointerChar5ValueFromString( self);
    length      = (NSUInteger) mulle_char5_strlen( value);
    otherLength = [other length];
@@ -210,19 +212,16 @@ static NSUInteger   grab_utf8( id self, NSUInteger length, mulle_utf8_t *dst, NS
    if( length != otherLength)
       return( NO);
 
-   {
-      mulle_utf8_t   buf[ mulle_char5_maxlength64 * 4];
-                                   // other is known to have same length
-                                   // and each unichar canexpand into 4 chars
+  // other is known to have same length
+  // and each unichar can expand into 4 chars max
 
-      [other mulleGetUTF8Characters:buf
-                          maxLength:sizeof( buf)];
-      for( i = 0; i < length; i++)
-      {
-         c = mulle_char5_next( &value);
-         if( c != buf[ i])
-            return( NO);
-      }
+   [other mulleGetUTF8Characters:buf
+                       maxLength:sizeof( buf)];
+   for( i = 0; i < length; i++)
+   {
+      c = mulle_char5_next( &value);
+      if( c != buf[ i])
+         return( NO);
    }
    return( YES);
 }

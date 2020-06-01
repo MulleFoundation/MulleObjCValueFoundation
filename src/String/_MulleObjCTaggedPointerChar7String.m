@@ -33,7 +33,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #import "NSString.h"
 
 // other files in this library
@@ -197,9 +196,7 @@ static NSUInteger   grab_utf8( id self,
    uintptr_t      value;
    unsigned int   i;
    mulle_utf8_t   c;
-
-   if( self == other)
-      return( YES);
+   mulle_utf8_t   buf[ mulle_char7_maxlength64 * 4];
 
    value       = _MulleObjCTaggedPointerChar7ValueFromString( self);
    length      = (NSUInteger) mulle_char7_strlen( value);
@@ -207,19 +204,16 @@ static NSUInteger   grab_utf8( id self,
    if( length != otherLength)
       return( NO);
 
-   {
-      mulle_utf8_t   buf[ mulle_char7_maxlength64 * 4];
-                                   // other is known to have same length
-                                   // and each unichar canexpand into 4 chars
-      [other mulleGetUTF8Characters:buf
-                          maxLength:sizeof( buf)];
+   // other is known to have same length
+   // and each unichar canexpand into 4 chars max
+   [other mulleGetUTF8Characters:buf
+                       maxLength:sizeof( buf)];
 
-      for( i = 0; i < length; i++)
-      {
-         c = mulle_char7_next( &value);
-         if( c != buf[ i])
-            return( NO);
-      }
+   for( i = 0; i < length; i++)
+   {
+      c = mulle_char7_next( &value);
+      if( c != buf[ i])
+         return( NO);
    }
    return( YES);
 }
