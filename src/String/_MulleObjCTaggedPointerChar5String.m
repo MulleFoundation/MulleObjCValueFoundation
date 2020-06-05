@@ -95,14 +95,14 @@ NSString  *MulleObjCTaggedPointerChar5StringWithCharacters( unichar *s, NSUInteg
 }
 
 
-
-static inline NSUInteger  MulleObjCTaggedPointerChar5StringGetLength( _MulleObjCTaggedPointerChar5String *self)
+static inline NSUInteger
+   MulleObjCTaggedPointerChar5StringGetLength( _MulleObjCTaggedPointerChar5String *self)
 {
    uintptr_t    value;
    NSUInteger   length;
 
    value  = _MulleObjCTaggedPointerChar5ValueFromString( self);
-   length = (NSUInteger) mulle_char5_strlen( value);
+   length = (NSUInteger) mulle_char5_fstrlen( value);
    return( length);
 }
 
@@ -126,6 +126,21 @@ static inline NSUInteger  MulleObjCTaggedPointerChar5StringGetLength( _MulleObjC
 
    return( (unichar) mulle_char5_get( value, (unsigned int) index));
 }
+
+- (unichar) :(NSUInteger) index
+{
+   uintptr_t    value;
+   NSUInteger   length;
+
+   value  = _MulleObjCTaggedPointerChar5ValueFromString( self);
+   length = (NSUInteger) mulle_char5_strlen( value);
+
+   if( index >= length)
+      MulleObjCThrowInvalidIndexException( index);
+
+   return( (unichar) mulle_char5_get( value, (unsigned int) index));
+}
+
 
 
 static NSUInteger   grab_utf8( id self, NSUInteger length, mulle_utf8_t *dst, NSRange range)

@@ -162,8 +162,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 }
 
 
-#pragma mark -
-#pragma mark accessors
+#pragma mark - accessors
 
 - (void *) bytes
 {
@@ -230,8 +229,7 @@ static struct mulle_data   mulleGetMutableData( _MulleObjCConcreteMutableData *s
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 - (void) appendBytes:(void *) bytes
               length:(NSUInteger) length

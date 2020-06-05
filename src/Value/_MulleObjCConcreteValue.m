@@ -47,7 +47,7 @@
 @implementation _MulleObjCConcreteValue
 
 + (instancetype) mulleNewWithBytes:(void *) bytes
-                     objCType:(char *) type
+                          objCType:(char *) type
 {
    _MulleObjCConcreteValue   *value;
    NSUInteger                extra;
@@ -82,9 +82,21 @@
 
 #pragma mark - hash and equality
 
+//
+// The hash is incompatible with NSNumber
+//
 - (NSUInteger) hash
 {
-   return( mulle_hash( _MulleObjCConcreteValueBytes( self), _size));
+   NSUInteger   size;
+   void         *bytes;
+
+   bytes = _MulleObjCConcreteValueBytes( self);
+   size  = _size;
+
+   if( size > 64)
+      size = 64;
+
+   return( MulleObjCBytesHash( bytes, size));
 }
 
 

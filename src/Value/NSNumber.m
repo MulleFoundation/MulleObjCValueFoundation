@@ -75,6 +75,11 @@
    return( YES);
 }
 
+// it's a subclass, yet not a NSValue because of different hash and isEqual:
+- (BOOL) __isNSValue
+{
+   return( NO);
+}
 
 
 #pragma mark - class cluster support
@@ -256,6 +261,7 @@ static inline id   initWithInteger( NSNumber *self,
    return( initWithInt64( self, (int64_t) value));
 }
 
+
 static inline id   initWithLongLong( NSNumber *self,
                                     long long  value)
 {
@@ -265,7 +271,6 @@ static inline id   initWithLongLong( NSNumber *self,
       return( initWithInt32( self, (int32_t) value));
    return( initWithInt64( self, (int64_t) value));
 }
-
 
 
 # pragma signed init methods
@@ -307,8 +312,7 @@ static inline id   initWithLongLong( NSNumber *self,
 
 
 
-#pragma mark -
-#pragma mark unsigned init
+#pragma mark - unsigned init
 
 static inline id   initWithUnsignedChar( NSNumber *self,
                                          unsigned char value)
@@ -528,8 +532,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 }
 
 
-#pragma mark -
-#pragma mark NSValue init
+#pragma mark - NSValue init
 
 
 - (instancetype) initWithBytes:(void *) value
@@ -662,8 +665,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 /*
  * this compare: "properly" promotes all comparisons to unsigned
@@ -854,12 +856,46 @@ bail:
 
 #pragma mark - hash and equality
 
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualDefault);
+}
+
+
 // NSNumbers are NSValues so don't do isEqual: or hash
 
-- (BOOL) isEqualToNumber:(NSNumber *) other
+- (BOOL) isEqual:(id) other
 {
    if( self == other)
       return( YES);
+   if( ! [other __isNSNumber])
+      return( NO);
+   return( [self isEqualToNumber:other]);
+}
+
+
+- (BOOL) isEqualToNumber:(NSNumber *) other
+{
+   enum MulleNumberIsEqualType   myType;
+   enum MulleNumberIsEqualType   otherType;
+
+   myType    = [self __mulleIsEqualType];
+   otherType = [other __mulleIsEqualType];
+   if( myType != MulleNumberIsEqualDefault && otherType != MulleNumberIsEqualDefault)
+   {
+      /* exploit that we "unique" numbers */
+      if( myType != otherType)
+         return( NO);
+
+      switch( myType)
+      {
+      case MulleNumberIsEqualLongLong   :
+         return( [self longLongValue] == [other longLongValue]);
+      case MulleNumberIsEqualLongDouble :
+         return( [self longDoubleValue] == [other longDoubleValue]);
+      }
+   }
+
    return( [other compare:self] == NSOrderedSame);
 }
 
@@ -870,9 +906,7 @@ bail:
 }
 
 
-
-#pragma mark -
-#pragma mark value conversion from primitives
+#pragma mark - value conversion from primitives
 
 - (BOOL) boolValue
 {

@@ -38,6 +38,11 @@
 // other files in this library
 #import "NSString+ClassCluster.h"
 #import "NSString+Sprintf.h"
+#import "_MulleObjCUTF32String.h"
+#import "_MulleObjCTaggedPointerChar7String.h"
+#import "_MulleObjCTaggedPointerChar5String.h"
+
+// other library private stuff
 
 // std-c and dependencies
 #import "import-private.h"
@@ -89,11 +94,15 @@ static void   sizeStorageWithCount( NSMutableString *self, unsigned int count)
    if( self->_size < 4)
       self->_size = 4;
 
-   self->_storage = MulleObjCObjectReallocateNonZeroedMemory( self,  self->_storage, self->_size * sizeof( NSString *));
+   self->_storage = MulleObjCObjectReallocateNonZeroedMemory( self,
+                                                              self->_storage,
+                                                              self->_size * sizeof( NSString *));
 }
 
 
-static void   copyStringsAndComputeLength( NSMutableString *self, NSString **strings, unsigned int count)
+static void   copyStringsAndComputeLength( NSMutableString *self,
+                                           NSString **strings,
+                                           unsigned int count)
 {
    NSUInteger  i;
 
@@ -107,14 +116,18 @@ static void   copyStringsAndComputeLength( NSMutableString *self, NSString **str
 }
 
 
-static void   initWithStrings( NSMutableString *self, NSString **strings, unsigned int count)
+static void   initWithStrings( NSMutableString *self,
+                               NSString **strings,
+                               unsigned int count)
 {
    sizeStorageWithCount( self, count);
    copyStringsAndComputeLength( self, strings, count);
 }
 
 
-static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsigned int count)
+static void   shrinkWithStrings( NSMutableString *self,
+                                 NSString **strings,
+                                 unsigned int count)
 {
    autoreleaseStorageStrings( self);
    flush_shadow( self);
@@ -165,8 +178,7 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-#pragma mark -
-#pragma mark tedious code for all these NSString init calls
+#pragma mark - tedious code for all these NSString init calls
 
 
 // need to implement all MulleObjCCStringPlaceholder does
@@ -338,8 +350,7 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-#pragma mark -
-#pragma mark additional convenience constructors
+#pragma mark - additional convenience constructors
 
 + (instancetype) stringWithCapacity:(NSUInteger) capacity
 {
@@ -358,25 +369,57 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-#pragma mark -
-#pragma mark NSCopying
-
+#pragma mark - NSCopying
 
 - (id) copy
 {
-   char   *s;
+   char                     *s;
+   struct mulle_allocator   *allocator;
+   unichar                  *buf;
+   unichar                  tmp[ 64];
+
+   if( ! _length)
+      return( @"");
 
    // ez and cheap copy, use it
    if( self->_count == 1)
       return( (id) [self->_storage[ 0] copy]);
 
-   s = [self UTF8String];
-   return( (id) [[NSString alloc] initWithUTF8String:s]);
+   allocator = NULL;
+   buf       = tmp;
+   if( _length > 64)
+   {
+      allocator = MulleObjCInstanceGetAllocator( self);
+      buf       = mulle_allocator_malloc( allocator, _length * sizeof( unichar));
+   }
+   [self getCharacters:buf];
+
+   if( ! allocator)
+   {
+#ifdef __MULLE_OBJC_TPS__
+      switch( _mulle_utf32_charinfo( tmp, _length))
+      {
+      case mulle_utf_is_char7 :
+         return( MulleObjCTaggedPointerChar7StringWithCharacters( tmp,
+                                                                  _length));
+      case mulle_utf_is_char5 :
+         return( MulleObjCTaggedPointerChar5StringWithCharacters( tmp,
+                                                                  _length));
+      default :
+         break;
+      }
+#endif
+      return( [_MulleObjCGenericUTF32String newWithUTF32Characters:buf
+                                                            length:_length]);
+   }
+
+   return( [_MulleObjCAllocatorUTF32String newWithUTF32CharactersNoCopy:buf
+                                                                 length:_length
+                                                              allocator:allocator]);
 }
 
 
-#pragma mark -
-#pragma mark NSString subclassing
+#pragma mark - NSString subclassing
 
 - (NSUInteger) length
 {
@@ -403,20 +446,43 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-- (unichar) characterAtIndex:(NSUInteger) index
+- (void) mulleCompact
+{
+   NSString   *s;
+
+   if( self->_count < 2)
+      return;
+
+   // make one big string and use this has first string
+   s = [[self copy] autorelease];
+   shrinkWithStrings( self, &s, 1);
+}
+
+
+static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 {
    NSString     **p;
    NSString     **sentinel;
    NSUInteger   length;
    NSString     *s;
 
-   if( index >= _length)
+   //
+   // If someone wants to do characterAtIndex: on a NSMutableString
+   // it's going to be painful, if it is composed of many strings. We can make
+   // it less painful, if we compact. We don't do this if someone just wants
+   // to check the first 8 characters
+   //
+   if( index >= self->_length)
       MulleObjCThrowInvalidIndexException( index);
 
-   p        = &_storage[ 0];
-   sentinel = &p[ _count];
+   if( index >= 8 && self->_count >= 8)
+      [self mulleCompact];
+   if( self->_length == 1)
+      return( [self->_storage[ 0] characterAtIndex:index]);
 
-   s = nil;
+   p        = &self->_storage[ 0];
+   sentinel = &p[ self->_count];
+
    // find string containing character
    while( p < sentinel)
    {
@@ -428,6 +494,18 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
       index -= length;
    }
    return( [s characterAtIndex:index]);
+}
+
+
+- (unichar) characterAtIndex:(NSUInteger) index
+{
+   return( characterAtIndex( self, index));
+}
+
+
+- (unichar) :(NSUInteger) index
+{
+   return( characterAtIndex( self, index));
 }
 
 
@@ -475,8 +553,7 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-#pragma mark -
-#pragma mark Operations
+#pragma mark - Operations
 
 - (void) _reset
 {
@@ -498,7 +575,9 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
       _size += _size;
       if( _size < 8)
          _size = 8;
-      _storage = MulleObjCObjectReallocateNonZeroedMemory( self, _storage, _size * sizeof( NSString *));
+      _storage = MulleObjCObjectReallocateNonZeroedMemory( self,
+                                                           _storage,
+                                                           _size * sizeof( NSString *));
    }
 
    _storage[ _count++] = [s copy];
@@ -560,7 +639,7 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 
 
 //
-// maybe overcomplicated: could be better to just make a new coherent
+// maybe overcomplicated: would it be better to make a new coherent
 // buffer ?
 //
 - (void) replaceCharactersInRange:(NSRange) aRange
@@ -602,9 +681,6 @@ static void   shrinkWithStrings( NSMutableString *self, NSString **strings, unsi
 }
 
 
-
-
-// rrrong, if storage is smaller than prefix!
 - (BOOL) hasPrefix:(NSString *) prefix
 {
    NSUInteger   len_first;
@@ -725,9 +801,7 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
 @end
 
 
-# pragma mark -
-# pragma mark ### NSString ( NSMutableString) ###
-# pragma mark -
+# pragma mark - NSString ( NSMutableString)
 
 @implementation NSString ( NSMutableString)
 
@@ -736,46 +810,18 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    return( [[NSMutableString alloc] initWithString:self]);
 }
 
+
 #pragma mark - mutation constructors
 
-//
-// this works, albeit not so well for Unicode, because both
-// get converted to UTF8 and then appended.
-//
-// Possibly use a link list chain class for this, because
-// there is probably another append coming up.
-//
 - (NSString *) stringByAppendingString:(NSString *) other
 {
-   NSUInteger               len;
-   NSUInteger               other_len;
-   NSUInteger               combined_len;
-   NSString                 *s;
-   mulle_utf8_t             *buf;
-   struct mulle_allocator   *allocator;
-
-   len = [self mulleUTF8StringLength];
-   if( ! len)
-      return( [[other copy] autorelease]);
-
-   other_len = [other mulleUTF8StringLength];
-   if( ! other_len)
-      return( [[self copy] autorelease]);
-
-   combined_len = len + other_len;
-   buf          = MulleObjCObjectAllocateNonZeroedMemory( self, combined_len * sizeof( mulle_utf8_t));
-
-   [self mulleGetUTF8Characters:buf
-                 maxLength:len];
-
-   [other mulleGetUTF8Characters:&buf[ len]
-                  maxLength:other_len];
-
-   allocator = MulleObjCInstanceGetAllocator( self);
-   s = [[[NSString alloc] mulleInitWithUTF8CharactersNoCopy:buf
-                                                     length:combined_len
-                                                  allocator:allocator] autorelease];
-   return( s);
+   NSString   *strings[ 2] = { self, other };
+   //
+   // On a followup call of stringByAppendingString: with the returned
+   // NSMutableString as "other", "other" will be copied.
+   //
+   return( [[[NSMutableString alloc] initWithStrings:strings
+                                               count:2] autorelease]);
 }
 
 

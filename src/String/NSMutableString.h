@@ -38,6 +38,12 @@
 #import "import.h"
 
 
+//
+// NSMutableString in the MulleFoundation is a class to temporarily
+// construct strings from other strings. Many string operations on
+// NSMutableString can be slow. It is best to convert NSMutableString
+// to a regular NSString after construction with "copy/autorelease"
+//
 @interface NSMutableString : NSString
 {
    unsigned int   _length;

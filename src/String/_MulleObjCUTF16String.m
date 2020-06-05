@@ -212,6 +212,14 @@
 }
 
 
+- (unichar) :(NSUInteger)index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
+
 - (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16_data *) data
 {
    data->characters = _storage;
@@ -247,6 +255,14 @@
 }
 
 - (unichar) characterAtIndex:(NSUInteger)index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
+
+- (unichar) :(NSUInteger)index
 {
    if( index >= _length)
       MulleObjCThrowInvalidIndexException( index);
@@ -298,6 +314,13 @@
 
 
 - (unichar) characterAtIndex:(NSUInteger)index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
+- (unichar) :(NSUInteger)index
 {
    if( index >= _length)
       MulleObjCThrowInvalidIndexException( index);

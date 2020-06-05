@@ -153,10 +153,6 @@ typedef mulle_utf32_t  unichar;
                                               length:(NSUInteger) len
                                            allocator:(struct mulle_allocator *) allocator;
 
-+ (instancetype) mulleStringWithStrings:(NSString *) s, ...;
-+ (instancetype) mulleStringWithString:(NSString *) s
-                      mulleVarargList:(mulle_vararg_list) args;
-
 //
 // UTF8
 // keep "old" UTF8Strings methods using char *
@@ -181,6 +177,7 @@ typedef mulle_utf32_t  unichar;
 
 @interface NSString( Subclasses)
 
+- (unichar) :(NSUInteger) index;
 - (unichar) characterAtIndex:(NSUInteger) index;
 - (NSUInteger) length;
 

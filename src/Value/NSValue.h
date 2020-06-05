@@ -64,6 +64,9 @@
 
 @interface NSValue (Subclasses)
 
+// subclass must implement a compatible hash
+// see _MulleObjCConcreteValue.h for details
+- (NSUInteger) hash;
 - (char *) objCType;
 - (instancetype) initWithBytes:(void *) bytes
                       objCType:(char *) type;

@@ -58,8 +58,7 @@
 @end
 
 
-#pragma mark -
-#pragma mark unsigned variants
+#pragma mark - unsigned variants
 
 
 @interface _MulleObjCUInt32Number : NSNumber <MulleObjCImmutable>

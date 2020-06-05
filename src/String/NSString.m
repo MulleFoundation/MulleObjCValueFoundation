@@ -178,8 +178,7 @@ enum _NSStringClassClusterStringSize
 }
 
 
-#pragma mark -
-#pragma mark class cluster selection
+#pragma mark - class cluster selection
 
 static enum _NSStringClassClusterStringSize   MulleObjCStringClassIndexForLength( NSUInteger length)
 {
@@ -299,8 +298,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 
 
-#pragma mark -
-#pragma mark generic init
+#pragma mark - generic init
 
 
 - (instancetype) initWithString:(NSString *) other
@@ -314,8 +312,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
-#pragma mark -
-#pragma mark generic code
+#pragma mark - generic code
 
 - (NSString *) description
 {
@@ -622,8 +619,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 
 
 
-#pragma mark -
-#pragma mark simplest substring
+#pragma mark - simplest substring
 
 - (BOOL) hasPrefix:(NSString *) prefix
 {
@@ -675,8 +671,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 }
 
 
-#pragma mark -
-#pragma mark numerical values
+#pragma mark - numerical values
 
 static mulle_utf8_t   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
 {

@@ -142,8 +142,7 @@
 }
 
 
-#pragma mark -
-#pragma mark operations
+#pragma mark - operations
 
 - (void) setData:(NSData *) aData
 {

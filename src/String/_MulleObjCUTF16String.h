@@ -83,6 +83,6 @@
 }
 
 + (instancetype) newWithUTF16CharactersNoCopy:(mulle_utf16_t *) chars
-                                        length:(NSUInteger) length
-                                 sharingObject:(id) sharingObject;
+                                       length:(NSUInteger) length
+                                sharingObject:(id) sharingObject;
 @end

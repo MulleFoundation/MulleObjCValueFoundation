@@ -45,11 +45,6 @@
 #include <stdint.h>
 
 
-#define MulleObjCValueAllocPlaceholderHash         0x331bd8f6291d398e  // MulleObjCValueAllocPlaceholder
-#define MulleObjCValueInstantiatePlaceholderHash   0x56fb1f12fb5bee1f  // MulleObjCValueInstantiatePlaceholder
-
-
-
 @implementation NSObject( _NSValue)
 
 - (BOOL) __isNSValue
@@ -68,32 +63,18 @@
 }
 
 
-+ (mulle_objc_classid_t) __allocPlaceholderClassid
-{
-   return( MULLE_OBJC_CLASSID( MulleObjCValueAllocPlaceholderHash));
-}
-
-
-+ (mulle_objc_classid_t) __instantiatePlaceholderClassid
-{
-   return( MULLE_OBJC_CLASSID( MulleObjCValueInstantiatePlaceholderHash));
-}
-
-
-#pragma mark -
-#pragma mark classcluster ?
+#pragma mark - classcluster ?
 
 - (instancetype) initWithBytes:(void *) value
                       objCType:(char *) type
 {
    self = [_MulleObjCConcreteValue mulleNewWithBytes:value
-                                       objCType:type];
+                                            objCType:type];
    return( self);
 }
 
 
-#pragma mark -
-#pragma mark convenience constructors
+#pragma mark - convenience constructors
 
 // compiler: need an @alias( alloc, whatever), so that implementations
 //           can  be shared
@@ -199,26 +180,10 @@
 }
 
 
-#pragma mark - hash and equality
-
-- (NSUInteger) hash
-{
-   NSUInteger   size;
-
-   NSGetSizeAndAlignment( [self objCType], &size, NULL);
-
-   {
-      char   bytes[ size];
-
-      [self getValue:bytes];
-
-      return( MulleObjCBytesPartialHash( bytes, size));
-   }
-}
-
-
 - (BOOL) isEqual:(id) other
 {
+   if( self == other)
+      return( YES);
    if( ! [other __isNSValue])
       return( NO);
    return( [self isEqualToValue:other]);

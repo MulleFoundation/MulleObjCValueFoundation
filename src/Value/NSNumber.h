@@ -60,6 +60,14 @@ static inline int   _ns_superquad_compare( _ns_superquad a, _ns_superquad b)
 }
 
 
+enum MulleNumberIsEqualType
+{
+   MulleNumberIsEqualDefault,
+   MulleNumberIsEqualLongDouble,
+   MulleNumberIsEqualLongLong
+};
+
+
 @interface NSNumber : NSValue < NSCopying, MulleObjCClassCluster>
 {
 }
@@ -115,6 +123,8 @@ static inline int   _ns_superquad_compare( _ns_superquad a, _ns_superquad b)
 - (float) floatValue;
 - (unsigned long long) unsignedLongLongValue;
 
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType;
 
 // need this for comparison until I get smarter
 - (_ns_superquad) _superquadValue;

@@ -74,8 +74,7 @@ enum
 
 
 
-#pragma mark -
-#pragma mark Export
+#pragma mark - Export
 
 
 // move convenient for subclasses
@@ -428,8 +427,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 }
 
 
-#pragma mark -
-#pragma mark Import
+#pragma mark - Import
 
 - (instancetype) mulleInitWithUTF16Characters:(mulle_utf16_t *) chars
                                        length:(NSUInteger) length
