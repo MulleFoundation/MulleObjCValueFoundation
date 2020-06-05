@@ -63,6 +63,13 @@ static inline char  *MulleObjCSmallStringAddress( _MulleObjCASCIIString *self)
    return( MulleObjCSmallStringAddress( self)[ index]);
 }
 
+- (unichar) :(NSUInteger) index
+{
+   if( index >= [self length])
+      MulleObjCThrowInvalidIndexException( index);
+   return( MulleObjCSmallStringAddress( self)[ index]);
+}
+
 
 static void   grab_utf32( id self,
                           SEL sel,
@@ -452,6 +459,13 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
    return( _storage[ index]);
 }
 
+- (unichar) :(NSUInteger) index
+{
+   if( index >= _length + 1)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
 
 - (char *) UTF8String
 {
@@ -542,6 +556,12 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
    return( _storage[ index]);
 }
 
+- (unichar) :(NSUInteger)index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
 
 - (NSUInteger) length
 {
@@ -582,6 +602,13 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
 @implementation _MulleObjCReferencingASCIIString
 
 - (unichar) characterAtIndex:(NSUInteger)index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
+- (unichar) :(NSUInteger)index
 {
    if( index >= _length)
       MulleObjCThrowInvalidIndexException( index);

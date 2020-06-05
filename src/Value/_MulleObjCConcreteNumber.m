@@ -44,6 +44,37 @@
 // other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
+
+
+static inline NSUInteger  hashNSUInteger( NSUInteger value)
+{
+   return( mulle_hash_avalanche( value));
+}
+
+
+static inline NSUInteger   hashNSUIntegers( NSUInteger *p, int n)
+{
+   NSUInteger   hash;
+
+   assert( n >= 1);
+
+   hash = *p;
+   while( --n)
+   {
+      hash <<= 6;
+      hash  += *++p;
+   }
+   hash = hashNSUInteger( hash);
+   return( hash);
+}
+
+static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
+{
+   return( hashNSUIntegers( p, (n + sizeof( NSUInteger) - 1) / sizeof( NSUInteger)));
+}
+
+
+
 @implementation _MulleObjCInt32Number : NSNumber
 
 + (instancetype) newWithInt32:(int32_t) value
@@ -79,30 +110,26 @@
 - (long double) longDoubleValue   { return( (long double) _value); }
 
 
-- (void) getValue:(void *) value
+- (void) getValue:(void *) p_value
 {
-   *(int32_t *) value = _value;
+   *(int32_t *) p_value = _value;
 }
 
 
 - (char *) objCType
 {
-   if( _value >= CHAR_MIN && _value <= CHAR_MAX)
-      return( @encode( char));
-   if( _value >= SHRT_MIN && _value <= SHRT_MAX)
-      return( @encode( short));
-   if( _value >= INT_MIN && _value <= INT_MAX)
-      return( @encode( int));
-
-   if( sizeof( long) == sizeof( NSInteger))
-      return( @encode( long));
    return( @encode( int32_t));
 }
 
 
 - (NSUInteger) hash
 {
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
+   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+}
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongLong);
 }
 
 @end
@@ -151,9 +178,9 @@
 - (long double) longDoubleValue   { return( (long double) _value); }
 
 
-- (void) getValue:(void *) value
+- (void) getValue:(void *) p_value
 {
-   *(long long *) value = _value;
+   *(int64_t *) p_value = _value;
 }
 
 
@@ -162,9 +189,15 @@
    return( @encode( int64_t));
 }
 
+
 - (NSUInteger) hash
 {
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
+   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+}
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongLong);
 }
 
 @end
@@ -204,9 +237,9 @@
 - (long double) longDoubleValue   { return( (long double) _value); }
 
 
-- (void) getValue:(void *) value
+- (void) getValue:(void *) p_value
 {
-   *(uint32_t *) value = _value;
+   *(uint32_t *) p_value = _value;
 }
 
 
@@ -222,18 +255,18 @@
 
 - (char *) objCType
 {
-   if( _value <= UCHAR_MAX)
-      return( @encode( unsigned char));
-   if( _value <= USHRT_MAX)
-      return( @encode( unsigned short));
-   if( sizeof( unsigned long) == sizeof( NSInteger))
-      return( @encode( unsigned long));
    return( @encode( uint32_t));
 }
 
+
 - (NSUInteger) hash
 {
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
+   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+}
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongLong);
 }
 
 @end
@@ -292,13 +325,91 @@
    return( @encode( uint64_t));
 }
 
+
 - (NSUInteger) hash
 {
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
+   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+}
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongLong);
 }
 
 @end
 
+
+
+/*
+ * a is noticably faster than
+ * b (intel i7)
+ *
+ * int   a( double x)
+ * {
+ *    if( x < LONG_MIN || x > LONG_MAX)
+ *       return( 0);
+ *    return( 1);
+ * }
+ *
+ * int   b( double x)
+ * {
+ *    if( (long) x == x)
+ *       return( 0);
+ *    return( 1);
+ * }
+ *
+ * but d is faster than c
+ *
+ * int   c( double x)
+ * {
+ *    double   y;
+ *
+ *    y = floor( x);
+ *    if( y == x && y >= LONG_MIN && y <= LONG_MAX)
+ *       return( 0);
+ *    return( 1);
+ * }
+ *
+ *
+ * int   d( double x)
+ * {
+ *    long   y;
+ *
+ *    y = (long) x;
+ *    if( (double) y == x)
+ *       return( 0);
+ *    return( 1);
+ * }
+ */
+
+
+//
+// MEMO: As NSNumber tries to guarantee, that a double value that
+//       can be represented as an integer _IS_ stored as an integer
+//       the compatibility with NSUInteger is possibly pointless.
+//       Same goes for the double == long double check
+//
+static inline NSUInteger  hashDouble( double value)
+{
+   NSUInteger   y;
+
+   y = (NSUInteger) value;
+   if( (double) y == value && y >= NSIntegerMin && y <= NSIntegerMax)
+       return( hashNSUInteger( y));
+
+   return( hashNSUIntegerBytes( &value, sizeof( double)));
+}
+
+
+static inline NSUInteger  hashLongDouble( long double value)
+{
+   double   y;
+
+   y = (double) value;
+   if( (long double) y == value)
+       return( hashDouble( y));
+   return( hashNSUIntegerBytes( &value, sizeof( double)));
+}
 
 
 @implementation _MulleObjCDoubleNumber : NSNumber
@@ -357,14 +468,18 @@
 
 - (char *) objCType
 {
-   if( _value >= FLT_MIN && _value <= FLT_MAX)
-      return( @encode( float));
    return( @encode( double));
 }
 
+
 - (NSUInteger) hash
 {
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
+   return( hashDouble( _value));
+}
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongDouble);
 }
 
 @end
@@ -421,8 +536,13 @@
 
 - (NSUInteger) hash
 {
-   return( MulleObjCBytesHash( &_value, sizeof( _value)));
+   return( hashLongDouble( _value));
 }
 
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongDouble);
+}
 
 @end

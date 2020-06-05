@@ -99,8 +99,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
 }
 
 
-#pragma mark -
-#pragma mark class cluster stuff
+#pragma mark - class cluster stuff
 
 - (instancetype) init
 {
@@ -302,8 +301,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
 }
 
 
-#pragma mark -
-#pragma mark common code
+#pragma mark - common code
 
 
 - (void) getBytes:(void *) buf
@@ -422,8 +420,7 @@ static void   *mulle_memrmem( unsigned char *a, size_t a_len,
 }
 
 
-#pragma mark -
-#pragma mark placeholder only
+#pragma mark - placeholder only
 
 // for debug description
 - (void *) bytes

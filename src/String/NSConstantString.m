@@ -112,6 +112,14 @@
 }
 
 
+- (unichar) :(NSUInteger) index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
+
 - (NSUInteger) length
 {
    return( _length);

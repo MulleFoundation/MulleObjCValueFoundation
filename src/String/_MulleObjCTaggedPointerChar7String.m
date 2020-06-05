@@ -97,7 +97,7 @@ static inline NSUInteger  MulleObjCTaggedPointerChar7StringGetLength( _MulleObjC
    NSUInteger   length;
 
    value  = _MulleObjCTaggedPointerChar7ValueFromString( self);
-   length = (NSUInteger) mulle_char7_strlen( value);
+   length = (NSUInteger) mulle_char7_fstrlen( value);
    return( length);
 }
 

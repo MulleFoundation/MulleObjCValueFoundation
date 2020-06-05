@@ -15,8 +15,7 @@
 
 @implementation NSNumber (NSCoder)
 
-#pragma mark -
-#pragma mark NSCoding
+#pragma mark - NSCoding
 
 - (Class) classForCoder
 {
@@ -29,3 +28,34 @@
 }
 
 @end
+
+
+
+#ifdef __MULLE_OBJC_TPS__
+
+#import "_MulleObjCTaggedPointerIntegerNumber.h"
+
+
+@interface _MulleObjCTaggedPointerIntegerNumber( NSCoder) < NSCoding>
+@end
+
+@implementation _MulleObjCTaggedPointerIntegerNumber( NSCoder)
+
+#pragma mark - NSCoding
+
+- (void) encodeWithCoder:(NSCoder *) coder
+{
+   NSInteger      value;
+   char           *type;
+
+   value = _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+   type  = @encode( NSInteger);
+   [coder encodeBytes:@encode( NSInteger)
+               length:1+1]; // trailing 0
+   [coder encodeValueOfObjCType:type
+                             at:&value];
+}
+
+@end
+
+#endif

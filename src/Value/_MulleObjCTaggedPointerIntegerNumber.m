@@ -39,6 +39,12 @@
 
 #ifdef __MULLE_OBJC_TPS__
 
+static inline NSUInteger  hashNSUInteger( NSUInteger value)
+{
+   return( mulle_hash_avalanche( value));
+}
+
+
 @implementation _MulleObjCTaggedPointerIntegerNumber
 
 + (void) load
@@ -72,16 +78,19 @@
 - (long double) longDoubleValue   { return( (long double) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
 
 
-- (void) getValue:(void *) value
+- (void) getValue:(void *) p_value
 {
-   *(NSInteger *) value = _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+   NSInteger   value;
+
+   value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+   *(NSInteger *) p_value = value;
 }
 
 
 - (_ns_superquad) _superquadValue
 {
    _ns_superquad  value;
-   NSInteger             v;
+   NSInteger      v;
 
    v        = _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
    value.lo = v;
@@ -92,22 +101,49 @@
 
 - (char *) objCType
 {
-   NSInteger   value;
-
-   value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
-
-   if( value >= CHAR_MIN && value <= CHAR_MAX)
-      return( @encode( char));
-   if( value >= SHRT_MIN && value <= SHRT_MAX)
-      return( @encode( short));
-   if( value >= INT_MIN && value <= INT_MAX)
-      return( @encode( int));
-   if( value >= LONG_MIN && value <= LONG_MAX)
-      return( @encode( long));
-
    return( @encode( NSInteger));
 }
 
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongLong);
+}
+
+
+- (NSUInteger) hash
+{
+   NSInteger   value;
+
+   value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+   return( hashNSUInteger( value));
+}
+
+
+- (BOOL) isEqualToNumber:(NSNumber *) other
+{
+   enum MulleNumberIsEqualType   myType;
+   enum MulleNumberIsEqualType   otherType;
+   NSInteger                     value;
+   NSInteger                     otherValue;
+
+   if( MulleObjCTaggedPointerGetIndex( other) == 0x2)
+   {
+      value      = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+      otherValue = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( other);
+      return( value == otherValue);
+   }
+
+   otherType = [other __mulleIsEqualType];
+   if( otherType != MulleNumberIsEqualDefault)
+   {
+      if( myType != otherType)
+         return( NO);
+      return( value == [other longLongValue]);
+   }
+
+   return( [other compare:self] == NSOrderedSame);
+}
 
 @end
 

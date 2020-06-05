@@ -15,8 +15,7 @@
 
 @implementation NSString (NSCoder)
 
-#pragma mark -
-#pragma mark NSCoding
+#pragma mark - NSCoding
 
 - (Class) classForCoder
 {
