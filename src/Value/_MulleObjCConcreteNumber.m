@@ -340,6 +340,101 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 
 
 
+@implementation _MulleObjCBoolNumber : NSNumber
+
+static struct
+{
+   _MulleObjCBoolNumber   *_yes;
+   _MulleObjCBoolNumber   *_no;
+} Self;
+
+
++ (void) initialize
+{
+   if( Self._yes)
+      return;
+
+   // could make these permanent, but possibly tricky
+   // due to possibly being deinitialized too early ?
+   Self._yes = NSAllocateObject( self, 0, NULL);
+   Self._yes->_value = YES;
+   Self._no  = NSAllocateObject( self, 0, NULL);
+   Self._no->_value  = NO;
+}
+
+
++ (void) deinitialize
+{
+   [Self._yes release];
+   [Self._no release];
+}
+
+
++ (instancetype) newWithBOOL:(BOOL) value
+{
+   _MulleObjCBoolNumber   *nr;
+
+   nr = value ? Self._yes : Self._no;
+   assert( nr);
+   return( [nr retain]);
+}
+
+
+- (int32_t) _int32Value               { return( (int32_t) _value); }
+- (int64_t) _int64Value               { return( (int64_t) _value); }
+
+- (BOOL) boolValue                    { return( _value); }
+- (char) charValue                    { return( (char) _value); }
+- (short) shortValue                  { return( (short) _value); }
+- (int) intValue                      { return( (int) _value); }
+- (long) longValue                    { return( (long) _value); }
+- (NSInteger) integerValue            { return( (NSInteger) _value); }
+- (long long) longLongValue           { return( (long long) _value); }
+
+- (unsigned char) unsignedCharValue   { return( (unsigned char) _value); }
+- (unsigned short) unsignedShortValue { return( (unsigned short) _value); }
+- (unsigned int) unsignedIntValue     { return( (unsigned int) _value); }
+- (unsigned long) unsignedLongValue   { return( (unsigned long) _value); }
+- (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
+- (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
+
+- (double) doubleValue                { return( (double) _value); }
+- (long double) longDoubleValue       { return( (long double) _value); }
+
+
+- (void) getValue:(void *) value
+{
+   *(BOOL *) value = _value;
+}
+
+//
+// tricky: @encode( BOOL) will give an "i"
+// but we prefer to be a 'B', so that we can encode as a bool singleton
+// it should be OK, since we are limited to this class, not all BOOL
+// variables out there
+//
+- (char *) objCType
+{
+   static char   type[2] = { _C_BOOL, 0 };
+
+   return( type);
+}
+
+- (NSUInteger) hash
+{
+   return( hashNSUInteger( _value));
+}
+
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongLong);
+}
+
+@end
+
+
+
 /*
  * a is noticably faster than
  * b (intel i7)
@@ -546,3 +641,5 @@ static inline NSUInteger  hashLongDouble( long double value)
 }
 
 @end
+
+

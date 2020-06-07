@@ -43,6 +43,13 @@
 
 #pragma mark - NSCoding
 
+- (instancetype) initWithCoder:(NSCoder *) coder
+{
+   abort(); // use NSNumber
+   return( self);
+}
+
+
 - (void) encodeWithCoder:(NSCoder *) coder
 {
    NSInteger      value;

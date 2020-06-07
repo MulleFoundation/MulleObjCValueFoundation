@@ -336,15 +336,26 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 
 MULLE_C_NEVER_INLINE
-struct mulle_utf8_data  NSStringGetUTF8Data( NSString *self)
+struct mulle_utf8_data  MulleStringGetUTF8Data( NSString *self, struct mulle_utf8_data space)
 {
    struct mulle_utf8_data   data;
 
    if( [self mulleFastGetUTF8Data:&data])
       return( data);
 
-   data.length     = [self mulleUTF8StringLength];
+      // for TPS and other small strings try to grab into local area
+   data.length = [self mulleGetUTF8Characters:space.characters
+                                    maxLength:space.length];
+   if( data.length < space.length)
+   {
+      data.characters = space.characters;
+      return( data);
+   }
+
+   // probably exhausted so use painful slow code
    data.characters = (mulle_utf8_t *) [self UTF8String];
+   data.length     = [self mulleUTF8StringLength];
+
    return( data);
 }
 
@@ -361,12 +372,13 @@ static void   grab_utf8( mulle_utf8_t *storage,
                             maxLength:(NSUInteger) maxLength
 {
    struct mulle_utf8_data   data;
+   mulle_utf8_t             tmp[ 64];
 
-   data = NSStringGetUTF8Data( self);
-   if( maxLength < data.length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "destination buffer too small");
-
-   memcpy( buf, data.characters, data.length);
+   data = MulleStringGetUTF8Data( self, mulle_utf8_data_make( buf, maxLength));
+   if( data.characters != buf)
+   {
+      memcpy( buf, data.characters, data.length);
+   }
    assert( ! memchr( buf, 0, data.length));
    return( data.length);
 }
@@ -415,7 +427,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 }
 
 
-- (BOOL) mulleFastGetASCIIData:(struct mulle_utf8_data *) space
+- (BOOL) mulleFastGetASCIIData:(struct mulle_ascii_data *) space
 {
    return( NO);
 }
@@ -580,35 +592,73 @@ static void   grab_utf8( mulle_utf8_t *storage,
 }
 
 
-- (BOOL) isEqualToString:(NSString *) other
+static BOOL   hasPrefix( NSString *self, NSString *prefix, NSUInteger prefixLength)
 {
-   NSUInteger   len;
+   auto unichar   buf[ 32];
+   auto unichar   prefix_buf[ 32];
+   NSRange        range;
 
-   len = [self length];
-   if( len != [other length])
-      return( NO);
-
+   range.location = 0;
+   while( prefixLength)
    {
-      auto unichar   their_buf[ 32];
-      auto unichar   our_buf[ 32];
-      NSRange        range;
+      range.length = prefixLength > 32 ? 32 : prefixLength;
+      [self getCharacters:buf
+                    range:range];
+      [prefix getCharacters:prefix_buf
+                      range:range];
+      if( memcmp( prefix_buf, buf, range.length * sizeof( unichar)))
+         return( NO);
 
-      range.location = 0;
-      while( len)
-      {
-         range.length = len > 32 ? 32 : len;
-         [self getCharacters:our_buf
-                       range:range];
-         [other getCharacters:their_buf
-                        range:range];
-         if( memcmp( their_buf, our_buf, range.length * sizeof( unichar)))
-            return( NO);
-
-         len            -= range.length;
-         range.location += range.length;
-      }
+      prefixLength   -= range.length;
+      range.location += range.length;
    }
    return( YES);
+}
+
+
+static BOOL   hasSuffix( NSString *self, NSUInteger length,
+                         NSString *suffix, NSUInteger suffixLength)
+{
+   auto unichar   suffix_buf[ 32];
+   auto unichar   buf[ 32];
+   NSRange        range;
+   NSRange        suffixRange;
+
+   assert( suffixLength <= length);
+
+   range.location       = length - suffixLength;
+   range.length         = suffixLength;
+   suffixRange.location = 0;
+   suffixRange.length   = suffixLength;
+
+   while( suffixLength)
+   {
+      range.length = suffixLength > 32 ? 32 : suffixLength;
+      [self getCharacters:buf
+                    range:range];
+      [suffix getCharacters:suffix_buf
+                      range:range];
+      if( memcmp( suffix_buf, buf, range.length * sizeof( unichar)))
+         return( NO);
+
+      suffixLength         -= range.length;
+      range.location       += range.length;
+      suffixRange.location += suffixRange.length;
+   }
+   return( YES);
+}
+
+
+
+- (BOOL) isEqualToString:(NSString *) other
+{
+   NSUInteger   length;
+
+   length = [self length];
+   if( length != [other length])
+      return( NO);
+
+   return( hasPrefix( self, other, length));
 }
 
 
@@ -623,51 +673,29 @@ static void   grab_utf8( mulle_utf8_t *storage,
 
 - (BOOL) hasPrefix:(NSString *) prefix
 {
-   struct mulle_utf8_data   data;
-   struct mulle_utf8_data   prefixData;
+   NSUInteger   prefixLength;
+   NSUInteger   length;
 
-   if( ! [self mulleFastGetUTF8Data:&data])
-   {
-      data.characters = (mulle_utf8_t *) [self UTF8String];
-      data.length     = [self mulleUTF8StringLength];
-   }
-   if( ! [prefix mulleFastGetUTF8Data:&prefixData])
-   {
-      prefixData.characters = (mulle_utf8_t *)  [prefix UTF8String];
-      prefixData.length     = [prefix mulleUTF8StringLength];
-   }
-
-   if( data.length < prefixData.length)
+   length       = [self length];
+   prefixLength = [prefix length];
+   if( length < prefixLength)
       return( NO);
 
-   return( ! strncmp( (char *) data.characters,
-                      (char *) prefixData.characters,
-                      prefixData.length));
+   return( hasPrefix( self, prefix, prefixLength));
 }
 
 
 - (BOOL) hasSuffix:(NSString *) suffix
 {
-   struct mulle_utf8_data   data;
-   struct mulle_utf8_data   suffixData;
+   NSUInteger   suffixLength;
+   NSUInteger   length;
 
-   if( ! [self mulleFastGetUTF8Data:&data])
-   {
-      data.characters = (mulle_utf8_t *)  [self UTF8String];
-      data.length     = [self mulleUTF8StringLength];
-   }
-   if( ! [suffix mulleFastGetUTF8Data:&suffixData])
-   {
-      suffixData.characters = (mulle_utf8_t *) [suffix UTF8String];
-      suffixData.length     = [suffix mulleUTF8StringLength];
-   }
-
-   if( data.length < suffixData.length)
+   length       = [self length];
+   suffixLength = [suffix length];
+   if( length < suffixLength)
       return( NO);
 
-   return( ! strncmp( (char *) &data.characters[ data.length - suffixData.length],
-                      (char *) suffixData.characters,
-                      suffixData.length));
+   return( hasSuffix( self, length, suffix, suffixLength));
 }
 
 

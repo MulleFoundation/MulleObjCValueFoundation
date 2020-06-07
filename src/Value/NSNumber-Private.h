@@ -48,3 +48,13 @@ enum _NSNumberClassClusterNumberType
    _NSNumberClassClusterLongDoubleType = 7,
    _NSNumberClassClusterNumberTypeMax
 };
+
+@interface NSNumber( Private)
+//
+// Expects a suitably sized buffer in "data" (64 chars should be enough)
+// Returns the converted string. Don't release the result. If there is
+// no conversion available, data.characters will be NULL
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data;
+
+@end

@@ -39,6 +39,14 @@
 @class NSData;
 
 
+enum
+{
+   big_end_first    = 0,
+   little_end_first = 1,
+   native_end_first = 2
+};
+
+
 //
 // Maybe more later. Should ensure that the enums have same numeric values as
 // in AppleFoundation.
@@ -164,4 +172,14 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 // why is this here ?
 - (instancetype) mulleInitWithUTF16Characters:(mulle_utf16_t *) chars
                                        length:(NSUInteger) length;
+
+// private and mulleprefix needed
+- (NSData *) _asciiData;
+- (NSData *) _utf8Data;
+- (NSData *) _utf16DataWithEndianness:(unsigned int) endianess
+                        prefixWithBOM:(BOOL) prefixWithBOM
+                    terminateWithZero:(BOOL) terminateWithZero;
+- (NSData *) _utf32DataWithEndianness:(unsigned int) endianess
+                        prefixWithBOM:(BOOL) prefixWithBOM
+                    terminateWithZero:(BOOL) terminateWithZero;
 @end

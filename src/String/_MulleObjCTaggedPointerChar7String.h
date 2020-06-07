@@ -39,6 +39,9 @@
 
 
 @interface _MulleObjCTaggedPointerChar7String : NSString < MulleObjCTaggedPointer>
+
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength;
 @end
 
 

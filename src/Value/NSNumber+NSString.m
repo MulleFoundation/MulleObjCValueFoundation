@@ -92,12 +92,18 @@
    return( [self description]);
 }
 
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+{
+   return( mulle_ascii_data_make( NULL, 0));
+}
+
 @end
 
 //
 // Not sure how compatible this is...
 //
-// @implementation MulleObjCBoolNumber( NSString)
+// @implementation _MulleObjCBoolNumber( NSString)
 //
 //
 // - (NSString *) description
