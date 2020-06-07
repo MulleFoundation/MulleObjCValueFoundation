@@ -50,6 +50,9 @@
 // the runtime
 //
 @interface _MulleObjCTaggedPointerChar5String : NSString < MulleObjCTaggedPointer>
+
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength;
 @end
 
 

@@ -35,52 +35,301 @@
 //
 
 #import "_MulleObjCConcreteNumber.h"
+#import "_MulleObjCTaggedPointerIntegerNumber.h"
 
 
 // other files in this library
 #import "NSString.h"
 #import "NSString+Sprintf.h"
+#import "NSString+Substring-Private.h"
 
 // std-c dependencies
 #import "import-private.h"
 
+#include <float.h>
 
 
-@implementation _MulleObjCUInt32Number (NSString)
-
-- (NSString *) description
+static char  *convert_decimal_uint32_t( uint32_t value, char *s, size_t len)
 {
-   return( [NSString stringWithFormat:@"%lu", [self unsignedLongValue]]);
+   s = &s[ len];
+   do
+   {
+      *--s   = '0' + value % 10;
+      value /= 10;
+   }
+   while( value);
+
+   return( s);
+}
+
+
+static char  *convert_decimal_uint64_t( uint64_t value, char *s, size_t len)
+{
+   s = &s[ len];
+   do
+   {
+      *--s   = '0' + value % 10;
+      value /= 10;
+   }
+   while( value);
+
+   return( s);
+}
+
+
+static struct _MulleStringContext   empty;
+
+
+@implementation _MulleObjCUInt32Number( NSString)
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+{
+   struct mulle_ascii_data   rval;
+
+   assert( data.length>= 16);
+   rval.characters = convert_decimal_uint32_t( _value, data.characters, data.length);
+   rval.length     = data.length - (rval.characters - data.characters);
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char                      tmp[ 16];
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   return( [_mulleNewASCIIStringWithStringContext( string.characters,
+                                                   &string.characters[ string.length],
+                                                   &empty) autorelease]);
 }
 
 @end
 
 
-@implementation _MulleObjCUInt64Number (NSString)
+@implementation _MulleObjCUInt64Number( NSString)
 
-- (NSString *) description
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
 {
-   return( [NSString stringWithFormat:@"%llu", [self unsignedLongLongValue]]);
+   struct mulle_ascii_data   rval;
+
+   assert( data.length>= 32);
+   rval.characters = convert_decimal_uint64_t( _value, data.characters, data.length);
+   rval.length     = data.length - (rval.characters - data.characters);
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char                      tmp[ 32];  // max: 18,xxx,xxx,xxx,xxx,xxx,xxx
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   return( [_mulleNewASCIIStringWithStringContext( string.characters,
+                                                   &string.characters[ string.length],
+                                                   &empty) autorelease]);
 }
 
 @end
 
 
-@implementation _MulleObjCDoubleNumber (NSString)
+@implementation _MulleObjCInt32Number( NSString)
 
-- (NSString *) description
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
 {
-   return( [NSString stringWithFormat:@"%g", [self doubleValue]]);
+   struct mulle_ascii_data   rval;
+
+   assert( data.length>= 16);
+   if( _value < 0)
+   {
+      rval.characters   = convert_decimal_uint32_t( - _value, data.characters, data.length);
+      *--rval.characters = '-';
+   }
+   else
+   {
+      rval.characters = convert_decimal_uint32_t( _value, data.characters, data.length);
+   }
+   assert( rval.characters >= data.characters);
+
+   rval.length = data.length - (rval.characters - data.characters);
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char                      tmp[ 64];  // max: -2,xxx,xxx,xxx
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   return( [_mulleNewASCIIStringWithStringContext( string.characters, &string.characters[ string.length], &empty) autorelease]);
 }
 
 @end
 
 
-@implementation _MulleObjCLongDoubleNumber (NSString)
+@implementation _MulleObjCInt64Number( NSString)
 
-- (NSString *) description
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
 {
-   return( [NSString stringWithFormat:@"%Lg", [self longDoubleValue]]);
+   struct mulle_ascii_data   rval;
+
+   assert( data.length>= 32);
+   if( _value < 0)
+   {
+      rval.characters    = convert_decimal_uint64_t( - _value, data.characters, data.length);
+      *--rval.characters = '-';
+   }
+   else
+   {
+      rval.characters = convert_decimal_uint64_t( _value, data.characters, data.length);
+   }
+   assert( rval.characters >= data.characters);
+
+   rval.length = data.length - (rval.characters - data.characters);
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char                      tmp[ 32];
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   return( [_mulleNewASCIIStringWithStringContext( string.characters,
+                                                   &string.characters[ string.length],
+                                                   &empty) autorelease]);
+}
+
+@end
+
+
+@implementation _MulleObjCDoubleNumber( NSString)
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+{
+   struct mulle_ascii_data   rval;
+
+   assert( data.length >= DBL_DECIMAL_DIG + 16);
+   rval.length = snprintf( data.characters, data.length, "%g", _value);
+   assert( rval.length < data.length);
+
+   rval.characters = data.characters;
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char  tmp[ DBL_DECIMAL_DIG + 16];
+   int   len;
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   assert( string.length < sizeof( tmp));
+   return( [_mulleNewASCIIStringWithStringContext( string.characters,
+                                                   &string.characters[ string.length],
+                                                   &empty) autorelease]);
+}
+
+@end
+
+
+@implementation _MulleObjCLongDoubleNumber( NSString)
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+{
+   struct mulle_ascii_data   rval;
+
+   assert( data.length>= LDBL_DECIMAL_DIG + 16);
+   rval.length = snprintf( data.characters, data.length, "%Lg", _value);
+   assert( rval.length < data.length);
+
+   rval.characters = data.characters;
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char                      tmp[ LDBL_DECIMAL_DIG + 16];
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   assert( string.length < sizeof( tmp));
+   return( [_mulleNewASCIIStringWithStringContext( string.characters,
+                                                   &string.characters[ string.length],
+                                                   &empty) autorelease]);
+}
+
+@end
+
+
+@implementation _MulleObjCTaggedPointerIntegerNumber( NSString)
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+{
+   struct mulle_ascii_data   rval;
+   NSInteger                 value;
+
+   assert( data.length>= 32);
+   value = _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
+   if( value < 0)
+   {
+      rval.characters   = convert_decimal_uint64_t( - value, data.characters, data.length);
+      *--rval.characters = '-';
+   }
+   else
+   {
+      rval.characters = convert_decimal_uint64_t( value, data.characters, data.length);
+   }
+   assert( rval.characters >= data.characters);
+
+   rval.length = data.length - (rval.characters - data.characters);
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   char                      tmp[ 32];
+   struct mulle_ascii_data   string;
+
+   string = [self _mulleConvertToASCIICharacters:mulle_ascii_data_make( tmp, sizeof( tmp))];
+   return( [_mulleNewASCIIStringWithStringContext( string.characters,
+                                                   &string.characters[ string.length],
+                                                   &empty) autorelease]);
+}
+
+@end
+
+
+@implementation _MulleObjCBoolNumber( NSString)
+
+- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+{
+   struct mulle_ascii_data   rval;
+
+   if( _value)
+   {
+      rval.characters = "YES";
+      rval.length     = 3;
+   }
+   else
+   {
+      rval.characters = "NO";
+      rval.length     = 2;
+   }
+
+   return( rval);
+}
+
+
+- (NSString *) stringValue
+{
+   return( _value ? @"YES" : @"NO");
 }
 
 @end

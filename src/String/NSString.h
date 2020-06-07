@@ -135,7 +135,7 @@ typedef mulle_utf32_t  unichar;
 
 // returns NO, if ASCII data could not be provided. You will get pointers
 // into private memory, which is not necessarily 0 terminated
-- (BOOL) mulleFastGetASCIIData:(struct mulle_utf8_data *) space;
+- (BOOL) mulleFastGetASCIIData:(struct mulle_ascii_data *) space;
 
 // returns NO, if UTF8 data can not be provided w/o conversion.
 // You will get pointers into private memory, which is not necessarily
@@ -213,7 +213,6 @@ typedef mulle_utf32_t  unichar;
 - (NSString *) mulleStringByRemovingPrefix:(NSString *) other;
 - (NSString *) mulleStringByRemovingSuffix:(NSString *) other;
 
-
 @end
 
 
@@ -253,6 +252,12 @@ static inline NSUInteger   MulleObjCStringHashRangeUTF8( mulle_utf8_t *buf, NSRa
 }
 
 
+static inline NSUInteger   MulleObjCStringHashRangeASCII( char *buf, NSRange range)
+{
+   return( MulleObjCStringHashRangeUTF8( (mulle_utf8_t *) buf, range));
+}
+
+
 static inline NSUInteger   MulleObjCStringHashRangeUTF16( mulle_utf16_t *buf, NSRange range)
 {
    uintptr_t   hash;
@@ -274,6 +279,15 @@ static inline NSUInteger   MulleObjCStringHashRangeUTF32( mulle_utf32_t *buf, NS
    hash = _mulle_fnv1a_utf32( &buf[ range.location], range.length);
    // hash = (hash << 4) | (hash >> (sizeof( uintptr_t) * 8 - 4));
    return( (NSUInteger) hash);
+}
+
+
+static inline NSUInteger   MulleObjCStringHashASCII( char *buf, NSUInteger length)
+{
+   NSRange   range;
+
+   range = MulleObjCGetHashStringRange( length);
+   return( MulleObjCStringHashRangeASCII( buf, range));
 }
 
 
@@ -305,5 +319,5 @@ static inline NSUInteger   MulleObjCStringHashUTF32( mulle_utf32_t *buf, NSUInte
 
 
 // a safe version to get converted or raw UTF8 characters from a string
-struct mulle_utf8_data  NSStringGetUTF8Data( NSString *self);
+struct mulle_utf8_data   MulleStringGetUTF8Data( NSString *self, struct mulle_utf8_data space);
 

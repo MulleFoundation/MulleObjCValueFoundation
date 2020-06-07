@@ -121,8 +121,8 @@ static inline unsigned int   hex( unsigned int c)
    mulle_buffer_done( &buffer);
 
    return( [NSString mulleStringWithUTF8CharactersNoCopy:s
-                                              length:length
-                                           allocator:allocator]);
+                                                  length:length
+                                               allocator:allocator]);
 }
 
 
@@ -152,8 +152,8 @@ static inline unsigned int   hex( unsigned int c)
    mulle_buffer_done( &buffer);
 
    return( [NSString mulleStringWithUTF8CharactersNoCopy:s
-                                              length:length
-                                           allocator:allocator]);
+                                                  length:length
+                                               allocator:allocator]);
 }
 
 

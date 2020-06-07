@@ -127,17 +127,17 @@ static inline NSUInteger  hashNSUInteger( NSUInteger value)
    NSInteger                     value;
    NSInteger                     otherValue;
 
+   value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
    if( MulleObjCTaggedPointerGetIndex( other) == 0x2)
    {
-      value      = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
-      otherValue = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( other);
+      otherValue = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( (_MulleObjCTaggedPointerIntegerNumber *) other);
       return( value == otherValue);
    }
 
    otherType = [other __mulleIsEqualType];
    if( otherType != MulleNumberIsEqualDefault)
    {
-      if( myType != otherType)
+      if( MulleNumberIsEqualLongLong != otherType)
          return( NO);
       return( value == [other longLongValue]);
    }

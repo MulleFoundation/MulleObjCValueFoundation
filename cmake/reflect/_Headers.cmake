@@ -19,6 +19,7 @@ src/reflect/_MulleObjCValueFoundation-include-private.h
 )
 
 set( PRIVATE_HEADERS
+src/String/NSString+Substring-Private.h
 src/Value/_MulleObjCConcreteValue-Private.h
 src/Value/NSNumber-Private.h
 src/Value/NSValue-Private.h

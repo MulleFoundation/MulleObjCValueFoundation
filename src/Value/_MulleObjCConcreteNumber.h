@@ -81,6 +81,22 @@
 @end
 
 
+//
+// If you use initWithBOOL: then you get a _MulleObjCBoolNumber
+// this can be useful when you want to serialize into true/false for JSON
+// when you add a -JSONdescription or some such method
+//
+@interface _MulleObjCBoolNumber : NSNumber
+{
+   BOOL   _value;
+}
+
++ (instancetype) newWithBOOL:(BOOL) value;
+
+@end
+
+
+
 // assume float losslessly converts to double and back
 @interface _MulleObjCDoubleNumber : NSNumber <MulleObjCImmutable>
 {

@@ -123,13 +123,11 @@ static inline NSUInteger  MulleObjCTaggedPointerChar7StringGetLength( _MulleObjC
 }
 
 
-static NSUInteger   grab_utf8( id self,
-                               NSUInteger length,
-                               mulle_utf8_t *dst,
-                               NSRange range)
+static NSUInteger
+   grab_ascii( id self, NSUInteger length, char *dst, NSRange range)
 {
-   mulle_utf8_t   tmp[ mulle_char7_maxlength64];
-   uintptr_t      value;
+   char        tmp[ mulle_char7_maxlength64];
+   uintptr_t   value;
 
    assert( length <= mulle_char7_maxlength64);
 
@@ -138,12 +136,12 @@ static NSUInteger   grab_utf8( id self,
    value = _MulleObjCTaggedPointerChar7ValueFromString( self);
    if( range.location)
    {
-      mulle_char7_decode( value, (char *) tmp, length);
+      mulle_char7_decode( value, tmp, length);
       memcpy( dst, &tmp[ range.location], range.length);
       return( range.length);
    }
 
-   mulle_char7_decode( value, (char *) dst, range.length);
+   mulle_char7_decode( value, dst, range.length);
    return( range.length);
 }
 
@@ -151,12 +149,25 @@ static NSUInteger   grab_utf8( id self,
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {
-   NSUInteger      length;
-   mulle_utf8_t    tmp[ mulle_char7_maxlength64];  // known ascii max 8
+   NSUInteger   length;
+   char         tmp[ mulle_char7_maxlength64];  // known ascii max 8
 
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
-   length = grab_utf8( self, length, tmp, range);
-   _mulle_utf8_convert_to_utf32( tmp, length, buf);
+   length = grab_ascii( self, length, tmp, range);
+   _mulle_ascii_convert_to_utf32( tmp, length, buf);
+}
+
+
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength
+{
+   NSUInteger   length;
+
+   length = MulleObjCTaggedPointerChar7StringGetLength( self);
+   if( length > maxLength)
+      length = maxLength;
+   length = grab_ascii( self, length, buf, NSMakeRange( 0, length));
+   return( length);
 }
 
 
@@ -168,7 +179,7 @@ static NSUInteger   grab_utf8( id self,
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
    if( length > maxLength)
       length = maxLength;
-   length = grab_utf8( self, length, buf, NSMakeRange( 0, length));
+   length = grab_ascii( self, length, (char *) buf, NSMakeRange( 0, length));
    return( length);
 }
 
@@ -227,12 +238,13 @@ static NSUInteger   grab_utf8( id self,
 
 - (char *) UTF8String
 {
-   NSUInteger      length;
-   mulle_utf8_t    *s;
+   NSUInteger  length;
+   char        *s;
 
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
    s      = MulleObjCCallocAutoreleased( length + 1, sizeof( mulle_utf8_t));
-   grab_utf8( self, length, s, NSMakeRange( 0, length));
+   grab_ascii( self, length, s, NSMakeRange( 0, length));
+   // final byte already zero by calloc
    return( (char *) s);
 }
 

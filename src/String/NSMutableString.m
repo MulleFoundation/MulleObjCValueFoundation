@@ -681,40 +681,6 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 }
 
 
-- (BOOL) hasPrefix:(NSString *) prefix
-{
-   NSUInteger   len_first;
-   NSUInteger   len_prefix;
-
-   if( _count == 0)
-      return( NO);
-
-   len_prefix = [prefix length];
-   len_first  = [_storage[ 0] length];
-   if( len_prefix <= len_first)
-      return( [_storage[ 0] hasPrefix:prefix]);
-
-   return( [super hasPrefix:prefix]);
-}
-
-
-- (BOOL) hasSuffix:(NSString *) suffix
-{
-   NSUInteger   len_last;
-   NSUInteger   len_suffix;
-
-   if( _count == 0)
-      return( NO);
-
-   len_suffix = [suffix length];
-   len_last   = [_storage[ _count - 1] length];
-   if( len_suffix <= len_last)
-      return( [_storage[ _count - 1] hasSuffix:suffix]);
-
-   return( [super hasSuffix:suffix]);
-}
-
-
 static void   mulleConvertStringsToUTF8( NSString **strings,
                                          unsigned int n,
                                          struct mulle_buffer *buffer)
@@ -731,7 +697,7 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
       len = [s mulleUTF8StringLength];
       p   = mulle_buffer_advance( buffer, len);
       [s mulleGetUTF8Characters:p
-                 maxLength:len];
+                     maxLength:len];
    }
    mulle_buffer_add_byte( buffer, 0);
 }

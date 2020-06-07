@@ -63,6 +63,28 @@
 }
 
 
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength
+{
+   NSUInteger   length;
+
+   length = _length > maxLength ? maxLength : _length;
+   memcpy( buf, _storage, length);
+   return( length);
+}
+
+
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+{
+   NSUInteger   length;
+
+   length = _length > maxLength ? maxLength : _length;
+   memcpy( buf, _storage, length);
+   return( length);
+}
+
+
 // cheating string can't use shadow
 - (char *) UTF8String
 {

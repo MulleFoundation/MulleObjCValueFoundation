@@ -46,6 +46,10 @@
 // because it can provide mulle_utf8_t and mulle_utf32_t w/o composition
 //
 @interface _MulleObjCASCIIString : NSString < MulleObjCImmutable>
+
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength;
+
 @end
 
 

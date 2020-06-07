@@ -47,15 +47,6 @@
 #import "import-private.h"
 
 
-enum
-{
-   big_end_first    = 0,
-   little_end_first = 1,
-   native_end_first = 2
-};
-
-
-
 @implementation NSString (NSData)
 
 
@@ -680,7 +671,8 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    size_t                        length;
    struct mulle_utf_information  info;
    mulle_utf8_t                  *s;
-   struct mulle_utf8_data        data;
+   struct mulle_ascii_data       data;
+   struct mulle_utf8_data        utf8data;
 
    if( [self mulleFastGetASCIIData:&data])
    {
@@ -694,10 +686,10 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
       }
    }
 
-   if( [self mulleFastGetUTF8Data:&data])
+   if( [self mulleFastGetUTF8Data:&utf8data])
    {
-      s      = data.characters;
-      length = data.length;
+      s      = utf8data.characters;
+      length = utf8data.length;
    }
    else
    {

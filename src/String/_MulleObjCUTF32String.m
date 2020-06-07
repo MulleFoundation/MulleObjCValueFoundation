@@ -39,6 +39,7 @@
 
 // other files in this library
 #import "NSString+NSData.h"
+#import "NSString+Substring-Private.h"
 
 // other libraries of MulleObjCValueFoundation
 
@@ -149,20 +150,15 @@
    struct mulle_utf32_data   data;
    BOOL                      flag;
 
-   flag = [self mulleFastGetUTF32Data:&data];
-   assert( flag);
-
    range  = MulleObjCValidateRangeAgainstLength( range, data.length);
+   flag   = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
    if( range.length == data.length)
       return( self);
 
-   if( ! range.length)
-      return( @"");
-
-   s = &data.characters[ range.location];
-   return( [[_MulleObjCSharedUTF32String newWithUTF32CharactersNoCopy:s
-                                                               length:range.length
-                                                        sharingObject:self] autorelease]);
+   data.characters = &data.characters[ range.location];
+   data.length     = range.length;
+   return( _mulleNewSubstringFromUTF32Data( self, data));
 }
 
 

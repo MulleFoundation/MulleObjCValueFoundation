@@ -40,6 +40,7 @@
 
 // other files in this library
 #import "NSString+NSData.h"
+#import "NSString+Substring-Private.h"
 
 // other libraries of MulleObjCValueFoundation
 
@@ -157,23 +158,18 @@
    struct mulle_utf16_data   data;
    BOOL                      flag;
 
-   flag = [self mulleFastGetUTF16Data:&data];
-   assert( flag);
-
    // check both because of overflow range.length == (unsigned) -1 f.e.
-   range  = MulleObjCValidateRangeAgainstLength( range, data.length);
-
+   range = MulleObjCValidateRangeAgainstLength( range, data.length);
+   flag  = [self mulleFastGetUTF16Data:&data];
+   assert( flag);
    if( range.length == data.length)
       return( self);
 
-   if( ! range.length)
-      return( @"");
-
-   s = &data.characters[ range.location];
-   return( [[_MulleObjCSharedUTF16String newWithUTF16CharactersNoCopy:s
-                                                               length:range.length
-                                                        sharingObject:self] autorelease]);
+   data.characters = &data.characters[ range.location];
+   data.length     = range.length;
+   return( _mulleNewSubstringFromUTF16Data( self, data));
 }
+
 
 - (NSUInteger) lengthOfBytesUsingEncoding:(NSStringEncoding) encoding
 {

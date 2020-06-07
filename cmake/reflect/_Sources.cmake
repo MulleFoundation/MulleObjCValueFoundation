@@ -31,6 +31,7 @@ src/String/NSString+NSCoder.m
 src/String/NSString+NSData.m
 src/String/NSStringObjCFunctions.m
 src/String/NSString+Sprintf.m
+src/String/NSString+Substring-Private.m
 src/String/NSString.m
 src/String/mulle_sprintf_object.m
 src/Value/_MulleObjCConcreteNumber+NSString.m
