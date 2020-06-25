@@ -746,7 +746,7 @@ static int  simplify_type_for_comparison( int type)
 }
 
 
-- (NSComparisonResult) compare:(NSNumber *) other
+- (NSComparisonResult) compare:(id) other
 {
    char            *p_type;
    char            *p_other_type;

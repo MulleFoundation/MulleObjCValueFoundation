@@ -94,7 +94,8 @@ typedef double    NSTimeInterval;
 
 @interface NSDate ( Future)
 
-+ (instancetype) date;
+// obsolete, use +object, keep typed
++ (NSDate *) date;
 + (NSTimeInterval) timeIntervalSinceReferenceDate;
 
 @end

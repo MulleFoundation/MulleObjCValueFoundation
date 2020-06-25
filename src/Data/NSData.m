@@ -204,9 +204,9 @@ static NSData  *_newData( void *buf, NSUInteger length)
 
 #pragma mark - construction conveniences
 
-+ (instancetype) data
++ (NSData *) data
 {
-   return( [[self new] autorelease]);
+   return( [self object]);
 }
 
 

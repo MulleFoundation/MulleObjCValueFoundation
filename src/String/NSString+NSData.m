@@ -133,182 +133,6 @@
                 options:options]);
 }
 
-
-- (NSData *) _asciiData
-{
-   NSUInteger      length;
-   NSMutableData   *data;
-   mulle_utf8_t    *p;
-   mulle_utf8_t    *sentinel;
-
-   length   = [self mulleUTF8StringLength];
-   data     = [NSMutableData mulleNonZeroedDataWithLength:length];
-   p        = [data mutableBytes];
-   sentinel = &p[ length];
-   [self mulleGetUTF8Characters:p
-                      maxLength:length];
-
-   // check that its only ASCII
-   while( p < sentinel)
-      if( *p++ & 0x80)
-         return( nil);
-   return( data);
-}
-
-
-- (NSData *) _utf8Data
-{
-   NSUInteger      length;
-   NSMutableData   *data;
-
-   length = [self mulleUTF8StringLength];
-   data   = [NSMutableData mulleNonZeroedDataWithLength:length];
-   [self mulleGetUTF8Characters:[data mutableBytes]
-                      maxLength:length];
-   return( data);
-}
-
-
-//
-// need to improve this the duplicate buffer is layme
-// put better code into subclasses
-//
-- (NSData *) _utf16DataWithEndianness:(unsigned int) endianess
-                        prefixWithBOM:(BOOL) prefixWithBOM
-                    terminateWithZero:(BOOL) terminateWithZero
-{
-   NSMutableData                  *data;
-   NSMutableData                  *tmp_data;
-   NSUInteger                     tmp_length;
-   NSUInteger                     utf16total;
-   mulle_utf16_t                  *buf;
-   mulle_utf16_t                  *p;
-   mulle_utf16_t                  *sentinel;
-   mulle_utf16_t                  bom;
-   mulle_utf32_t                  *tmp_buf;
-   struct mulle_buffer            buffer;
-   struct mulle_utf_information   info;
-   size_t                         size;
-
-   tmp_length = [self length];
-   tmp_data   = [NSMutableData mulleNonZeroedDataWithLength:tmp_length * sizeof( mulle_utf32_t)];
-   tmp_buf    = [tmp_data mutableBytes];
-
-   [self getCharacters:tmp_buf
-                 range:NSMakeRange( 0, tmp_length)];
-
-   if( mulle_utf32_information( tmp_buf, tmp_length, &info))
-      MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF32");
-
-   utf16total = info.utf16len;
-   if( prefixWithBOM)
-      ++utf16total;
-   if( terminateWithZero)
-      ++utf16total;
-
-   size = utf16total * sizeof( mulle_utf16_t);
-   data = [NSMutableData mulleNonZeroedDataWithLength:size];
-   buf  = [data mutableBytes];
-
-   mulle_buffer_init_inflexible_with_static_bytes( &buffer, buf, size);
-
-   if( prefixWithBOM)
-   {
-      bom = (mulle_utf16_t) mulle_utf32_get_bomcharacter();
-      mulle_buffer_add_bytes( &buffer, &bom, sizeof( bom));
-   }
-   mulle_utf32_bufferconvert_to_utf16( info.start,
-                                       info.utf32len,
-                                       &buffer,
-                                       (void (*)()) mulle_buffer_add_bytes);
-   if( terminateWithZero)
-   {
-      bom = 0;
-      mulle_buffer_add_bytes( &buffer, &bom, sizeof( bom));
-   }
-
-   assert( mulle_buffer_get_length( &buffer) == size);
-   assert( ! mulle_buffer_has_overflown( &buffer));
-   mulle_buffer_done( &buffer);
-
-   if( endianess == native_end_first)
-      return( data);
-
-#ifdef __LITTLE_ENDIAN__
-   if( endianess == little_end_first)
-      return( data);
-#else
-   if( endianess == big_end_first)
-      return( data);
-#endif
-
-   p        = buf;
-   sentinel = &p[ utf16total];
-
-   while( p < sentinel)
-   {
-      *p = MulleObjCSwapUInt16( *p);
-      ++p;
-   }
-
-   return( data);
-}
-
-
-- (NSData *) _utf32DataWithEndianness:(unsigned int) endianess
-                        prefixWithBOM:(BOOL) prefixWithBOM
-                    terminateWithZero:(BOOL) terminateWithZero
-{
-   NSUInteger      length;
-   NSUInteger      total;
-   NSMutableData   *data;
-   mulle_utf32_t   *buf;
-   mulle_utf32_t   *p;
-   mulle_utf32_t   *sentinel;
-
-   total = length = [self length];
-   if( prefixWithBOM)
-      ++total;
-   if( terminateWithZero)
-      ++total;
-
-   data    = [NSMutableData mulleNonZeroedDataWithLength:total * sizeof( mulle_utf32_t)];
-   p = buf = [data mutableBytes];
-
-   if( prefixWithBOM)
-      *p++ = mulle_utf32_get_bomcharacter();
-
-   [self getCharacters:p
-                 range:NSMakeRange( 0, length)];
-   p = &p[ length];
-
-   if( terminateWithZero)
-      *p = 0;
-
-   if( endianess == native_end_first)
-      return( data);
-
-#ifdef __LITTLE_ENDIAN__
-   if( endianess == little_end_first)
-      return( data);
-#else
-   if( endianess == big_end_first)
-      return( data);
-#endif
-
-   p        = buf;
-   sentinel = &p[ total];
-
-   while( p < sentinel)
-   {
-      *p = MulleObjCSwapUInt32( *p);
-      ++p;
-   }
-
-   return( data);
-}
-
-
 //
 // TODO: need a plugin mechanism to support more encodings
 //
@@ -740,6 +564,187 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
    return( [[[NSString alloc] initWithBytes:bytes
                                      length:length
                                    encoding:encoding] autorelease]);
+}
+
+@end
+
+
+
+@implementation NSString( NSDataPrivate)
+
+- (NSData *) _asciiData
+{
+   NSUInteger      length;
+   NSMutableData   *data;
+   mulle_utf8_t    *p;
+   mulle_utf8_t    *sentinel;
+
+   length   = [self mulleUTF8StringLength];
+   data     = [NSMutableData mulleNonZeroedDataWithLength:length];
+   p        = [data mutableBytes];
+   sentinel = &p[ length];
+   [self mulleGetUTF8Characters:p
+                      maxLength:length];
+
+   // check that its only ASCII
+   while( p < sentinel)
+      if( *p++ & 0x80)
+         return( nil);
+
+   return( data);
+}
+
+
+- (NSData *) _utf8Data
+{
+   NSUInteger      length;
+   NSMutableData   *data;
+
+   length = [self mulleUTF8StringLength];
+   data   = [NSMutableData mulleNonZeroedDataWithLength:length];
+   [self mulleGetUTF8Characters:[data mutableBytes]
+                      maxLength:length];
+   return( data);
+}
+
+
+//
+// need to improve this the duplicate buffer is layme
+// put better code into subclasses
+//
+- (NSData *) _utf16DataWithEndianness:(unsigned int) endianess
+                        prefixWithBOM:(BOOL) prefixWithBOM
+                    terminateWithZero:(BOOL) terminateWithZero
+{
+   NSMutableData                  *data;
+   NSMutableData                  *tmp_data;
+   NSUInteger                     tmp_length;
+   NSUInteger                     utf16total;
+   mulle_utf16_t                  *buf;
+   mulle_utf16_t                  *p;
+   mulle_utf16_t                  *sentinel;
+   mulle_utf16_t                  bom;
+   mulle_utf32_t                  *tmp_buf;
+   struct mulle_buffer            buffer;
+   struct mulle_utf_information   info;
+   size_t                         size;
+
+   tmp_length = [self length];
+   tmp_data   = [NSMutableData mulleNonZeroedDataWithLength:tmp_length * sizeof( mulle_utf32_t)];
+   tmp_buf    = [tmp_data mutableBytes];
+
+   [self getCharacters:tmp_buf
+                 range:NSMakeRange( 0, tmp_length)];
+
+   if( mulle_utf32_information( tmp_buf, tmp_length, &info))
+      MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF32");
+
+   utf16total = info.utf16len;
+   if( prefixWithBOM)
+      ++utf16total;
+   if( terminateWithZero)
+      ++utf16total;
+
+   size = utf16total * sizeof( mulle_utf16_t);
+   data = [NSMutableData mulleNonZeroedDataWithLength:size];
+   buf  = [data mutableBytes];
+
+   mulle_buffer_init_inflexible_with_static_bytes( &buffer, buf, size);
+
+   if( prefixWithBOM)
+   {
+      bom = (mulle_utf16_t) mulle_utf32_get_bomcharacter();
+      mulle_buffer_add_bytes( &buffer, &bom, sizeof( bom));
+   }
+   mulle_utf32_bufferconvert_to_utf16( info.start,
+                                       info.utf32len,
+                                       &buffer,
+                                       (void (*)()) mulle_buffer_add_bytes);
+   if( terminateWithZero)
+   {
+      bom = 0;
+      mulle_buffer_add_bytes( &buffer, &bom, sizeof( bom));
+   }
+
+   assert( mulle_buffer_get_length( &buffer) == size);
+   assert( ! mulle_buffer_has_overflown( &buffer));
+   mulle_buffer_done( &buffer);
+
+   if( endianess == native_end_first)
+      return( data);
+
+#ifdef __LITTLE_ENDIAN__
+   if( endianess == little_end_first)
+      return( data);
+#else
+   if( endianess == big_end_first)
+      return( data);
+#endif
+
+   p        = buf;
+   sentinel = &p[ utf16total];
+
+   while( p < sentinel)
+   {
+      *p = MulleObjCSwapUInt16( *p);
+      ++p;
+   }
+
+   return( data);
+}
+
+
+- (NSData *) _utf32DataWithEndianness:(unsigned int) endianess
+                        prefixWithBOM:(BOOL) prefixWithBOM
+                    terminateWithZero:(BOOL) terminateWithZero
+{
+   NSUInteger      length;
+   NSUInteger      total;
+   NSMutableData   *data;
+   mulle_utf32_t   *buf;
+   mulle_utf32_t   *p;
+   mulle_utf32_t   *sentinel;
+
+   total = length = [self length];
+   if( prefixWithBOM)
+      ++total;
+   if( terminateWithZero)
+      ++total;
+
+   data    = [NSMutableData mulleNonZeroedDataWithLength:total * sizeof( mulle_utf32_t)];
+   p = buf = [data mutableBytes];
+
+   if( prefixWithBOM)
+      *p++ = mulle_utf32_get_bomcharacter();
+
+   [self getCharacters:p
+                 range:NSMakeRange( 0, length)];
+   p = &p[ length];
+
+   if( terminateWithZero)
+      *p = 0;
+
+   if( endianess == native_end_first)
+      return( data);
+
+#ifdef __LITTLE_ENDIAN__
+   if( endianess == little_end_first)
+      return( data);
+#else
+   if( endianess == big_end_first)
+      return( data);
+#endif
+
+   p        = buf;
+   sentinel = &p[ total];
+
+   while( p < sentinel)
+   {
+      *p = MulleObjCSwapUInt32( *p);
+      ++p;
+   }
+
+   return( data);
 }
 
 @end

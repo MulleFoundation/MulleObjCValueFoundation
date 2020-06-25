@@ -61,8 +61,10 @@ enum
 + (instancetype) dataWithBytesNoCopy:(void *) bytes
                               length:(NSUInteger) length
                         freeWhenDone:(BOOL) flag;
+
+// use +object instead
++ (NSData *) data;
 + (instancetype) dataWithData:(NSData *) other;
-+ (instancetype) data;
 
 - (NSUInteger) hash;
 - (BOOL) isEqual:(id) other;

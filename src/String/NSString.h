@@ -54,30 +54,29 @@ typedef mulle_utf32_t  unichar;
 // since its totally pervasive in all other classes.
 // The implementation in MulleObjCValueFoundation is slightly schizophrenic.
 // On the character level anything below UTF-32 is just misery.
-// But UTF-8 is basically what is being used (for I/O).
+// But UTF-8 is basically what is being used for I/O.
 //
 // The MulleObjCValueFoundation deals with UTF32 and UTF8.
-// UTF-16 is treated just an optimized storage medium for UTF strings.
+// UTF-16 is treated just an optimized storage medium for UTF32 strings.
 //
-// A CString is a string with a zero terminator in the C locale,
-// this particular library does not deal with locales, so the concept
-// is postponed until POSIX is introduced. (Truth be told, c locales suck)
+// A CString is a string with a zero terminator in the characterset of the
+// current C locale. This particular library (MulleObjCValueFoundation)
+// does not deal with locales, so the conceptis postponed until POSIX is
+// introduced (MulleObjCOSFoundation). (Truth be told, c locales suck)
 //
 // To support unichar somewhat efficiently
 //
 //    o make unichar UTF-32
-//    o store strings in three formats
+//    o store strings in three formats only!!!
 //        1. ASCII (7 bit)
 //        2. UTF-16 (15 bit only) (w/o surrogate pairs)
 //        3. UTF-32, everything else
-//    o strings that are not ASCII, store their UTF8 representation when
-//      needed.
 //
 // As an external exchange format UTF8 is the law, forget the others.
 //
 
 //
-// when dealing with the filesystem (open/stat) use -fileSystemRepresentation
+// When dealing with the filesystem (open/stat) use -fileSystemRepresentation
 // defined by a layer upwards of MulleObjCValueFoundation
 // when interfacing with the OS (log messages) or C use cString
 // in all other cases use UTF8String
@@ -87,7 +86,9 @@ typedef mulle_utf32_t  unichar;
 {
 }
 
-+ (instancetype) string;
+// obsolete convenience: use +object!, must be typed for NSScanner ...
++ (NSString *) string;
+
 + (instancetype) stringWithString:(NSString *) other;
 
 - (instancetype) initWithString:(NSString *) s;
@@ -193,9 +194,9 @@ typedef mulle_utf32_t  unichar;
 
 - (NSString *) stringByAppendingString:(NSString *) other;
 
-- (instancetype) stringByPaddingToLength:(NSUInteger) length
-                              withString:(NSString *) other
-                         startingAtIndex:(NSUInteger) index;
+- (NSString *) stringByPaddingToLength:(NSUInteger) length
+                            withString:(NSString *) other
+                       startingAtIndex:(NSUInteger) index;
 
 - (NSString *) stringByReplacingOccurrencesOfString:(NSString *) search
                                          withString:(NSString *) replacement

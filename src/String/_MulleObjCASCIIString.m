@@ -106,38 +106,34 @@ static void   grab_utf32( id self,
 }
 
 
-static void   grab_ascii( id self,
-                          SEL sel,
-                          char *storage,
-                          NSUInteger len,
-                          mulle_utf8_t *dst,
-                          NSUInteger dst_len)
-{
-   if( dst_len < len)
-      MulleObjCThrowInvalidArgumentExceptionCString( "destination buffer too small");
-
-   memcpy( dst, storage, len);
-}
-
-
-- (NSUInteger) mulleGetASCIICharacters:(char *) buf
-                             maxLength:(NSUInteger) maxLength
+static NSUInteger   grab_ascii( id self,
+                                char *dst,
+                                NSUInteger maxLength)
 {
    struct mulle_ascii_data   data;
    BOOL                      flag;
 
    flag = [self mulleFastGetASCIIData:&data];
    assert( flag);
-   grab_ascii( self, _cmd, data.characters, data.length, buf, maxLength);
+
+   if( data.length > maxLength)
+      data.length = maxLength;
+   memcpy( dst, data.characters, data.length);
    return( data.length);
+}
+
+
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength
+{
+   return( grab_ascii( self, buf, maxLength));
 }
 
 
 - (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   return( [self mulleGetASCIICharacters:buf
-                               maxLength:maxLength]);
+   return( grab_ascii( self, (char *) buf, maxLength));
 }
 
 
