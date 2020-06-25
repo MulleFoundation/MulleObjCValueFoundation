@@ -178,8 +178,9 @@ static NSUInteger   grab_ascii( id self, NSUInteger length, char *dst, NSRange r
 }
 
 
-- (NSUInteger) mulleGetASCIICharacters:(char *) buf
-                             maxLength:(NSUInteger) maxLength
+static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
+                                      char *buf,
+                                      NSUInteger maxLength)
 {
    NSUInteger   length;
 
@@ -191,16 +192,17 @@ static NSUInteger   grab_ascii( id self, NSUInteger length, char *dst, NSRange r
 }
 
 
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength
+{
+   return( grab_ascii_char5( self, buf, maxLength));
+}
+
+
 - (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   NSUInteger   length;
-
-   length = MulleObjCTaggedPointerChar5StringGetLength( self);
-   if( length > maxLength)
-      length = maxLength;
-   length = grab_ascii( self, length, (char *) buf, NSMakeRange( 0, length));
-   return( length);
+   return( grab_ascii_char5( self, (char *) buf, maxLength));
 }
 
 

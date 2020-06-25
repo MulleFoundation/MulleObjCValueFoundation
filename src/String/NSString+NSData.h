@@ -48,8 +48,13 @@ enum
 
 
 //
-// Maybe more later. Should ensure that the enums have same numeric values as
-// in AppleFoundation.
+// NSString+NSData is the "import" of characters into NSString. Here the
+// incoming data is not trusted. Malformed UTF sequences are rejected. As
+// soon as the characters become part of an NSString they are trusted to
+// be well-formed and of the proper encoding for the given string class.
+// Characters derived from an NSString are then trusted and not checked again.
+// Typical imports of string data are files, user-input, internet connections.
+// None can be trusted to always provide correct content.
 //
 // NSStringEncodings used internally are NSASCIIStringEncoding,
 // NSUTF8StringEncoding, NSUTF16StringEncoding and NSUTF32StringEncoding.
@@ -66,6 +71,10 @@ enum
 // NSASCIIStringEncoding.
 //
 
+//
+// Maybe more later. Should ensure that the enums have same numeric values as
+// in AppleFoundation.
+//
 enum
 {
    NSASCIIStringEncoding         = 1,
@@ -172,6 +181,11 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 // why is this here ?
 - (instancetype) mulleInitWithUTF16Characters:(mulle_utf16_t *) chars
                                        length:(NSUInteger) length;
+
+@end
+
+
+@interface NSString( NSDataPrivate)
 
 // private and mulleprefix needed
 - (NSData *) _asciiData;

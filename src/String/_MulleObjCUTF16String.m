@@ -118,7 +118,6 @@
 }
 
 
-
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {

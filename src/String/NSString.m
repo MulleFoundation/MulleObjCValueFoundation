@@ -240,9 +240,10 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 # pragma mark - convenience constructors
 
-+ (instancetype) string
+// obsolete
++ (NSString *) string
 {
-   return( [[[self alloc] init] autorelease]);
+   return( [self object]);
 }
 
 
