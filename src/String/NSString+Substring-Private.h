@@ -21,11 +21,12 @@ NSString   *_mulleNewUTF8StringWithStringContext( mulle_utf8_t *start,
 
 
 static inline NSString   *_mulleNewSubstringFromASCIIData( NSString *self,
-                                                           struct mulle_ascii_data buf)
+                                                           struct mulle_asciidata buf)
 {
    struct _MulleStringContext   ctxt;
 
-//   ctxt.stringClass   = Nil
+// need to init this for valgrind ?
+//   ctxt.stringClass   = Nil;
    ctxt.sharingObject = self;
    ctxt.sepLen        = 0;
 
@@ -36,10 +37,11 @@ static inline NSString   *_mulleNewSubstringFromASCIIData( NSString *self,
 
 
 static inline NSString   *_mulleNewSubstringFromUTF16Data( NSString *self,
-                                                           struct mulle_utf16_data buf)
+                                                           struct mulle_utf16data buf)
 {
    struct _MulleStringContext   ctxt;
 
+// need to init this for valgrind ?
 //   ctxt.stringClass   = Nil;
    ctxt.sharingObject = self;
    ctxt.sepLen        = 0;
@@ -49,10 +51,11 @@ static inline NSString   *_mulleNewSubstringFromUTF16Data( NSString *self,
 
 
 static inline NSString   *_mulleNewSubstringFromUTF32Data( NSString *self,
-                                                        struct mulle_utf32_data buf)
+                                                        struct mulle_utf32data buf)
 {
    struct _MulleStringContext   ctxt;
 
+// need to init this for valgrind  ?
 //   ctxt.stringClass   = Nil;
    ctxt.sharingObject = self;
    ctxt.sepLen        = 0;

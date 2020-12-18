@@ -9,6 +9,7 @@
 #import "NSStringObjCFunctions.h"
 
 #import "NSString.h"
+#import "NSString+ClassCluster.h"
 #import "NSString+Sprintf.h"
 
 #import "import-private.h"
@@ -81,5 +82,46 @@ NSString   *NSStringFromRange( NSRange range)
 }
 
 
+NSString  *MulleObjCStringByCombiningPrefixAndCapitalizedKey( NSString *prefix,
+                                                              NSString *key,
+                                                              BOOL tailColon)
+{
+   NSUInteger               prefix_len;
+   NSUInteger               key_len;
+   NSUInteger               len;
+   uint8_t                  *buf;
+   uint8_t                  c;
+   NSString                 *s;
+   struct mulle_allocator   *allocator;
 
+   key_len = [key mulleUTF8StringLength];
+   assert( key_len);
+
+   if( key_len == 0)
+      return( nil);
+
+   allocator  = MulleObjCInstanceGetAllocator( key);
+   prefix_len = [prefix mulleUTF8StringLength];
+   len        = key_len + prefix_len + (tailColon == YES);
+
+   buf = (uint8_t *) mulle_allocator_malloc( allocator, len);
+
+   [prefix mulleGetUTF8Characters:buf];
+   [key mulleGetUTF8Characters:&buf[ prefix_len]];
+
+   c = buf[ prefix_len];
+   if( c >= 'a' && c <= 'z')
+   {
+      c -= 'a' - 'A';
+      buf[ prefix_len] = c;
+   }
+
+   if( tailColon)
+      buf[ len - 1] = ':';
+
+   s = [[[NSString alloc] mulleInitWithUTF8CharactersNoCopy:buf
+                                                     length:len
+                                                  allocator:allocator] autorelease];
+   return( s);
+}
 

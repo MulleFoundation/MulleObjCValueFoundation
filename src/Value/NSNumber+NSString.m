@@ -93,9 +93,9 @@
 }
 
 
-- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data
+- (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
 {
-   return( mulle_ascii_data_make( NULL, 0));
+   *data = mulle_asciidata_make( NULL, 0);
 }
 
 @end

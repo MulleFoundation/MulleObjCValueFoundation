@@ -48,7 +48,7 @@
 
 static inline NSUInteger  hashNSUInteger( NSUInteger value)
 {
-   return( mulle_hash_avalanche( value));
+   return( mulle_integer_hash( value));
 }
 
 
@@ -87,8 +87,8 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 }
 
 
-- (int32_t) _int32Value     {  return( (int32_t) _value); }
-- (int64_t) _int64Value     {  return( (int64_t) _value); }
+- (int32_t) _int32Value     { return( (int32_t) _value); }
+- (int64_t) _int64Value     { return( (int64_t) _value); }
 
 - (BOOL) boolValue          { return( _value ? YES : NO); }
 - (char) charValue          { return( (char) _value); }
@@ -98,11 +98,11 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 - (NSInteger) integerValue  { return( _value); }
 - (long long) longLongValue { return( _value); }
 
-- (unsigned char) unsignedCharValue   { return( (unsigned char) _value); }
-- (unsigned short) unsignedShortValue { return( (unsigned short) _value); }
-- (unsigned int) unsignedIntValue     { return( (unsigned int) _value); }
-- (unsigned long) unsignedLongValue   { return( (unsigned long) _value); }
-- (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
+- (unsigned char) unsignedCharValue          { return( (unsigned char) _value); }
+- (unsigned short) unsignedShortValue        { return( (unsigned short) _value); }
+- (unsigned int) unsignedIntValue            { return( (unsigned int) _value); }
+- (unsigned long) unsignedLongValue          { return( (unsigned long) _value); }
+- (NSUInteger) unsignedIntegerValue          { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
 // 32 bit conversions should pose no problem
@@ -148,8 +148,8 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 }
 
 
-- (int32_t) _int32Value     {  return( (int32_t) _value); }
-- (int64_t) _int64Value     {  return( (int64_t) _value); }
+- (int32_t) _int32Value     { return( (int32_t) _value); }
+- (int64_t) _int64Value     { return( (int64_t) _value); }
 
 - (BOOL) boolValue          { return( _value ? YES : NO); }
 - (char) charValue          { return( (char) _value); }
@@ -159,11 +159,11 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 - (NSInteger) integerValue  { return( (NSInteger) _value); }
 - (long long) longLongValue { return( (long long) _value); }
 
-- (unsigned char) unsignedCharValue   { return( (unsigned char) _value); }
-- (unsigned short) unsignedShortValue { return( (unsigned short) _value); }
-- (unsigned int) unsignedIntValue     { return( (unsigned int) _value); }
-- (unsigned long) unsignedLongValue   { return( (unsigned long) _value); }
-- (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
+- (unsigned char) unsignedCharValue          { return( (unsigned char) _value); }
+- (unsigned short) unsignedShortValue        { return( (unsigned short) _value); }
+- (unsigned int) unsignedIntValue            { return( (unsigned int) _value); }
+- (unsigned long) unsignedLongValue          { return( (unsigned long) _value); }
+- (NSUInteger) unsignedIntegerValue          { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
 //
@@ -264,9 +264,12 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
    return( hashNSUIntegerBytes( &_value, sizeof( _value)));
 }
 
+
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
 {
-   return( MulleNumberIsEqualLongLong);
+   if( sizeof( int32_t) < sizeof( long long))
+      return( MulleNumberIsEqualLongLong);
+   return( MulleNumberIsEqualDefault);
 }
 
 @end
@@ -331,9 +334,12 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
    return( hashNSUIntegerBytes( &_value, sizeof( _value)));
 }
 
+
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
 {
-   return( MulleNumberIsEqualLongLong);
+   if( sizeof( int64_t) < sizeof( long long))
+      return( MulleNumberIsEqualLongLong);
+   return( MulleNumberIsEqualDefault);
 }
 
 @end
@@ -492,7 +498,7 @@ static inline NSUInteger  hashDouble( double value)
    if( (double) y == value && y >= NSIntegerMin && y <= NSIntegerMax)
        return( hashNSUInteger( y));
 
-   return( hashNSUIntegerBytes( &value, sizeof( double)));
+   return( mulle_double_hash( value));
 }
 
 
@@ -503,7 +509,7 @@ static inline NSUInteger  hashLongDouble( long double value)
    y = (double) value;
    if( (long double) y == value)
        return( hashDouble( y));
-   return( hashNSUIntegerBytes( &value, sizeof( double)));
+   return( mulle_long_double_hash( value));
 }
 
 
@@ -519,6 +525,8 @@ static inline NSUInteger  hashLongDouble( long double value)
 }
 
 
+// TODO: maybe check out
+//       https://stackoverflow.com/questions/17035464/a-fast-method-to-round-a-double-to-a-32-bit-int-explained
 - (NSInteger) integerValue
 {
    return( (NSInteger) _value);

@@ -16,3 +16,8 @@ SEL         NSSelectorFromString( NSString *s);
 NSString   *NSStringFromClass( Class cls);
 NSString   *NSStringFromSelector( SEL sel);
 NSString   *NSStringFromRange( NSRange range);
+
+NSString   *
+   MulleObjCStringByCombiningPrefixAndCapitalizedKey( NSString *prefix,
+                                                      NSString *key,
+                                                      BOOL tailingColon);

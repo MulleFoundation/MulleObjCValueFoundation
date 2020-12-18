@@ -61,7 +61,7 @@
 
 - (NSUInteger) mulleUTF8StringLength
 {
-   struct mulle_utf32_data   data;
+   struct mulle_utf32data   data;
    BOOL                      flag;
 
    flag = [self mulleFastGetUTF32Data:&data];
@@ -73,7 +73,7 @@
 - (char *) UTF8String
 {
    struct mulle_buffer       buf;
-   struct mulle_utf32_data   data;
+   struct mulle_utf32data   data;
    BOOL                      flag;
 
    if( ! _shadow)
@@ -81,14 +81,15 @@
       flag = [self mulleFastGetUTF32Data:&data];
       assert( flag);
 
-      mulle_buffer_init( &buf, MulleObjCInstanceGetAllocator( self));
+      mulle_buffer_init_with_capacity( &buf, data.length * 4, MulleObjCInstanceGetAllocator( self));
       mulle_utf32_bufferconvert_to_utf8( data.characters,
                                          data.length,
                                          &buf,
                                          (mulle_utf_add_bytes_function_t) mulle_buffer_add_bytes);
 
       mulle_buffer_add_byte( &buf, 0);
-      _shadow = mulle_buffer_extract_all( &buf);
+      mulle_buffer_size_to_fit( &buf);
+      _shadow = mulle_buffer_extract_bytes( &buf);
       mulle_buffer_done( &buf);
    }
    return( (char *) _shadow);
@@ -98,7 +99,7 @@
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {
-   struct mulle_utf32_data   data;
+   struct mulle_utf32data   data;
    BOOL                      flag;
 
    flag = [self mulleFastGetUTF32Data:&data];
@@ -114,7 +115,7 @@
                             maxLength:(NSUInteger) maxLength
 {
    struct mulle_utf8_conversion_context   ctxt;
-   struct mulle_utf32_data                data;
+   struct mulle_utf32data                 data;
    BOOL                                   flag;
 
    flag = [self mulleFastGetUTF32Data:&data];
@@ -127,8 +128,6 @@
                                       data.length,
                                       &ctxt,
                                       mulle_utf8_conversion_context_add_bytes);
-   if( ctxt.buf > ctxt.sentinel)
-      MulleObjCThrowInvalidArgumentExceptionCString( "destination buffer too small");
    assert( ! memchr( buf, 0, ctxt.buf - buf));
    return( ctxt.buf - buf);
 }
@@ -147,18 +146,18 @@
 {
    mulle_utf32_t             *s;
    NSUInteger                length;
-   struct mulle_utf32_data   data;
+   struct mulle_utf32data   data;
    BOOL                      flag;
 
-   range  = MulleObjCValidateRangeAgainstLength( range, data.length);
    flag   = [self mulleFastGetUTF32Data:&data];
    assert( flag);
+   range  = MulleObjCValidateRangeAgainstLength( range, data.length);
    if( range.length == data.length)
       return( self);
 
    data.characters = &data.characters[ range.location];
    data.length     = range.length;
-   return( _mulleNewSubstringFromUTF32Data( self, data));
+   return( [_mulleNewSubstringFromUTF32Data( self, data) autorelease]);
 }
 
 
@@ -205,7 +204,7 @@
 }
 
 
-- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) data
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data
 {
    data->characters = _storage;
    data->length     = _length;
@@ -257,7 +256,7 @@
 }
 
 
-- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) data
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data
 {
    data->characters = _storage;
    data->length     = _length;
@@ -309,7 +308,7 @@
 }
 
 
-- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) data
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data
 {
    data->characters = _storage;
    data->length     = _length;

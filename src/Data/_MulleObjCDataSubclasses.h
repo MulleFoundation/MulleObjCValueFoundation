@@ -96,6 +96,6 @@
 
 + (instancetype) mulleNewWithBytesNoCopy:(void *) bytes
                                   length:(NSUInteger) length
-                                   owner:(id) owner;
+                           sharingObject:(id) owner;
 
 @end

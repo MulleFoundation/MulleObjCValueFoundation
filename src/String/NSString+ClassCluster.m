@@ -168,6 +168,7 @@ static NSString  *
    NSUInteger            utf16len;
    mulle_utf16_t         *utf16;
    struct mulle_buffer   buffer;
+   struct mulle_data     data;
 
    assert( length);
    mulle_buffer_init( &buffer, allocator);
@@ -179,12 +180,11 @@ static NSString  *
                                        &buffer,
                                        (void (*)()) mulle_buffer_add_bytes);
 
-   utf16len = mulle_buffer_get_length( &buffer) / sizeof( mulle_utf16_t);
-   utf16    = mulle_buffer_extract_all( &buffer);
+   data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
-   return( [_MulleObjCAllocatorUTF16String newWithUTF16CharactersNoCopy:utf16
-                                                                 length:utf16len
+   return( [_MulleObjCAllocatorUTF16String newWithUTF16CharactersNoCopy:data.bytes
+                                                                 length:data.length / sizeof( mulle_utf16_t)
                                                               allocator:allocator]);
 }
 
@@ -197,6 +197,7 @@ static NSString  *
    struct mulle_buffer   buffer;
    NSUInteger            utf32len;
    mulle_utf32_t         *utf32;
+   struct mulle_data     data;
 
    assert( length);
    assert( allocator);
@@ -210,12 +211,11 @@ static NSString  *
                                       &buffer,
                                       (void (*)()) mulle_buffer_add_bytes);
 
-   utf32len = mulle_buffer_get_length( &buffer) / sizeof( unichar);
-   utf32    = mulle_buffer_extract_all( &buffer);
+   data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
-   return( [_MulleObjCAllocatorUTF32String newWithUTF32CharactersNoCopy:utf32
-                                                                 length:utf32len
+   return( [_MulleObjCAllocatorUTF32String newWithUTF32CharactersNoCopy:data.bytes
+                                                                 length:data.length / sizeof( unichar)
                                                               allocator:allocator]);
 }
 
@@ -324,9 +324,9 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 - (instancetype) initWithUTF8String:(char *) s
 {
    struct mulle_allocator       *allocator;
-   struct _mulle_objc_universe   *universe;
+   struct _mulle_objc_universe  *universe;
 
-   assert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterObject]);
 
    if( ! s)
       MulleObjCThrowInvalidArgumentExceptionCString( "argument must not be null");
@@ -348,7 +348,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
    struct _mulle_objc_universe   *universe;
    id                           old;
 
-   assert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterObject]);
 
    allocator = MulleObjCInstanceGetAllocator( self);
    universe  = MulleObjCObjectGetUniverse( self);
@@ -363,7 +363,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 {
    struct mulle_allocator   *allocator;
 
-   assert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterObject]);
 
    allocator = flag ? &mulle_stdlib_allocator : NULL;
    self      = [self mulleInitWithCharactersNoCopy:chars
@@ -395,7 +395,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 // as above but will return nil, if UTF8 is wrong
 //
 - (instancetype) mulleInitOrNilWithUTF8Characters:(mulle_utf8_t *) s
-                                            length:(NSUInteger) len
+                                           length:(NSUInteger) len
 {
    struct mulle_allocator       *allocator;
    struct _mulle_objc_universe   *universe;

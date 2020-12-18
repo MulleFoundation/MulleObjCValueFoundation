@@ -214,7 +214,7 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
    uintptr_t   hash;
 
    value = _MulleObjCTaggedPointerChar5ValueFromString( self);
-   hash  = _mulle_char5_fnv1a( value);
+   hash  = _mulle_char5_hash_nsstring( value);
    // hash  = (hash << 4) | (hash >> (sizeof( uintptr_t) * 8 - 4));
    return( (NSUInteger) hash);
 }

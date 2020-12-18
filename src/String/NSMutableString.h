@@ -46,7 +46,7 @@
 //
 @interface NSMutableString : NSString
 {
-   unsigned int   _length;
+   NSUInteger     _length;
    unsigned int   _count;
    unsigned int   _size;
    NSString       **_storage;
@@ -75,7 +75,9 @@
 - (void) mulleAppendCharacters:(unichar *) buf
                         length:(NSUInteger) length;
 - (void) mulleAppendFormat:(NSString *) format
-                 arguments:(mulle_vararg_list) args;
+           mulleVarargList:(mulle_vararg_list) args;
+- (void) mulleAppendFormat:(NSString *) format
+                 arguments:(va_list) args;
 @end
 
 

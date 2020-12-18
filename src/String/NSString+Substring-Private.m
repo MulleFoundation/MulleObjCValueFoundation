@@ -71,6 +71,7 @@ NSString   *_mulleNewASCIIStringWithStringContext( char *start,
 
    end -= ctxt->sepLen;
    assert( start <= end);
+
    length = end - start;
    if( ! length)
       return( @"");
@@ -105,6 +106,7 @@ NSString   *_mulleNewUTF16StringWithStringContext( mulle_utf16_t *start,
 
    end   -= ctxt->sepLen;
    assert( start <= end);
+
    length = end - start;
    if( ! length)
       return( @"");
@@ -141,6 +143,7 @@ NSString   *_mulleNewUTF32StringWithStringContext( mulle_utf32_t *start,
 
    end -= ctxt->sepLen;
    assert( start <= end);
+
    length = end - start;
    if( ! length)
       return( @"");

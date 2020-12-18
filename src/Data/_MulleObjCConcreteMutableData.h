@@ -59,5 +59,5 @@
                                   length:(NSUInteger) length
                                allocator:(struct mulle_allocator *) allocator;
 
-
+// TODO: need a shrink to fit ?
 @end

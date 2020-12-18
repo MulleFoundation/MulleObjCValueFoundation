@@ -95,9 +95,10 @@ static id   string_from_buffer( NSString *self,
                                 struct mulle_buffer *buffer,
                                 struct mulle_allocator *allocator)
 {
-   size_t         len;
-   mulle_utf8_t   *result;
-   NSString       *s;
+   size_t              len;
+   mulle_utf8_t        *result;
+   NSString            *s;
+   struct mulle_data   data;
 
    // check if buffer needed to malloc
    len = mulle_buffer_get_staticlength( buffer);
@@ -105,15 +106,14 @@ static id   string_from_buffer( NSString *self,
    {
       result = mulle_buffer_get_bytes( buffer);
       s      = [self mulleInitWithUTF8Characters:result
-                                      length:len];
+                                          length:len];
    }
    else
    {
-      len    = mulle_buffer_get_length( buffer);
-      result = mulle_buffer_extract_all( buffer);
-      s      = [self mulleInitWithUTF8CharactersNoCopy:result
-                                            length:len
-                                         allocator:allocator];
+      data = mulle_buffer_extract_data( buffer);
+      s    = [self mulleInitWithUTF8CharactersNoCopy:data.bytes
+                                              length:data.length
+                                           allocator:allocator];
    }
    mulle_buffer_done( buffer);
    return( s);
@@ -196,7 +196,7 @@ char   *MulleObjC_vasprintf( char *format, va_list args)
    mulle_buffer_init( &buffer, NULL);
    mulle_vsprintf( &buffer, format, args);
    mulle_buffer_add_byte( &buffer, 0);
-   s = mulle_buffer_extract_all( &buffer);
+   s = mulle_buffer_extract_bytes( &buffer);
    mulle_buffer_done( &buffer);
 
    MulleObjCAutoreleaseAllocation( s, NULL);

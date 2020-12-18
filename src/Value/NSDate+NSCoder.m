@@ -15,8 +15,7 @@
 
 @implementation NSDate( NSCoder)
 
-# pragma mark -
-# pragma mark NSCoding
+# pragma mark - NSCoding
 
 - (instancetype) initWithCoder:(NSCoder *) coder
 {

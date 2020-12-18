@@ -82,21 +82,16 @@
 
 #pragma mark - hash and equality
 
+
 //
 // The hash is incompatible with NSNumber
 //
 - (NSUInteger) hash
 {
-   NSUInteger   size;
-   void         *bytes;
+   void   *bytes;
 
    bytes = _MulleObjCConcreteValueBytes( self);
-   size  = _size;
-
-   if( size > 64)
-      size = 64;
-
-   return( MulleObjCBytesHash( bytes, size));
+   return( MulleObjCBytesPartialHash( bytes, _size));
 }
 
 

@@ -62,7 +62,7 @@
 
 - (NSUInteger) mulleUTF8StringLength
 {
-   struct mulle_utf16_data   data;
+   struct mulle_utf16data   data;
    BOOL                      flag;
 
    flag = [self mulleFastGetUTF16Data:&data];
@@ -74,21 +74,22 @@
 - (char *) UTF8String
 {
    struct mulle_buffer       buf;
-   struct mulle_utf16_data   data;
+   struct mulle_utf16data   data;
    BOOL                      flag;
 
    if( ! _shadow)
    {
       flag = [self mulleFastGetUTF16Data:&data];
       assert( flag);
-      mulle_buffer_init( &buf, MulleObjCInstanceGetAllocator( self));
+      mulle_buffer_init_with_capacity( &buf, data.length * 4, MulleObjCInstanceGetAllocator( self));
       mulle_utf16_bufferconvert_to_utf8( data.characters,
                                          data.length,
                                          &buf,
                                          (mulle_utf_add_bytes_function_t) mulle_buffer_add_bytes);
 
       mulle_buffer_add_byte( &buf, 0);
-      _shadow = mulle_buffer_extract_all( &buf);
+      mulle_buffer_size_to_fit( &buf);
+      _shadow = mulle_buffer_extract_bytes( &buf);
       mulle_buffer_done( &buf);
    }
    return( (char *) _shadow);
@@ -98,9 +99,9 @@
 - (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   struct mulle_utf8_conversion_context   ctxt;
-   struct mulle_utf16_data                data;
-   BOOL                                   flag;
+   struct mulle_utf8_conversion_context  ctxt;
+   struct mulle_utf16data                data;
+   BOOL                                  flag;
 
    ctxt.buf      = buf;
    ctxt.sentinel = &buf[ maxLength];
@@ -111,8 +112,6 @@
                                       data.length,
                                       &ctxt,
                                       mulle_utf8_conversion_context_add_bytes);
-   if( ctxt.buf > ctxt.sentinel)
-      MulleObjCThrowInvalidArgumentExceptionCString( "destination buffer too small");
    assert( ! memchr( buf, 0, ctxt.buf - buf));
    return( ctxt.buf - buf);
 }
@@ -124,7 +123,7 @@
    mulle_utf16_t             *sentinel;
    mulle_utf16_t             *src;
    unichar                   *dst;
-   struct mulle_utf16_data   data;
+   struct mulle_utf16data   data;
    BOOL                      flag;
 
    flag = [self mulleFastGetUTF16Data:&data];
@@ -154,19 +153,19 @@
 - (NSString *) substringWithRange:(NSRange) range
 {
    mulle_utf16_t             *s;
-   struct mulle_utf16_data   data;
+   struct mulle_utf16data   data;
    BOOL                      flag;
 
-   // check both because of overflow range.length == (unsigned) -1 f.e.
-   range = MulleObjCValidateRangeAgainstLength( range, data.length);
    flag  = [self mulleFastGetUTF16Data:&data];
    assert( flag);
+   // check both because of overflow range.length == (unsigned) -1 f.e.
+   range = MulleObjCValidateRangeAgainstLength( range, data.length);
    if( range.length == data.length)
       return( self);
 
    data.characters = &data.characters[ range.location];
    data.length     = range.length;
-   return( _mulleNewSubstringFromUTF16Data( self, data));
+   return( [_mulleNewSubstringFromUTF16Data( self, data) autorelease]);
 }
 
 
@@ -215,7 +214,7 @@
 }
 
 
-- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16_data *) data
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) data
 {
    data->characters = _storage;
    data->length     = _length;
@@ -225,7 +224,7 @@
 
 - (NSUInteger) hash
 {
-   return( MulleObjCStringHashUTF16( _storage, _length));
+   return( MulleObjCStringHashUTF16Bit15( _storage, _length));
 }
 
 @end
@@ -265,7 +264,7 @@
 }
 
 
-- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16_data *) data
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) data
 {
    data->characters = _storage;
    data->length     = _length;
@@ -275,7 +274,7 @@
 
 - (NSUInteger) hash
 {
-   return( MulleObjCStringHashUTF16( _storage, _length));
+   return( MulleObjCStringHashUTF16Bit15( _storage, _length));
 }
 
 
@@ -315,6 +314,7 @@
    return( _storage[ index]);
 }
 
+
 - (unichar) :(NSUInteger)index
 {
    if( index >= _length)
@@ -323,7 +323,7 @@
 }
 
 
-- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16_data *) data
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) data
 {
    data->characters = _storage;
    data->length     = _length;
@@ -333,7 +333,7 @@
 
 - (NSUInteger) hash
 {
-   return( MulleObjCStringHashUTF16( _storage, _length));
+   return( MulleObjCStringHashUTF16Bit15( _storage, _length));
 }
 
 

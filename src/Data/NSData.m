@@ -33,7 +33,7 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
- #define _GNU_SOURCE   // UGLINESS for memmem and memrmem
+#define _GNU_SOURCE   // UGLINESS for memmem and memrmem
 
 #import "NSData.h"
 
@@ -77,9 +77,11 @@
 }
 
 
-
 static NSData  *_newData( void *buf, NSUInteger length)
 {
+   if( ! buf && length)
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+
    switch( length)
    {
    case 0  : return( [_MulleObjCZeroBytesData mulleNewWithBytes:buf]);
@@ -89,13 +91,13 @@ static NSData  *_newData( void *buf, NSUInteger length)
 
    if( length < 0x100 + 1)
       return( [_MulleObjCTinyData mulleNewWithBytes:buf
-                                        length:length]);
+                                             length:length]);
    if( length < 0x10000 + 0x100 + 1)
       return( [_MulleObjCMediumData mulleNewWithBytes:buf
-                                          length:length]);
+                                               length:length]);
 
    return( [_MulleObjCAllocatorData mulleNewWithBytes:buf
-                                          length:length]);
+                                               length:length]);
 }
 
 
@@ -116,24 +118,37 @@ static NSData  *_newData( void *buf, NSUInteger length)
    return( self);
 }
 
+- (instancetype) initWithMulleData:(struct mulle_data) data
+{
+   self = _newData( data.bytes, data.length);
+   return( self);
+}
+
 
 - (instancetype) mulleInitWithBytesNoCopy:(void *) bytes
                                    length:(NSUInteger) length
                                 allocator:(struct mulle_allocator *) allocator
 {
+   if( ! bytes && length)
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+
    self = [_MulleObjCAllocatorData mulleNewWithBytesNoCopy:bytes
-                                               length:length
-                                            allocator:allocator];
+                                                    length:length
+                                                 allocator:allocator];
    return( self);
 }
 
+
 - (instancetype) mulleInitWithBytesNoCopy:(void *) bytes
                                    length:(NSUInteger) length
-                                    owner:(id) owner
+                            sharingObject:(id) owner
 {
+   if( ! bytes && length)
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+
    self = [_MulleObjCSharedData mulleNewWithBytesNoCopy:bytes
-                                            length:length
-                                             owner:owner];
+                                                 length:length
+                                          sharingObject:owner];
    return( self);
 }
 
@@ -143,6 +158,9 @@ static NSData  *_newData( void *buf, NSUInteger length)
 - (instancetype) initWithBytesNoCopy:(void *) bytes
                               length:(NSUInteger) length
 {
+   if( ! bytes && length)
+      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+
    self = [self mulleInitWithBytesNoCopy:bytes
                                   length:length
                                allocator:&mulle_stdlib_allocator];
@@ -172,7 +190,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
    else
       self = [self mulleInitWithBytesNoCopy:[other bytes]
                                      length:[other length]
-                                      owner:other];
+                              sharingObject:other];
    return( self);
 }
 
@@ -204,9 +222,9 @@ static NSData  *_newData( void *buf, NSUInteger length)
 
 #pragma mark - construction conveniences
 
-+ (NSData *) data
++ (instancetype) data
 {
-   return( [self object]);
+   return( [[[self alloc] init] autorelease]);
 }
 
 
@@ -242,6 +260,12 @@ static NSData  *_newData( void *buf, NSUInteger length)
 }
 
 
++ (instancetype) dataWithMulleData:(struct mulle_data) data
+{
+   return( [[[self alloc] initWithMulleData:data] autorelease]);
+}
+
+
 #pragma mark - NSCopying
 
 
@@ -268,7 +292,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
    hash = 0x1848;
    while( length > 32)
    {
-      hash = mulle_chained_hash( buf, 32, hash);
+      hash = mulle_data_hash_chained( mulle_data_make( buf, 32), hash);
       buf  = &buf[ 0x100];
       if( buf >= sentinel)
          return( (NSUInteger) hash);
@@ -277,7 +301,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
    }
 
    // small and large data goes here
-   hash = mulle_chained_hash( buf, length, hash);
+   hash = mulle_data_hash_chained( mulle_data_make( buf, length), hash);
    return( (NSUInteger) hash);
 }
 

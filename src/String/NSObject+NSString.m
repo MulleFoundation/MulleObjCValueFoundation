@@ -43,12 +43,17 @@
 #import "NSStringObjCFunctions.h"
 
 // other libraries of MulleObjCValueFoundation
-#import "import.h"
-
+#import "import-private.h"
 
 // std-c and dependencies
 #include <ctype.h>
 
+
+#ifdef MULLE_TEST
+BOOL   MulleDebugDescriptionEllideAddressOutput = YES;
+#else
+BOOL   MulleDebugDescriptionEllideAddressOutput = NO;
+#endif
 
 @implementation NSObject (NSString)
 
@@ -77,13 +82,24 @@
 
    contents = [self mulleDebugContentsDescription];
    length   = [contents length];
+   if( MulleDebugDescriptionEllideAddressOutput)
+   {
+      if( ! length)
+         return( [NSString stringWithFormat:@"<%@>", [self class]]);
+
+      if( length >= 8192)
+         return( [NSString stringWithFormat:@"<%@ %.8192@...>", [self class], contents]);
+
+      return( [NSString stringWithFormat:@"<%@ %@>", [self class], contents]);
+   }
+
    if( ! length)
       return( [NSString stringWithFormat:@"<%@ %p>", [self class], self]);
 
    if( length >= 8192)
-      return( [NSString stringWithFormat:@"<%@ %p \"%.8192@...>", [self class], self, contents]);
+      return( [NSString stringWithFormat:@"<%@ %p %.8192@...>", [self class], self, contents]);
 
-   return( [NSString stringWithFormat:@"<%@ %p \"%@\">", [self class], self, contents]);
+   return( [NSString stringWithFormat:@"<%@ %p %@>", [self class], self, contents]);
 }
 
 

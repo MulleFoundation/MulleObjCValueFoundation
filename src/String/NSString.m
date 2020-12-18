@@ -243,7 +243,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 // obsolete
 + (NSString *) string
 {
-   return( [self object]);
+   return( [[[self alloc] init] autorelease]);
 }
 
 
@@ -301,12 +301,19 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 #pragma mark - generic init
 
+- (instancetype) init
+{
+   // subclasses (e.g. NSMutableString must implement init)
+   assert( [self class] == [NSString class]);
+   return( [self initWithUTF8String:""]);
+}
+
 
 - (instancetype) initWithString:(NSString *) other
 {
    char   *s;
 
-   assert( [self __isClassClusterPlaceholderObject]);
+   assert( [self __isClassClusterObject]);
 
    s = [other UTF8String];
    return( [self initWithUTF8String:s]);
@@ -337,16 +344,19 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 
 MULLE_C_NEVER_INLINE
-struct mulle_utf8_data  MulleStringGetUTF8Data( NSString *self, struct mulle_utf8_data space)
+struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
+                                               struct mulle_utf8data space)
 {
-   struct mulle_utf8_data   data;
+   struct mulle_utf8data   data;
 
    if( [self mulleFastGetUTF8Data:&data])
       return( data);
 
-      // for TPS and other small strings try to grab into local area
+   // for TPS and other small strings try to grab into local area
    data.length = [self mulleGetUTF8Characters:space.characters
                                     maxLength:space.length];
+   // if buffer is not full, then self is known not to be
+   // truncated
    if( data.length < space.length)
    {
       data.characters = space.characters;
@@ -372,16 +382,16 @@ static void   grab_utf8( mulle_utf8_t *storage,
 - (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   struct mulle_utf8_data   data;
-   mulle_utf8_t             tmp[ 64];
+   struct mulle_utf8data   data;
+   NSUInteger               length;
 
-   data = MulleStringGetUTF8Data( self, mulle_utf8_data_make( buf, maxLength));
+   data   = MulleStringGetUTF8Data( self,
+                                    mulle_utf8data_make( buf, maxLength));
+   length = data.length <= maxLength ? data.length : maxLength;
    if( data.characters != buf)
-   {
-      memcpy( buf, data.characters, data.length);
-   }
-   assert( ! memchr( buf, 0, data.length));
-   return( data.length);
+      memcpy( buf, data.characters, length);
+   assert( ! memchr( buf, 0, length));
+   return( length);
 }
 
 
@@ -428,7 +438,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 }
 
 
-- (BOOL) mulleFastGetASCIIData:(struct mulle_ascii_data *) space
+- (BOOL) mulleFastGetASCIIData:(struct mulle_asciidata *) space
 {
    return( NO);
 }
@@ -436,19 +446,19 @@ static void   grab_utf8( mulle_utf8_t *storage,
 //
 // this could be non-ascii in case of compiler generated strings
 //
-- (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8_data *) space
+- (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8data *) space
 {
    return( NO);
 }
 
 
-- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16_data *) space
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) space
 {
    return( NO);
 }
 
 
-- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32_data *) space
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) space
 {
    return( NO);
 }
@@ -470,7 +480,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 
    // allocator NULL ? Well the block doesn't really belong to the class as an
    // instance variable, so...
-   size = length * sizeof( unichar);
+   size = length * 4 * sizeof( mulle_utf8_t); // unichar explodes max to 4 bytes
    buf  = mulle_allocator_malloc( NULL, size + sizeof( mulle_utf8_t));
    [self getCharacters:buf
                  range:NSMakeRange( 0, length)];
@@ -527,13 +537,19 @@ static void   grab_utf8( mulle_utf8_t *storage,
  */
 - (NSString *) substringFromIndex:(NSUInteger) index
 {
-   return( [self substringWithRange:NSMakeRange( index, [self length] - index)]);
+   NSRange   range;
+
+   range = NSMakeRange( index, [self length] - index);
+   return( [self substringWithRange:range]);
 }
 
 
 - (NSString *) substringToIndex:(NSUInteger) index
 {
-   return( [self substringWithRange:NSMakeRange( 0, index)]);
+   NSRange   range;
+
+   range = NSMakeRange( 0, index);
+   return( [self substringWithRange:range]);
 }
 
 
@@ -564,11 +580,22 @@ static void   grab_utf8( mulle_utf8_t *storage,
 }
 
 
-// subclasses should override this
+// subclasses oughta override this, but NSMutableString uses it
 - (NSUInteger) hash
 {
-   return( MulleObjCStringHashUTF8( (mulle_utf8_t *) [self UTF8String],
-                                    [self mulleUTF8StringLength]));
+   NSRange      range;
+   NSUInteger   length;
+
+   length = [self length];
+   range  = MulleObjCGetHashStringRange( length);
+   {
+      unichar   tmp[ range.length];
+
+      [self getCharacters:tmp
+                    range:range];
+      range.location = 0;
+      return( MulleObjCStringHashRangeUTF32( tmp, range));
+   }
 }
 
 
@@ -638,7 +665,7 @@ static BOOL   hasSuffix( NSString *self, NSUInteger length,
       [self getCharacters:buf
                     range:range];
       [suffix getCharacters:suffix_buf
-                      range:range];
+                      range:suffixRange];
       if( memcmp( suffix_buf, buf, range.length * sizeof( unichar)))
          return( NO);
 
@@ -798,7 +825,7 @@ static mulle_utf8_t   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
 
 
 
-uint32_t   _mulle_chained_fnv1a_32_utf16( mulle_utf16_t *buf, size_t len, uint32_t hash)
+uint32_t   _mulle_utf16_15bit_fnv1a_chained_32( mulle_utf16_t *buf, size_t len, uint32_t hash)
 {
    mulle_utf16_t   *s;
    mulle_utf16_t   *sentinel;
@@ -819,7 +846,7 @@ uint32_t   _mulle_chained_fnv1a_32_utf16( mulle_utf16_t *buf, size_t len, uint32
 }
 
 
-uint64_t   _mulle_chained_fnv1a_64_utf16( mulle_utf16_t *buf, size_t len, uint64_t hash)
+uint64_t   _mulle_utf16_15bit_fnv1a_chained_64( mulle_utf16_t *buf, size_t len, uint64_t hash)
 {
    mulle_utf16_t   *s;
    mulle_utf16_t   *sentinel;
@@ -840,7 +867,16 @@ uint64_t   _mulle_chained_fnv1a_64_utf16( mulle_utf16_t *buf, size_t len, uint64
 }
 
 
-uint32_t   _mulle_chained_fnv1a_32_utf32( mulle_utf32_t *buf, size_t len, uint32_t hash)
+
+uintptr_t   _mulle_utf16_15bit_fnv1a_chained( mulle_utf16_t *buf, size_t len, uintptr_t hash)
+{
+   if( sizeof( uintptr_t) == sizeof( uint32_t))
+      return( (uintptr_t) _mulle_utf16_15bit_fnv1a_chained_32( buf, len, hash));
+   return( (uintptr_t) _mulle_utf16_15bit_fnv1a_chained_64( buf, len, hash));
+}
+
+
+uint32_t   _mulle_utf32_fnv1a_chained_32( mulle_utf32_t *buf, size_t len, uint32_t hash)
 {
    mulle_utf32_t   *s;
    mulle_utf32_t   *sentinel;
@@ -861,7 +897,7 @@ uint32_t   _mulle_chained_fnv1a_32_utf32( mulle_utf32_t *buf, size_t len, uint32
 }
 
 
-uint64_t   _mulle_chained_fnv1a_64_utf32( mulle_utf32_t *buf, size_t len, uint64_t hash)
+uint64_t   _mulle_utf32_fnv1a_chained_64( mulle_utf32_t *buf, size_t len, uint64_t hash)
 {
    mulle_utf32_t   *s;
    mulle_utf32_t   *sentinel;
@@ -882,41 +918,51 @@ uint64_t   _mulle_chained_fnv1a_64_utf32( mulle_utf32_t *buf, size_t len, uint64
 }
 
 
-static inline uint32_t   _mulle_fnv1a_32_utf16( mulle_utf16_t *buf, size_t len)
-{
-   return( _mulle_chained_fnv1a_32_utf16( buf, len, FNV1A_32_INIT));
-}
-
-
-static inline uint64_t   _mulle_fnv1a_64_utf16( mulle_utf16_t *buf, size_t len)
-{
-   return( _mulle_chained_fnv1a_64_utf16( buf, len, FNV1A_64_INIT));
-}
-
-
-static inline uint32_t   _mulle_fnv1a_32_utf32( mulle_utf32_t *buf, size_t len)
-{
-   return( _mulle_chained_fnv1a_32_utf32( buf, len, FNV1A_32_INIT));
-}
-
-
-static inline uint64_t   _mulle_fnv1a_64_utf32( mulle_utf32_t *buf, size_t len)
-{
-   return( _mulle_chained_fnv1a_64_utf32( buf, len, FNV1A_64_INIT));
-}
-
-
-uintptr_t   _mulle_fnv1a_utf16( mulle_utf16_t *buf, size_t len)
+uintptr_t   _mulle_utf32_fnv1a_chained( mulle_utf32_t *buf, size_t len, uintptr_t hash)
 {
    if( sizeof( uintptr_t) == sizeof( uint32_t))
-      return( (uintptr_t) _mulle_fnv1a_32_utf16( buf, len));
-   return( (uintptr_t) _mulle_fnv1a_64_utf16( buf, len));
+      return( (uintptr_t) _mulle_utf32_fnv1a_chained_32( buf, len, hash));
+   return( (uintptr_t) _mulle_utf32_fnv1a_chained_64( buf, len, hash));
 }
 
 
-uintptr_t   _mulle_fnv1a_utf32( mulle_utf32_t *buf, size_t len)
+
+static inline uint32_t   _mulle_utf16_15bit_fnv1a_32( mulle_utf16_t *buf, size_t len)
+{
+   return( _mulle_utf16_15bit_fnv1a_chained_32( buf, len, FNV1A_32_INIT));
+}
+
+
+static inline uint64_t   _mulle_utf16_15bit_fnv1a_64( mulle_utf16_t *buf, size_t len)
+{
+   return( _mulle_utf16_15bit_fnv1a_chained_64( buf, len, FNV1A_64_INIT));
+}
+
+
+uintptr_t   _mulle_utf16_15bit_fnv1a( mulle_utf16_t *buf, size_t len)
 {
    if( sizeof( uintptr_t) == sizeof( uint32_t))
-      return( (uintptr_t) _mulle_fnv1a_32_utf32( buf, len));
-   return( (uintptr_t) _mulle_fnv1a_64_utf32( buf, len));
+      return( (uintptr_t) _mulle_utf16_15bit_fnv1a_32( buf, len));
+   return( (uintptr_t) _mulle_utf16_15bit_fnv1a_64( buf, len));
 }
+
+
+static inline uint32_t   _mulle_utf32_fnv1a_32( mulle_utf32_t *buf, size_t len)
+{
+   return( _mulle_utf32_fnv1a_chained_32( buf, len, FNV1A_32_INIT));
+}
+
+
+static inline uint64_t   _mulle_utf32_fnv1a_64( mulle_utf32_t *buf, size_t len)
+{
+   return( _mulle_utf32_fnv1a_chained_64( buf, len, FNV1A_64_INIT));
+}
+
+
+uintptr_t   _mulle_utf32_fnv1a( mulle_utf32_t *buf, size_t len)
+{
+   if( sizeof( uintptr_t) == sizeof( uint32_t))
+      return( (uintptr_t) _mulle_utf32_fnv1a_32( buf, len));
+   return( (uintptr_t) _mulle_utf32_fnv1a_64( buf, len));
+}
+

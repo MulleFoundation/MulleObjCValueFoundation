@@ -37,7 +37,7 @@
 #import "import.h"
 
 // keep this in sync with MULLE_OBJC_VERSION, else pain! (why ?)
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (17 << 8) | 2)
+#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (18 << 8) | 0)
 
 #import "NSData+NSCoder.h"
 #import "NSData.h"

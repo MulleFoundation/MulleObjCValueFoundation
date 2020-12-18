@@ -55,6 +55,6 @@ enum _NSNumberClassClusterNumberType
 // Returns the converted string. Don't release the result. If there is
 // no conversion available, data.characters will be NULL
 
-- (struct mulle_ascii_data) _mulleConvertToASCIICharacters:(struct mulle_ascii_data) data;
+- (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data;
 
 @end
