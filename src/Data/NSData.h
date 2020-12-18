@@ -62,9 +62,9 @@ enum
                               length:(NSUInteger) length
                         freeWhenDone:(BOOL) flag;
 
-// use +object instead
-+ (NSData *) data;
++ (instancetype) data;
 + (instancetype) dataWithData:(NSData *) other;
++ (instancetype) dataWithMulleData:(struct mulle_data) data;
 
 - (NSUInteger) hash;
 - (BOOL) isEqual:(id) other;
@@ -81,6 +81,7 @@ enum
                   range:(NSRange) range;
 
 @end
+
 
 @interface NSData ( MulleObjCDataPlaceholder)
 
@@ -99,8 +100,7 @@ enum
 
 - (instancetype) mulleInitWithBytesNoCopy:(void *) bytes
                                    length:(NSUInteger) length
-                                    owner:(id) owner;
-
+                            sharingObject:(id) owner;
 
 @end
 

@@ -8,7 +8,7 @@ endif()
 
 #
 # Generated from sourcetree: MulleObjC;no-singlephase;
-# Disable with: `mulle-sourcetree mark MulleObjC no-link`
+# Disable with: `mulle-sourcetree mark MulleObjC no-header`
 #
 if( NOT MULLE_OBJC_LIBRARY)
    find_library( MULLE_OBJC_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjC${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjC NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
@@ -93,7 +93,7 @@ endif()
 
 #
 # Generated from sourcetree: mulle-buffer;no-all-load,no-import,no-singlephase;
-# Disable with: `mulle-sourcetree mark mulle-buffer no-link`
+# Disable with: `mulle-sourcetree mark mulle-buffer no-header`
 #
 if( NOT MULLE_BUFFER_LIBRARY)
    find_library( MULLE_BUFFER_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-buffer${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-buffer NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
@@ -161,7 +161,7 @@ endif()
 
 #
 # Generated from sourcetree: mulle-utf;no-all-load,no-import,no-singlephase;
-# Disable with: `mulle-sourcetree mark mulle-utf no-link`
+# Disable with: `mulle-sourcetree mark mulle-utf no-header`
 #
 if( NOT MULLE_UTF_LIBRARY)
    find_library( MULLE_UTF_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-utf${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-utf NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
@@ -229,7 +229,7 @@ endif()
 
 #
 # Generated from sourcetree: mulle-sprintf;no-import,no-singlephase;
-# Disable with: `mulle-sourcetree mark mulle-sprintf no-link`
+# Disable with: `mulle-sourcetree mark mulle-sprintf no-header`
 #
 if( NOT MULLE_SPRINTF_LIBRARY)
    find_library( MULLE_SPRINTF_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-sprintf${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-sprintf NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)

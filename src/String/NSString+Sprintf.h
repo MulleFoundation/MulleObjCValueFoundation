@@ -60,8 +60,8 @@
 @end
 
 
-// Return with the default mulle_allocator c-strings that are already
-// autoreleased!
+// Return with dynamically created c-strings, that are already autoreleases.
+// The default mulle_allocator will have been used for them.
 //
 // These functions are similiar to asprintf and vasprintf but use
 // a different calling signature.

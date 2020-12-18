@@ -68,8 +68,7 @@
 }
 
 
-# pragma mark -
-# pragma mark convenience constructors
+# pragma mark - convenience constructors
 
 
 + (instancetype) dateWithTimeIntervalSince1970:(NSTimeInterval) seconds
@@ -98,8 +97,7 @@
 }
 
 
-# pragma mark -
-# pragma mark Various inits
+# pragma mark - Various inits
 
 - (instancetype) initWithTimeInterval:(NSTimeInterval) seconds
                   sinceDate:(NSDate *) refDate
@@ -171,7 +169,7 @@
 
 - (NSUInteger) hash
 {
-   return( mulle_hash( &self->_interval, sizeof( NSTimeInterval)));
+   return( mulle_double_hash( self->_interval));
 }
 
 

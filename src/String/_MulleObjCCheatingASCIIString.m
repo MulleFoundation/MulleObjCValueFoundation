@@ -94,10 +94,10 @@
 
    allocator = MulleObjCInstanceGetAllocator( self);
 
-   mulle_buffer_init( &buffer, allocator);
+   mulle_buffer_init_with_capacity( &buffer, _length + 1, allocator);
    mulle_buffer_add_bytes( &buffer, _storage, _length);
    mulle_buffer_add_byte( &buffer, 0);
-   s = mulle_buffer_extract_all( &buffer);
+   s = mulle_buffer_extract_bytes( &buffer);
    mulle_buffer_done( &buffer);
 
    MulleObjCAutoreleaseAllocation( s, allocator);

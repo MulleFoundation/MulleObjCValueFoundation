@@ -57,8 +57,9 @@
 
    value = _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
    type  = @encode( NSInteger);
-   [coder encodeBytes:@encode( NSInteger)
-               length:1+1]; // trailing 0
+   assert( strlen( type) == 1);
+   [coder encodeBytes:type
+               length:1+1]; // trailing 0 of cString
    [coder encodeValueOfObjCType:type
                              at:&value];
 }

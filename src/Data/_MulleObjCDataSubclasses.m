@@ -197,7 +197,7 @@ static inline void   *get_bytes( id self)
 
 + (instancetype) mulleNewWithBytesNoCopy:(void *) bytes
                                   length:(NSUInteger) length
-                                   owner:(id) owner
+                           sharingObject:(id) owner
 {
    _MulleObjCSharedData   *data;
 

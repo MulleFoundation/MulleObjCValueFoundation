@@ -61,8 +61,7 @@
 
 
 
-# pragma mark -
-# pragma mark classcluster
+# pragma mark - classcluster
 
 - (instancetype) initWithCapacity:(NSUInteger) capacity
 {
@@ -113,7 +112,7 @@
 
 - (instancetype) mulleInitWithBytesNoCopy:(void *) bytes
                                    length:(NSUInteger) length
-                                    owner:(id) owner
+                            sharingObject:(id) owner
 {
    self = [_MulleObjCConcreteMutableData mulleNewWithBytes:bytes
                                                     length:length];

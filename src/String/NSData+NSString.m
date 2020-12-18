@@ -70,6 +70,7 @@ static inline unsigned int   hex( unsigned int c)
    struct mulle_buffer      buffer;
    unsigned char            *bytes;
    unsigned int             value;
+   struct mulle_data        data;
 
    length = [self length];
    if( ! length)
@@ -78,7 +79,7 @@ static inline unsigned int   hex( unsigned int c)
    bytes     = [self bytes];
    allocator = MulleObjCInstanceGetAllocator( self);
 
-   mulle_buffer_init( &buffer, allocator);
+   mulle_buffer_init_with_capacity( &buffer, length * 3, allocator);
 
    mulle_buffer_add_string( &buffer, "<");
 
@@ -116,12 +117,12 @@ static inline unsigned int   hex( unsigned int c)
    mulle_buffer_add_byte( &buffer, '>');
    mulle_buffer_add_byte( &buffer, 0);
 
-   length = mulle_buffer_get_length( &buffer);
-   s      = mulle_buffer_extract_all( &buffer);
+   mulle_buffer_size_to_fit( &buffer);
+   data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
-   return( [NSString mulleStringWithUTF8CharactersNoCopy:s
-                                                  length:length
+   return( [NSString mulleStringWithUTF8CharactersNoCopy:data.bytes
+                                                  length:data.length
                                                allocator:allocator]);
 }
 
@@ -133,6 +134,7 @@ static inline unsigned int   hex( unsigned int c)
    struct mulle_allocator   *allocator;
    struct mulle_buffer      buffer;
    unsigned char            *bytes;
+   struct mulle_data        data;
 
    length = [self length];
    if( ! length)
@@ -141,18 +143,14 @@ static inline unsigned int   hex( unsigned int c)
    bytes     = [self bytes];
    allocator = MulleObjCInstanceGetAllocator( self);
 
-   mulle_buffer_init( &buffer, allocator);
-
+   mulle_buffer_init_with_capacity( &buffer, length * 4, allocator);
    mulle_buffer_hexdump( &buffer, bytes, length, 0, 0);
    mulle_buffer_add_byte( &buffer, 0);
-
-   length = mulle_buffer_get_length( &buffer);
-   s      = mulle_buffer_extract_all( &buffer);
-
+   data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
-   return( [NSString mulleStringWithUTF8CharactersNoCopy:s
-                                                  length:length
+   return( [NSString mulleStringWithUTF8CharactersNoCopy:data.bytes
+                                                  length:data.length
                                                allocator:allocator]);
 }
 

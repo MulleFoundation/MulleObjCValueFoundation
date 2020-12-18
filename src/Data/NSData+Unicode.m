@@ -114,9 +114,10 @@ static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
    size_t                   length;
    mulle_utf16_t            *srcBytes;
    mulle_utf8_t             *dstBytes;
+   struct mulle_data        data;
 
    allocator = MulleObjCInstanceGetAllocator( self);
-   mulle_buffer_init( &buf, allocator);
+
    srcBytes  = [self bytes];
    length    = [self length] / sizeof( mulle_utf16_t);
    if( length)
@@ -127,17 +128,19 @@ static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
          ++srcBytes;
       }
    }
+
+   mulle_buffer_init_with_capacity( &buf, length * 3, allocator);
    mulle_utf16_bufferconvert_to_utf8( srcBytes,
                                       length,
                                       &buf,
                                       (void (*)()) mulle_buffer_add_bytes);
 
-   length   = mulle_buffer_get_length( &buf);
-   dstBytes = mulle_buffer_extract_all( &buf);
+   mulle_buffer_size_to_fit( &buf);
+   data = mulle_buffer_extract_data( &buf);
    mulle_buffer_done( &buf);
 
-   return( [[[NSData alloc] mulleInitWithBytesNoCopy:dstBytes
-                                              length:length
+   return( [[[NSData alloc] mulleInitWithBytesNoCopy:data.bytes
+                                              length:data.length
                                            allocator:allocator] autorelease]);
 }
 

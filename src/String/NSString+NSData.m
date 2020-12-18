@@ -251,6 +251,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    struct mulle_buffer             buffer;
    void                            *p;
    struct mulle_allocator          *allocator;
+   struct mulle_data               data;
 
    if( mulle_utf16_information( chars, length, &info))
       MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF16");
@@ -275,13 +276,12 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
                                        info.utf16len,
                                        &buffer,
                                        (void (*)()) mulle_buffer_add_bytes);
-
-   assert( mulle_buffer_get_length( &buffer) == info.utf32len * sizeof( mulle_utf32_t));
-
-   p = mulle_buffer_extract_all( &buffer);
+   data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
-   return( [self mulleInitWithCharactersNoCopy:p
+   assert( data.length == info.utf32len * sizeof( mulle_utf32_t));
+
+   return( [self mulleInitWithCharactersNoCopy:data.bytes
                                         length:info.utf32len
                                      allocator:allocator]);
 }
@@ -495,8 +495,8 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    size_t                        length;
    struct mulle_utf_information  info;
    mulle_utf8_t                  *s;
-   struct mulle_ascii_data       data;
-   struct mulle_utf8_data        utf8data;
+   struct mulle_asciidata       data;
+   struct mulle_utf8data        utf8data;
 
    if( [self mulleFastGetASCIIData:&data])
    {

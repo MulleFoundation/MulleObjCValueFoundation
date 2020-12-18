@@ -154,6 +154,12 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
+- (instancetype) init
+{
+   return( self);
+}
+
+
 - (instancetype) initWithCapacity:(NSUInteger) n
 {
    sizeStorageWithCount( self, (unsigned int) (n >> 1));
@@ -200,6 +206,27 @@ static void   shrinkWithStrings( NSMutableString *self,
 
    return( self);
 }
+
+
+- (instancetype) initWithFormat:(NSString *) format
+                      arguments:(va_list) args
+{
+   NSString  *s;
+
+   s = [[NSString alloc] initWithFormat:format
+                              arguments:args];
+   if( ! s)
+   {
+      [self release];
+      return( nil);
+   }
+
+   initWithStrings( self, &s, 1);
+   [s release];
+
+   return( self);
+}
+
 
 
 - (instancetype) initWithUTF8String:(char *) cStr
@@ -510,15 +537,16 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 
 
 - (void) getCharacters:(unichar *) buf
-                 range:(NSRange) range
+                 range:(NSRange) inRange
 {
    NSString     **p;
    NSString     **sentinel;
    NSUInteger   length;
    NSString     *s;
    NSUInteger   grab_len;
+   NSRange      range;
 
-   range    = MulleObjCValidateRangeAgainstLength( range, _length);
+   range    = MulleObjCValidateRangeAgainstLength( inRange, _length);
 
    p        = &_storage[ 0];
    sentinel = &p[ _count];
@@ -539,7 +567,7 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
       }
 
       grab_len = range.length;
-      if( grab_len > length)
+      if( range.location + grab_len > length)
          grab_len = length - range.location;
 
       [s getCharacters:buf
@@ -601,12 +629,23 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 
 
 - (void) mulleAppendFormat:(NSString *) format
-                 arguments:(mulle_vararg_list) args
+           mulleVarargList:(mulle_vararg_list) args
 {
    NSString   *s;
 
    s = [NSString stringWithFormat:format
                   mulleVarargList:args];
+   [self appendString:s];
+}
+
+
+- (void) mulleAppendFormat:(NSString *) format
+                 arguments:(va_list) args
+{
+   NSString   *s;
+
+   s = [NSString stringWithFormat:format
+                        arguments:args];
    [self appendString:s];
 }
 
@@ -740,6 +779,7 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    char                     tmp[ 0x400];
    struct mulle_allocator   *allocator;
    struct mulle_buffer      buffer;
+   struct mulle_data        data;
 
    if( _shadow)
       return( (char *) _shadow);
@@ -750,10 +790,11 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    mulleConvertStringsToUTF8( _storage, _count, &buffer);
 
    mulle_buffer_size_to_fit( &buffer);
-   _shadowLen = mulle_buffer_get_length( &buffer) - 1; // no trailin zero
-   _shadow    = mulle_buffer_extract_all( &buffer);
+   data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
+   _shadow    = data.bytes;
+   _shadowLen = data.length - 1;    // minus terminating zero
    return( (char *) _shadow);
 }
 
@@ -805,6 +846,5 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
       return( self);
    return( [self substringToIndex:[self length] - [other length]]);
 }
-
 
 @end

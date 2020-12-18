@@ -31,3 +31,7 @@
 - (NSString *) mulleQuotedDescriptionIfNeeded;
 
 @end
+
+// useful to set to 1 for tests, since it suppresses the varying pointer value
+extern BOOL   MulleDebugDescriptionEllideAddressOutput;
+
