@@ -1,0 +1,19 @@
+{
+   "name" : "MulleObjCValueFoundation",
+   "version" : "0.18.0",
+   "description" : "💶 Value classes NSNumber, NSString, NSDate, NSData",
+   "homepage" : "https://github.com/MulleFoundation/MulleObjCValueFoundation",
+   "bugs" : "https://github.com/MulleFoundation/MulleObjCValueFoundation/issues",
+   "keywords" : [],
+   "license" : "UNLICENSED",
+   "repository" : {
+      "type" : "git",
+      "url" : "MulleFoundation/MulleObjCValueFoundation"
+   },
+   "dependencies" : {
+      "MulleObjC" : "mulle-objc/MulleObjC",
+      "mulle-buffer" : "mulle-c/mulle-buffer",
+      "mulle-utf" : "mulle-c/mulle-utf",
+      "mulle-sprintf" : "mulle-c/mulle-sprintf"
+   }
+}
