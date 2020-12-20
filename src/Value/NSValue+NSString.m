@@ -39,6 +39,7 @@
 // other files in this library
 #import "NSObject+NSString.h"
 #import "NSString.h"
+#import "NSStringObjCFunctions.h"
 #import "NSString+Sprintf.h"
 
 // std-c dependencies
@@ -47,6 +48,43 @@
 
 
 @implementation NSValue( NSString)
+
+
+- (NSString *) description
+{
+   char       *type;
+   SEL        sel;
+   id         obj;
+   NSString   *s;
+   //
+   // its not 'stringValue' because the string here is can't be parsed
+   // in all cases
+   //
+   type = [self objCType];
+   switch( *type)
+   {
+   default :
+      return( @"@( ???)");
+
+   case _C_ID       :
+   case _C_ASSIGN_ID:
+   case _C_COPY_ID  :
+      [self getValue:&obj];
+      s = [obj description];
+      return( [NSString stringWithFormat:@"@( %@)", s]);
+
+   case _C_SEL     :
+      [self getValue:&sel];
+      s = NSStringFromSelector( sel);
+      return( [NSString stringWithFormat:@"@( @selector( %@))", s]);
+
+   case _C_PTR     :
+   case _C_CHARPTR :
+      return( [NSString stringWithFormat:@"@(%p)", [self pointerValue]]);
+   }
+}
+
+
 
 - (NSString *) mulleDebugContentsDescription
 {
