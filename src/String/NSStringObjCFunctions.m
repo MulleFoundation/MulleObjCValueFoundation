@@ -56,7 +56,7 @@ NSString   *NSStringFromSelector( SEL sel)
          return( nil);
       MulleObjCThrowInternalInconsistencyExceptionCString( "unknown selector id %08x (register selector first)", (uint32_t ) sel);
    }
-   return([NSString stringWithUTF8String:s]);
+   return( [NSString stringWithUTF8String:s]);
 }
 
 
@@ -71,7 +71,7 @@ NSString   *NSStringFromProtocol( PROTOCOL proto)
          return( nil);
       MulleObjCThrowInternalInconsistencyExceptionCString( "unknown protocol id %08x", (uint32_t ) proto);
    }
-   return([NSString stringWithUTF8String:s]);
+   return( [NSString stringWithUTF8String:s]);
 }
 
 
