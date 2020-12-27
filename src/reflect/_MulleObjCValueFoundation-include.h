@@ -16,42 +16,27 @@
 //    remove:             `mulle-sourcetree mark mulle-buffer no-header`
 //    rename:             `mulle-sde dependency|library set mulle-buffer include whatever.h`
 //    toggle #import:     `mulle-sourcetree mark mulle-buffer [no-]import`
-//    toggle localheader: `mulle-sourcetree mark mulle-buffer [no-]localheader`
 //    toggle public:      `mulle-sourcetree mark mulle-buffer [no-]public`
 //    toggle optional:    `mulle-sourcetree mark mulle-buffer [no-]require`
 //    remove for os:      `mulle-sourcetree mark mulle-buffer no-os-<osname>`
-# if defined( __has_include) && __has_include("mulle-buffer.h")
-#   include "mulle-buffer.h"   // mulle-buffer
-# else
-#   include <mulle-buffer/mulle-buffer.h>   // mulle-buffer
-# endif
+# include <mulle-buffer/mulle-buffer.h>   // mulle-buffer
 
 // How to tweak the following mulle-utf #include
 //    remove:             `mulle-sourcetree mark mulle-utf no-header`
 //    rename:             `mulle-sde dependency|library set mulle-utf include whatever.h`
 //    toggle #import:     `mulle-sourcetree mark mulle-utf [no-]import`
-//    toggle localheader: `mulle-sourcetree mark mulle-utf [no-]localheader`
 //    toggle public:      `mulle-sourcetree mark mulle-utf [no-]public`
 //    toggle optional:    `mulle-sourcetree mark mulle-utf [no-]require`
 //    remove for os:      `mulle-sourcetree mark mulle-utf no-os-<osname>`
-# if defined( __has_include) && __has_include("mulle-utf.h")
-#   include "mulle-utf.h"   // mulle-utf
-# else
-#   include <mulle-utf/mulle-utf.h>   // mulle-utf
-# endif
+# include <mulle-utf/mulle-utf.h>   // mulle-utf
 
 // How to tweak the following mulle-sprintf #include
 //    remove:             `mulle-sourcetree mark mulle-sprintf no-header`
 //    rename:             `mulle-sde dependency|library set mulle-sprintf include whatever.h`
 //    toggle #import:     `mulle-sourcetree mark mulle-sprintf [no-]import`
-//    toggle localheader: `mulle-sourcetree mark mulle-sprintf [no-]localheader`
 //    toggle public:      `mulle-sourcetree mark mulle-sprintf [no-]public`
 //    toggle optional:    `mulle-sourcetree mark mulle-sprintf [no-]require`
 //    remove for os:      `mulle-sourcetree mark mulle-sprintf no-os-<osname>`
-# if defined( __has_include) && __has_include("mulle-sprintf.h")
-#   include "mulle-sprintf.h"   // mulle-sprintf
-# else
-#   include <mulle-sprintf/mulle-sprintf.h>   // mulle-sprintf
-# endif
+# include <mulle-sprintf/mulle-sprintf.h>   // mulle-sprintf
 
 #endif
