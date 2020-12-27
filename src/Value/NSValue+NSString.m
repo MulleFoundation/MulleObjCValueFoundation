@@ -64,7 +64,7 @@
    switch( *type)
    {
    default :
-      return( @"@( ???)");
+      return( @"@( \?\?\?)"); // otherwise a trigraph for ']', LOL
 
    case _C_ID       :
    case _C_ASSIGN_ID:
