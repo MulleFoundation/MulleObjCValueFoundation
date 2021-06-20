@@ -85,6 +85,19 @@
 }
 
 
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+                                range:(NSRange) range
+{
+   if( (NSUInteger) range.length > maxLength)
+      range.length = maxLength;
+
+   range = MulleObjCValidateRangeAgainstLength( range, _length);
+   memcpy( buf, &_storage[ range.location], range.length);
+   return( range.length);
+}
+
+
 // cheating string can't use shadow
 - (char *) UTF8String
 {

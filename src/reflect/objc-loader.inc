@@ -6,7 +6,6 @@
       { @selector( NSData), MULLE_OBJC_NO_CATEGORYID },      // 8fce7861;NSData;;
       { @selector( NSDate), @selector( NSCoder) },      // cfcedd21;NSDate;100c54ba;NSCoder
       { @selector( NSDate), MULLE_OBJC_NO_CATEGORYID },      // cfcedd21;NSDate;;
-      { @selector( NSLock), @selector( NSDate) },      // cd92d31f;NSLock;cfcedd21;NSDate
       { @selector( NSMethodSignature), @selector( NSString) },      // 523989f9;NSMethodSignature;1994a171;NSString
       { @selector( NSMutableData), @selector( NSCoder) },      // 5d7fdc81;NSMutableData;100c54ba;NSCoder
       { @selector( NSMutableData), @selector( NSString) },      // 5d7fdc81;NSMutableData;1994a171;NSString

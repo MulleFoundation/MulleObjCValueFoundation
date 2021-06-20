@@ -36,39 +36,13 @@
 
 #import "import.h"
 
-// keep this in sync with MULLE_OBJC_VERSION, else pain! (why ?)
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (18 << 8) | 0)
+#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (19 << 8) | 0)
 
-#import "NSData+NSCoder.h"
-#import "NSData.h"
-#import "NSData+Unicode.h"
-#import "NSDate+NSCoder.h"
-#import "NSDate.h"
-#import "NSDateFactory.h"
-#import "NSLock+NSDate.h"
-#import "NSMutableData.h"
-#import "NSMutableData+NSString.h"
-#import "NSMutableData+Unicode.h"
-#import "NSMutableString.h"
-#import "NSNull.h"
-#import "NSNumber+NSCoder.h"
-#import "NSNumber+NSString.h"
-#import "NSNumber.h"
-#import "NSObject+NSString.h"
-#import "NSString+ClassCluster.h"
-#import "NSString+NSCoder.h"
-#import "NSString+NSData.h"
-#import "NSString+Sprintf.h"
-#import "NSString.h"
-#import "NSStringObjCFunctions.h"
-#import "NSThread+NSDate.h"
-#import "NSValue+NSCoder.h"
-#import "NSValue.h"
+#import "_MulleObjCValueFoundation-export.h"
+#include "_MulleObjCValueFoundation-provide.h"
 
-#import "mulle_sprintf_object.h"
-
-#import "MulleObjCLoader+MulleObjCValueFoundation.h"
-
-#if MULLE_OBJC_VERSION < ((0 << 20) | (14 << 8) | 0)
-# error "MulleObjC is too old"
+#ifdef __has_include
+# if __has_include( "_MulleObjCValueFoundation-versioncheck.h")
+#  include "_MulleObjCValueFoundation-versioncheck.h"
+# endif
 #endif

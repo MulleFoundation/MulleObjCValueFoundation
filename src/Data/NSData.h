@@ -64,7 +64,7 @@ enum
 
 + (instancetype) data;
 + (instancetype) dataWithData:(NSData *) other;
-+ (instancetype) dataWithMulleData:(struct mulle_data) data;
++ (instancetype) mulleDataWithCData:(struct mulle_data) data;
 
 - (NSUInteger) hash;
 - (BOOL) isEqual:(id) other;
@@ -83,7 +83,7 @@ enum
 @end
 
 
-@interface NSData ( MulleObjCDataPlaceholder)
+@interface NSData( MulleObjCDataPlaceholder)
 
 - (instancetype) initWithBytes:(void *) bytes
                         length:(NSUInteger) length
@@ -105,10 +105,10 @@ enum
 @end
 
 
-@interface NSData ( MulleObjCSubclasses)
+@interface NSData( MulleObjCSubclasses)
 
 - (NSUInteger) length;
 - (void *) bytes;
-- (struct mulle_data) mulleData;
+- (struct mulle_data) mulleCData;
 
 @end
