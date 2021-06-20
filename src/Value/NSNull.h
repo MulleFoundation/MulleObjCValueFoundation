@@ -43,6 +43,4 @@
 
 + (NSNull *) null;
 
-extern NSNull   *NSNullUniqueInstance;
-
 @end

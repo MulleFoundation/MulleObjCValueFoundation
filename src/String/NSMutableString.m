@@ -68,7 +68,7 @@
 
 static void  flush_shadow( NSMutableString *self)
 {
-   MulleObjCObjectDeallocateMemory( self, self->_shadow);
+   MulleObjCInstanceDeallocateMemory( self, self->_shadow);
    self->_shadow = NULL;
 }
 
@@ -94,7 +94,7 @@ static void   sizeStorageWithCount( NSMutableString *self, unsigned int count)
    if( self->_size < 4)
       self->_size = 4;
 
-   self->_storage = MulleObjCObjectReallocateNonZeroedMemory( self,
+   self->_storage = MulleObjCInstanceReallocateNonZeroedMemory( self,
                                                               self->_storage,
                                                               self->_size * sizeof( NSString *));
 }
@@ -229,6 +229,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 
 
 
+// WithUTF8String: is char *
 - (instancetype) initWithUTF8String:(char *) cStr
 {
    NSString  *s;
@@ -391,7 +392,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 
    flush_shadow( self);
 
-   MulleObjCObjectDeallocateMemory( self, self->_storage);
+   MulleObjCInstanceDeallocateMemory( self, self->_storage);
    [super dealloc];
 }
 
@@ -603,7 +604,7 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
       _size += _size;
       if( _size < 8)
          _size = 8;
-      _storage = MulleObjCObjectReallocateNonZeroedMemory( self,
+      _storage = MulleObjCInstanceReallocateNonZeroedMemory( self,
                                                            _storage,
                                                            _size * sizeof( NSString *));
    }
@@ -613,6 +614,17 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 
    flush_shadow( self);
 }
+
+
+
+- (void) mulleAppendUTF8String:(char *) cStr
+{
+   NSString  *s;
+
+   s = [NSString stringWithUTF8String:cStr];
+   [self appendString:s];
+}
+
 
 
 - (void) appendFormat:(NSString *) format, ...
@@ -644,8 +656,8 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 {
    NSString   *s;
 
-   s = [NSString stringWithFormat:format
-                        arguments:args];
+   s = [NSString mulleStringWithFormat:format
+                             arguments:args];
    [self appendString:s];
 }
 

@@ -124,12 +124,13 @@ static inline NSUInteger  MulleObjCTaggedPointerChar7StringGetLength( _MulleObjC
 
 
 static NSUInteger
-   grab_ascii( id self, NSUInteger length, char *dst, NSRange range)
+   grab_ascii_char7_range( id self, NSUInteger length, char *dst, NSRange range)
 {
    char        tmp[ mulle_char7_maxlength64];
    uintptr_t   value;
 
    assert( length <= mulle_char7_maxlength64);
+   assert( range.length != (NSUInteger) -1); // not cool to guess
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
    range = MulleObjCValidateRangeAgainstLength( range, length);
@@ -146,18 +147,6 @@ static NSUInteger
 }
 
 
-- (void) getCharacters:(unichar *) buf
-                 range:(NSRange) range
-{
-   NSUInteger   length;
-   char         tmp[ mulle_char7_maxlength64];  // known ascii max 8
-
-   length = MulleObjCTaggedPointerChar7StringGetLength( self);
-   length = grab_ascii( self, length, tmp, range);
-   _mulle_ascii_convert_to_utf32( tmp, length, buf);
-}
-
-
 static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
                                       char *buf,
                                       NSUInteger maxLength)
@@ -167,7 +156,7 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
    if( length > maxLength)
       length = maxLength;
-   length = grab_ascii( self, length, buf, NSMakeRange( 0, length));
+   length = grab_ascii_char7_range( self, length, buf, NSMakeRange( 0, length));
    return( length);
 }
 
@@ -184,6 +173,34 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
 {
    return( grab_ascii_char7( self, (char *) buf, maxLength));
 }
+
+
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+                                range:(NSRange) range
+{
+   NSUInteger   length;
+
+   if( (NSUInteger) range.length > maxLength)
+      range.length = maxLength;
+
+   length = MulleObjCTaggedPointerChar7StringGetLength( self);
+   return( grab_ascii_char7_range( self, length, (char *) buf, range));
+}
+
+
+
+- (void) getCharacters:(unichar *) buf
+                 range:(NSRange) range
+{
+   NSUInteger   length;
+   char         tmp[ mulle_char7_maxlength64];  // known ascii max 8
+
+   length = MulleObjCTaggedPointerChar7StringGetLength( self);
+   length = grab_ascii_char7_range( self, length, tmp, range);
+   _mulle_ascii_convert_to_utf32( tmp, length, buf);
+}
+
 
 
 #pragma mark - hash and equality
@@ -245,7 +262,7 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
 
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
    s      = MulleObjCCallocAutoreleased( length + 1, sizeof( mulle_utf8_t));
-   grab_ascii( self, length, s, NSMakeRange( 0, length));
+   grab_ascii_char7_range( self, length, s, NSMakeRange( 0, length));
    // final byte already zero by calloc
    return( (char *) s);
 }

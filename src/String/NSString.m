@@ -265,6 +265,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
+// keep UTF8String: as (char *)
 + (instancetype) stringWithUTF8String:(char *) s
 {
    return( [[[self alloc] initWithUTF8String:s] autorelease]);
@@ -371,14 +372,6 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 }
 
 
-static void   grab_utf8( mulle_utf8_t *storage,
-                         NSUInteger len,
-                         mulle_utf8_t *dst,
-                         NSUInteger dst_len)
-{
-}
-
-
 - (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
                             maxLength:(NSUInteger) maxLength
 {
@@ -392,6 +385,18 @@ static void   grab_utf8( mulle_utf8_t *storage,
       memcpy( buf, data.characters, length);
    assert( ! memchr( buf, 0, length));
    return( length);
+}
+
+
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+                                range:(NSRange) range
+{
+   NSString   *s;
+
+   s = [self substringWithRange:range];
+   return( [s mulleGetUTF8Characters:buf
+                           maxLength:maxLength]);
 }
 
 
@@ -434,7 +439,7 @@ static void   grab_utf8( mulle_utf8_t *storage,
 - (void) getCharacters:(unichar *) buf;
 {
    [self getCharacters:buf
-                 range:NSMakeRange( 0, -1)];
+                 range:NSMakeRange( 0, [self length])];  // don't use -1!
 }
 
 

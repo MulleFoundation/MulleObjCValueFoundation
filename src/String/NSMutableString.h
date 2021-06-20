@@ -78,6 +78,9 @@
            mulleVarargList:(mulle_vararg_list) args;
 - (void) mulleAppendFormat:(NSString *) format
                  arguments:(va_list) args;
+
+- (void) mulleAppendUTF8String:(char *) cStr;
+
 @end
 
 

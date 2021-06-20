@@ -64,6 +64,24 @@
 }
 
 
++ (NSStringEncoding *) availableStringEncodings
+{
+   static const NSStringEncoding   encodings[] =
+   {
+      NSASCIIStringEncoding,
+      NSUTF8StringEncoding,
+      NSUTF16StringEncoding,
+      NSUTF16BigEndianStringEncoding,
+      NSUTF16LittleEndianStringEncoding,
+      NSUTF32StringEncoding,
+      NSUTF32BigEndianStringEncoding,
+      NSUTF32LittleEndianStringEncoding,
+      0
+   };
+
+   return( (NSStringEncoding *) encodings);
+}
+
 
 #pragma mark - Export
 
@@ -235,6 +253,16 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 
 
 - (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
+{
+   return( [self _dataUsingEncoding:encoding
+                      prefixWithBOM:YES
+                  terminateWithZero:NO]);
+}
+
+
+// it's a lie!
+- (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
+          allowLossyConversion:(BOOL) flag
 {
    return( [self _dataUsingEncoding:encoding
                       prefixWithBOM:YES
@@ -460,7 +488,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 {
    struct mulle_data   data;
 
-   data  = [p mulleData];
+   data  = [p mulleCData];
    return( [self mulleInitWithBytesNoCopy:data.bytes
                                    length:data.length
                                  encoding:encoding
@@ -473,7 +501,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 {
    struct mulle_data   data;
 
-   data  = [p mulleData];
+   data  = [p mulleCData];
    return( [self initWithBytes:data.bytes
                         length:data.length
                       encoding:encoding]);

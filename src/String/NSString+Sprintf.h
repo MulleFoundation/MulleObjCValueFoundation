@@ -42,8 +42,8 @@
 + (instancetype) stringWithFormat:(NSString *) format
                   mulleVarargList:(mulle_vararg_list) arguments;
 
-+ (instancetype) stringWithFormat:(NSString *) format
-                        arguments:(va_list) args;
++ (instancetype) mulleStringWithFormat:(NSString *) format
+                             arguments:(va_list) args;
 
 + (instancetype) stringWithFormat:(NSString *) format, ...;
 

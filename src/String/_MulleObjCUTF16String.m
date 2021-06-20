@@ -145,7 +145,7 @@
 - (void) dealloc
 {
    if( _shadow)
-      MulleObjCObjectDeallocateMemory( self, _shadow);
+      MulleObjCInstanceDeallocateMemory( self, _shadow);
    [super dealloc];
 }
 

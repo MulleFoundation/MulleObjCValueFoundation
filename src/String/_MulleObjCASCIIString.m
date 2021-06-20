@@ -122,6 +122,25 @@ static NSUInteger   grab_ascii( id self,
 }
 
 
+static NSUInteger   grab_ascii_range( id self,
+                                      NSUInteger length,
+                                      char *dst,
+                                      NSRange range)
+{
+   struct mulle_asciidata   data;
+   BOOL                     flag;
+
+   assert( range.length != (NSUInteger) -1); // not cool to guess
+
+   flag  = [self mulleFastGetASCIIData:&data];
+   assert( flag);
+   range = MulleObjCValidateRangeAgainstLength( range, length);
+   memcpy( dst, &data.characters[ range.location], range.length);
+   return( range.length);
+}
+
+
+
 - (NSUInteger) mulleGetASCIICharacters:(char *) buf
                              maxLength:(NSUInteger) maxLength
 {
@@ -129,11 +148,23 @@ static NSUInteger   grab_ascii( id self,
 }
 
 
+
 - (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
                             maxLength:(NSUInteger) maxLength
 {
    return( grab_ascii( self, (char *) buf, maxLength));
 }
+
+
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+                                range:(NSRange) range
+{
+   if( (NSUInteger) range.length > maxLength)
+      range.length = maxLength;
+   return( grab_ascii_range( self, [self length], (char *) buf, range));
+}
+
 
 
 #pragma mark - hash and equality

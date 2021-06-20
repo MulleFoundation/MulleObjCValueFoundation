@@ -110,6 +110,7 @@ enum
 typedef NSUInteger   NSStringEncoding;
 
 
+// used for nothing currently
 enum
 {
    NSStringEncodingConversionAllowLossy             = 1,
@@ -123,12 +124,17 @@ char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
 
 @interface NSString (NSData)
 
++ (NSStringEncoding *) availableStringEncodings;
 - (NSStringEncoding) fastestEncoding;
 - (NSStringEncoding) smallestEncoding;
 
 - (BOOL) canBeConvertedToEncoding:(NSStringEncoding) encoding;
 
 - (NSData *) dataUsingEncoding:(NSStringEncoding) encoding;
+
+// the flag is a lie!
+- (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
+          allowLossyConversion:(BOOL) flag;
 
 - (NSData *) _dataUsingEncoding:(NSStringEncoding) encoding
                   prefixWithBOM:(BOOL) withBOM

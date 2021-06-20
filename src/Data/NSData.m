@@ -118,7 +118,8 @@ static NSData  *_newData( void *buf, NSUInteger length)
    return( self);
 }
 
-- (instancetype) initWithMulleData:(struct mulle_data) data
+
+- (instancetype) mulleInitWithCData:(struct mulle_data) data
 {
    self = _newData( data.bytes, data.length);
    return( self);
@@ -260,9 +261,9 @@ static NSData  *_newData( void *buf, NSUInteger length)
 }
 
 
-+ (instancetype) dataWithMulleData:(struct mulle_data) data
++ (instancetype) mulleDataWithCData:(struct mulle_data) data
 {
-   return( [[[self alloc] initWithMulleData:data] autorelease]);
+   return( [[[self alloc] mulleInitWithCData:data] autorelease]);
 }
 
 
@@ -458,7 +459,7 @@ static void   *mulle_memrmem( unsigned char *a, size_t a_len,
 }
 
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 

@@ -54,8 +54,8 @@
 }
 
 
-+ (instancetype) stringWithFormat:(NSString *) format
-                        arguments:(va_list) args
++ (instancetype) mulleStringWithFormat:(NSString *) format
+                             arguments:(va_list) args
 {
    return( [[[self alloc] initWithFormat:format
                                  arguments:args] autorelease]);
@@ -66,7 +66,7 @@
 //
 + (instancetype) stringWithFormat:(NSString *) format, ...
 {
-   NSString                  *s;
+   NSString             *s;
    mulle_vararg_list    args;
 
    mulle_vararg_start( args, format);

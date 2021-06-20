@@ -179,7 +179,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 }
 
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 

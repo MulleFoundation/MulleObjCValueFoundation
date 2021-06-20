@@ -90,7 +90,7 @@ static inline void   *get_bytes( id self)
 
 - (NSUInteger) length { return( 8); }
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 
@@ -115,7 +115,7 @@ static inline void   *get_bytes( id self)
 
 - (NSUInteger) length { return( 16); }
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 
@@ -135,7 +135,7 @@ static inline void   *get_bytes( id self)
 
    data = NSAllocateObject( self, 0, NULL);
 
-   data->_storage   = MulleObjCObjectAllocateNonZeroedMemory( self, length);
+   data->_storage   = MulleObjCClassAllocateNonZeroedMemory( self, length);
    data->_length    = length;
    data->_allocator = MulleObjCClassGetAllocator( self);
 
@@ -173,7 +173,7 @@ static inline void   *get_bytes( id self)
 }
 
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 
@@ -251,7 +251,7 @@ static inline void   *get_bytes( id self)
 }
 
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 
@@ -293,7 +293,7 @@ static inline void   *get_bytes( id self)
 }
 
 
-- (struct mulle_data) mulleData
+- (struct mulle_data) mulleCData
 {
    struct mulle_data   data;
 

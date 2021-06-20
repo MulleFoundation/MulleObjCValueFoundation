@@ -170,6 +170,13 @@ typedef mulle_utf32_t  unichar;
 // characters are not zero terminated
 - (void) mulleGetUTF8Characters:(mulle_utf8_t *) buf;
 
+// returns actual UTF8 length
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength;
+- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+                            maxLength:(NSUInteger) maxLength
+                                range:(NSRange) range;
+
 + (BOOL) mulleAreValidUTF8Characters:(mulle_utf8_t *) buffer
                           length:(NSUInteger) length;
 
