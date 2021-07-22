@@ -15,7 +15,7 @@ endif()
 #
 # Generated from sourcetree: E42CC335-C754-4C11-B0A9-5EF8B21A6525;MulleObjC;no-singlephase;
 # Disable with : `mulle-sourcetree mark MulleObjC no-link`
-# Disable for this platform: `mulle-sourcetree mark MulleObjC no-cmake-platform-linux`
+# Disable for this platform: `mulle-sourcetree mark MulleObjC no-cmake-platform-darwin`
 #
 if( NOT MULLE_OBJC_LIBRARY)
    find_library( MULLE_OBJC_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjC${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjC NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
@@ -112,7 +112,7 @@ endif()
 #
 # Generated from sourcetree: F69042E6-D516-412C-A887-1D9DC5F53E5D;mulle-buffer;no-all-load,no-cmake-searchpath,no-import,no-singlephase;
 # Disable with : `mulle-sourcetree mark mulle-buffer no-link`
-# Disable for this platform: `mulle-sourcetree mark mulle-buffer no-cmake-platform-linux`
+# Disable for this platform: `mulle-sourcetree mark mulle-buffer no-cmake-platform-darwin`
 #
 if( NOT MULLE_BUFFER_LIBRARY)
    find_library( MULLE_BUFFER_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-buffer${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-buffer NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
@@ -183,7 +183,7 @@ endif()
 #
 # Generated from sourcetree: F88CEF95-466E-4F31-B7A1-5C5FCA0F0D89;mulle-utf;no-all-load,no-cmake-searchpath,no-import,no-singlephase;
 # Disable with : `mulle-sourcetree mark mulle-utf no-link`
-# Disable for this platform: `mulle-sourcetree mark mulle-utf no-cmake-platform-linux`
+# Disable for this platform: `mulle-sourcetree mark mulle-utf no-cmake-platform-darwin`
 #
 if( NOT MULLE_UTF_LIBRARY)
    find_library( MULLE_UTF_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-utf${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-utf NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
@@ -254,7 +254,7 @@ endif()
 #
 # Generated from sourcetree: C58ADEBB-C366-4304-9F01-B4C9400C4DB1;mulle-sprintf;no-cmake-searchpath,no-import,no-singlephase;
 # Disable with : `mulle-sourcetree mark mulle-sprintf no-link`
-# Disable for this platform: `mulle-sourcetree mark mulle-sprintf no-cmake-platform-linux`
+# Disable for this platform: `mulle-sourcetree mark mulle-sprintf no-cmake-platform-darwin`
 #
 if( NOT MULLE_SPRINTF_LIBRARY)
    find_library( MULLE_SPRINTF_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-sprintf${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-sprintf NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
