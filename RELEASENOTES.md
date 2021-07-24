@@ -1,6 +1,12 @@
 ## 0.19.0
 
-* Various small improvements
+* renamed mulleCData to cData
+* moved NSLock categories elsewhere
+* renamed `stringWithFormat:arguments:` to `mulleStringWithFormat:arguments`
+* added `+[NSString availableStringEncodings]` and `-[NSString dataUsingEncoding:allowLossyConversion:]`
+* added `-[NSString mulleGetUTF8Characters:maxLength:range:]`
+* added `-[NSMutableString mulleAppendUTF8String:]`
+* renamed `mulleData` to `cData`, but as its incompatible methods still get a `mulle` prefix, so the read accessor is now `mulleCData`
 
 
 ## 0.18.0
