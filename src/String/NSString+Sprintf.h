@@ -37,7 +37,13 @@
 #import "NSString.h"
 
 
-@interface NSString (Sprintf)
+//
+// MEMO: if you are getting suprising "nil" returns here your string
+//       likely contains an unsupported formatting character.
+//       If this is not the case, ensure that mulle-sprintf is "force"
+//       linked (all-load) to your executable.
+//
+@interface NSString( Sprintf)
 
 + (instancetype) stringWithFormat:(NSString *) format
                   mulleVarargList:(mulle_vararg_list) arguments;
@@ -47,8 +53,6 @@
 
 + (instancetype) stringWithFormat:(NSString *) format, ...;
 
-- (NSString *) stringByAppendingFormat:(NSString *) format, ...;
-
 - (instancetype) initWithFormat:(NSString *) format
                 mulleVarargList:(mulle_vararg_list) arguments;
 - (instancetype) initWithFormat:(NSString *) format
@@ -56,6 +60,7 @@
 
 - (instancetype) initWithFormat:(NSString *) format, ...;
 
+- (NSString *) stringByAppendingFormat:(NSString *) format, ...;
 
 @end
 

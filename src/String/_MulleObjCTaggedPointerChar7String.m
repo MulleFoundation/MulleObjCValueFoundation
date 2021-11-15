@@ -168,14 +168,14 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    return( grab_ascii_char7( self, (char *) buf, maxLength));
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range
 {

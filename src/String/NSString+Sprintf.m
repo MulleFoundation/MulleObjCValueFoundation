@@ -58,7 +58,7 @@
                              arguments:(va_list) args
 {
    return( [[[self alloc] initWithFormat:format
-                                 arguments:args] autorelease]);
+                               arguments:args] autorelease]);
 }
 
 //
@@ -74,20 +74,6 @@
               mulleVarargList:args];
    mulle_vararg_end( args);
    return( s);
-}
-
-
-- (NSString *) stringByAppendingFormat:(NSString *) format, ...
-{
-   NSString             *s;
-   mulle_vararg_list    args;
-
-   mulle_vararg_start( args, format);
-   s = [NSString stringWithFormat:format
-                  mulleVarargList:args];
-   mulle_vararg_end( args);
-
-   return( [self stringByAppendingString:s]);
 }
 
 
@@ -129,12 +115,12 @@ static id   string_from_buffer( NSString *self,
    auto char                space[ 512];
 
    if( ! format)
-      MulleObjCThrowInvalidArgumentExceptionCString( "format is nil");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "format is nil");
 
    allocator = MulleObjCInstanceGetAllocator( self);
    mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), allocator);
    c_format  = [format UTF8String];
-   if( mulle_mvsprintf( &buffer, (char *) c_format, arguments) < 0)
+   if( mulle_buffer_mvsprintf( &buffer, (char *) c_format, arguments) < 0)
    {
       mulle_buffer_done( &buffer);
       [self release];
@@ -154,12 +140,12 @@ static id   string_from_buffer( NSString *self,
    auto char                space[ 512];
 
    if( ! format)
-      MulleObjCThrowInvalidArgumentExceptionCString( "format is nil");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "format is nil");
 
    allocator = MulleObjCInstanceGetAllocator( self);
    mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), allocator);
    c_format  = [format UTF8String];
-   if( mulle_vsprintf( &buffer, (char *) c_format, va_list) < 0)
+   if( mulle_buffer_vsprintf( &buffer, (char *) c_format, va_list) < 0)
    {
       mulle_buffer_done( &buffer);
       [self release];
@@ -182,9 +168,26 @@ static id   string_from_buffer( NSString *self,
    return( s);
 }
 
+
+- (NSString *) stringByAppendingFormat:(NSString *) format, ...
+{
+   NSString             *s;
+   mulle_vararg_list    args;
+
+   mulle_vararg_start( args, format);
+   s = [NSString stringWithFormat:format
+                  mulleVarargList:args];
+   mulle_vararg_end( args);
+
+   return( [self stringByAppendingString:s]);
+}
+
 @end
 
 
+//
+// MulleObjC_printf and friends are in OS Foundation
+//
 char   *MulleObjC_vasprintf( char *format, va_list args)
 {
    char                  *s;
@@ -194,7 +197,7 @@ char   *MulleObjC_vasprintf( char *format, va_list args)
       return( NULL);
 
    mulle_buffer_init( &buffer, NULL);
-   mulle_vsprintf( &buffer, format, args);
+   mulle_buffer_vsprintf( &buffer, format, args);
    mulle_buffer_add_byte( &buffer, 0);
    s = mulle_buffer_extract_bytes( &buffer);
    mulle_buffer_done( &buffer);

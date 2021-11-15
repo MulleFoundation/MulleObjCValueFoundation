@@ -74,7 +74,7 @@
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    NSUInteger   length;
@@ -85,7 +85,7 @@
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range
 {

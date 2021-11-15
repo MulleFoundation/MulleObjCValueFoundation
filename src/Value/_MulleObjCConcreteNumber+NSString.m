@@ -49,10 +49,12 @@
 #include <float.h>
 
 
+// TODO: not sure if this code is needed, as the fallback seems good enough
+//       for int and float or ?
+
 static char  *convert_decimal_uint32_t( uint32_t value, char *s, size_t len)
 {
    assert( len >= 10);  // 4,294,967,296
-
 
    s = &s[ len];
    do
@@ -120,7 +122,7 @@ static struct _MulleStringContext   empty;
 
    rval.characters = convert_decimal_uint64_t( _value, data->characters, data->length);
    rval.length     = data->length - (rval.characters - data->characters);
-   *data = rval;
+   *data           = rval;
 }
 
 
@@ -165,7 +167,7 @@ static struct _MulleStringContext   empty;
 
 - (NSString *) stringValue
 {
-   char                      tmp[ 64];  // max: -2,xxx,xxx,xxx
+   char                     tmp[ 32];  // max: -2,xxx,xxx,xxx
    struct mulle_asciidata   data;
 
    data = mulle_asciidata_make( tmp, sizeof( tmp));
@@ -203,7 +205,7 @@ static struct _MulleStringContext   empty;
 
 - (NSString *) stringValue
 {
-   char                      tmp[ 32];
+   char                     tmp[ 32];
    struct mulle_asciidata   data;
 
    data = mulle_asciidata_make( tmp, sizeof( tmp));
@@ -218,13 +220,15 @@ static struct _MulleStringContext   empty;
 
 @implementation _MulleObjCDoubleNumber( NSString)
 
+// TODO: there is possibly a problem here, that we don't have a true
+//       float representation
 - (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
 {
    struct mulle_asciidata   rval;
 
-   assert( data->length >= DBL_DECIMAL_DIG + 16);
+   assert( data->length >= 17 + 6);  //-e+123
 
-   rval.length = snprintf( data->characters, data->length, "%g", _value);
+   rval.length = snprintf( data->characters, data->length, "%0.17g", _value);
    assert( rval.length < data->length);
 
    rval.characters = data->characters;
@@ -234,7 +238,7 @@ static struct _MulleStringContext   empty;
 
 - (NSString *) stringValue
 {
-   char                      tmp[ DBL_DECIMAL_DIG + 16];
+   char                      tmp[ 32];
    int                       len;
    struct mulle_asciidata   data;
 
@@ -255,8 +259,8 @@ static struct _MulleStringContext   empty;
 {
    struct mulle_asciidata   rval;
 
-   assert( data->length >= LDBL_DECIMAL_DIG + 16);
-   rval.length = snprintf( data->characters, data->length, "%Lg", _value);
+   assert( data->length >= 21 + 6);
+   rval.length = snprintf( data->characters, data->length, "%0.21Lg", _value);
    assert( rval.length < data->length);
 
    rval.characters = data->characters;
@@ -266,7 +270,7 @@ static struct _MulleStringContext   empty;
 
 - (NSString *) stringValue
 {
-   char                      tmp[ LDBL_DECIMAL_DIG + 16];
+   char                     tmp[ 32];
    struct mulle_asciidata   data;
 
    data = mulle_asciidata_make( tmp, sizeof( tmp));
@@ -287,7 +291,7 @@ struct mulle_asciidata
                                                                  struct mulle_asciidata data)
 {
    struct mulle_asciidata   rval;
-   NSInteger                 value;
+   NSInteger                value;
 
    assert( data.length >= 21);
 
@@ -320,7 +324,7 @@ struct mulle_asciidata
 - (NSString *) stringValue
 {
    char                      tmp[ 32];
-   struct mulle_asciidata   data;
+   struct mulle_asciidata    data;
    NSString                  *s;
 
    data = mulle_asciidata_make( tmp, sizeof( tmp));
@@ -356,6 +360,12 @@ struct mulle_asciidata
 
 
 - (NSString *) stringValue
+{
+   return( _value ? @"YES" : @"NO");
+}
+
+
+- (NSString *) description
 {
    return( _value ? @"YES" : @"NO");
 }

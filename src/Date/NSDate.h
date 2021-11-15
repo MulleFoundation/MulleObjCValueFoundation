@@ -38,37 +38,39 @@
 
 #import "NSDateFactory.h"
 
+// we don't have mulle_timeinterval_t yet, as we don't want the dependency
+// on mulle-time here
 typedef double    NSTimeInterval;
 
 // This is the time interval to **add** to 1.1.1970 GMT.
 // to get to 1.1.2001 GMT.
-#define NSTimeIntervalSince1970  978307200.0
+//#define NSTimeIntervalSinceReferenceDate  0.0
+#define NSTimeIntervalSince1970           978307200.0
 
-// compatible values
+
+static inline NSTimeInterval
+   _NSTimeIntervalSince1970AsReferenceDate( NSTimeInterval interval)
+{
+   return( interval - NSTimeIntervalSince1970);
+}
+
+static inline NSTimeInterval
+   _NSTimeIntervalSinceReferenceDateAsSince1970( NSTimeInterval interval)
+{
+   return( interval + NSTimeIntervalSince1970);
+}
+
+
+// compatible values for NSTimeIntervalSinceReferenceDate
 #define _NSDistantFuture   63113904000.0
 #define _NSDistantPast    -63114076800.0
 
-
 //
-// NSDate is supposed to be a container for UTC. UTC is a calendar time
-// variant. It is not a physical time.
+// this is a class cluster with one subclass here for the regular NSDate
+// and NSCalendarDate in a future library.
 //
-// This means that if you asked on 31.Dez.2016 23:59:59 for [NSDate date]
-// and did this again in the next physical second, you should be getting a
-// duplicate because of the leap second being added. But leap seconds are
-// generally ignored when doing calendrical calculations...
-//
-// Arithmetic on NSDate is useful in terms of seconds, minutes and
-// days, but is errorprone when extended to months or years due to
-// leap years with varyiing numbers of days. When you use the proleptic
-// gregorian calendar, as pretty much everyone is doing, interval values
-// before 15.10.1582 will deviate by days from physical time!
-//
-// NSDate is floating point with all it's problems.
-//
-@interface NSDate : NSObject < NSDateFactory, NSCopying, MulleObjCValue, MulleObjCImmutable>
+@interface NSDate : NSObject < MulleObjCClassCluster, NSDateFactory, NSCopying, MulleObjCValue>
 {
-   NSTimeInterval   _interval;
 }
 
 
@@ -80,13 +82,19 @@ typedef double    NSTimeInterval;
 - (instancetype) initWithTimeInterval:(NSTimeInterval) seconds
                             sinceDate:(NSDate *) refDate;
 - (instancetype) initWithTimeIntervalSince1970:(NSTimeInterval) seconds;
-- (instancetype) initWithTimeIntervalSinceReferenceDate:(NSTimeInterval) seconds;
 
 - (NSComparisonResult) compare:(id) other;
 - (instancetype) dateByAddingTimeInterval:(NSTimeInterval) seconds;
 - (NSDate *) earlierDate:(NSDate *) other;
+- (NSDate *) laterDate:(NSDate *) other;
 - (NSTimeInterval) timeIntervalSince1970;
 - (NSTimeInterval) timeIntervalSinceDate:(NSDate *) other;
+
+@end
+
+@interface NSDate ( Subclasses)
+
+- (instancetype) initWithTimeIntervalSinceReferenceDate:(NSTimeInterval) seconds;
 - (NSTimeInterval) timeIntervalSinceReferenceDate;
 
 @end

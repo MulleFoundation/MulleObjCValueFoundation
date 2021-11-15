@@ -48,9 +48,14 @@
 @implementation _MulleObjCConcreteMutableData
 
 
-static void   append_via_tmp_buffer( _MulleObjCConcreteMutableData *self, void *bytes, NSUInteger length)
+static void   append_via_tmp_buffer( _MulleObjCConcreteMutableData *self,
+                                     void *bytes,
+                                     NSUInteger length)
 {
    void   *tmp;
+
+   if( length == (NSUInteger) -1)
+      length = strlen( bytes);
 
    tmp = mulle_malloc( length);
    {
@@ -63,6 +68,9 @@ static void   append_via_tmp_buffer( _MulleObjCConcreteMutableData *self, void *
 
 static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NSUInteger length)
 {
+   if( length == (NSUInteger) -1)
+      length = strlen( bytes);
+
    if( ! mulle_buffer_intersects_bytes( &self->_storage, bytes, length))
    {
       mulle_buffer_add_bytes( &self->_storage, bytes, length);
@@ -126,9 +134,12 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    struct mulle_allocator          *allocator;
 
    if( ! buf && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
 
    data = NSAllocateObject( self, 0, NULL);
+
+   if( length == (NSUInteger) -1)
+      length = strlen( buf);
 
    allocator = MulleObjCInstanceGetAllocator( data);
    mulle_buffer_init_with_capacity( &data->_storage, length, allocator);
@@ -145,9 +156,12 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    _MulleObjCConcreteMutableData   *data;
 
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
 
    data = NSAllocateObject( self, 0, NULL);
+
+   if( length == (NSUInteger) -1)
+      length = strlen( bytes);
 
    mulle_buffer_init_with_allocated_bytes( &data->_storage, bytes, length, allocator);
    mulle_buffer_advance( &data->_storage, length);

@@ -69,6 +69,7 @@
    static const NSStringEncoding   encodings[] =
    {
       NSASCIIStringEncoding,
+      NSISOLatin1StringEncoding, // sorta
       NSUTF8StringEncoding,
       NSUTF16StringEncoding,
       NSUTF16BigEndianStringEncoding,
@@ -158,6 +159,7 @@
 {
    switch( encoding)
    {
+   case NSISOLatin1StringEncoding         : return( NO);  // subclass can do a better check
    case NSUTF8StringEncoding              :
    case NSUTF16StringEncoding             :
    case NSUTF16LittleEndianStringEncoding :
@@ -171,34 +173,67 @@
 }
 
 
-char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
+static struct
 {
-   switch( encoding)
-   {
-   case NSASCIIStringEncoding             : return( "ASCII");
-   case NSNEXTSTEPStringEncoding          : return( "NEXTSTEP");
-   case NSJapaneseEUCStringEncoding       : return( "JapaneseEUC");
-   case NSUTF8StringEncoding              : return( "UTF8");
-   case NSISOLatin1StringEncoding         : return( "ISOLatin1");
-   case NSSymbolStringEncoding            : return( "Symbol");
-   case NSNonLossyASCIIStringEncoding     : return( "NonLossyASCII");
-   case NSShiftJISStringEncoding          : return( "ShiftJIS");
-   case NSISOLatin2StringEncoding         : return( "ISOLatin2");
-   case NSUTF16StringEncoding             : return( "UTF16");
-   case NSWindowsCP1251StringEncoding     : return( "WindowsCP1251");
-   case NSWindowsCP1252StringEncoding     : return( "WindowsCP1252");
-   case NSWindowsCP1253StringEncoding     : return( "WindowsCP1253");
-   case NSWindowsCP1254StringEncoding     : return( "WindowsCP1254");
-   case NSWindowsCP1250StringEncoding     : return( "WindowsCP1250");
-   case NSISO2022JPStringEncoding         : return( "ISO2022JP");
-   case NSUTF16BigEndianStringEncoding    : return( "UTF16BigEndian");
-   case NSUTF16LittleEndianStringEncoding : return( "UTF16LittleEndian");
-   case NSUTF32StringEncoding             : return( "UTF32");
-   case NSUTF32BigEndianStringEncoding    : return( "UTF32BigEndian");
-   case NSUTF32LittleEndianStringEncoding : return( "UTF32LittleEndian");
-   default                                : return( "???");
-   }
+   NSUInteger  encoding;
+   char        *name;
+} encoding_table[] =
+{
+   { NSASCIIStringEncoding            , "ASCII" },
+   { NSNEXTSTEPStringEncoding         , "NEXTSTEP" },
+   { NSJapaneseEUCStringEncoding      , "JapaneseEUC" },
+   { NSUTF8StringEncoding             , "UTF8" },
+   { NSISOLatin1StringEncoding        , "ISOLatin1" },
+   { NSSymbolStringEncoding           , "Symbol" },
+   { NSNonLossyASCIIStringEncoding    , "NonLossyASCII" },
+   { NSShiftJISStringEncoding         , "ShiftJIS" },
+   { NSISOLatin2StringEncoding        , "ISOLatin2" },
+   { NSUTF16StringEncoding            , "UTF16" },
+   { NSWindowsCP1251StringEncoding    , "WindowsCP1251" },
+   { NSWindowsCP1252StringEncoding    , "WindowsCP1252" },
+   { NSWindowsCP1253StringEncoding    , "WindowsCP1253" },
+   { NSWindowsCP1254StringEncoding    , "WindowsCP1254" },
+   { NSWindowsCP1250StringEncoding    , "WindowsCP1250" },
+   { NSISO2022JPStringEncoding        , "ISO2022JP" },
+   { NSMacOSRomanStringEncoding       , "MacOSRoman" },
+   { NSUTF16BigEndianStringEncoding   , "UTF16BigEndian" },
+   { NSUTF16LittleEndianStringEncoding, "UTF16LittleEndian" },
+   { NSUTF32StringEncoding            , "UTF32" },
+   { NSUTF32BigEndianStringEncoding   , "UTF32BigEndian" },
+   { NSUTF32LittleEndianStringEncoding, "UTF32LittleEndian" },
+   0, 0
 };
+
+
+NSStringEncoding   MulleStringEncodingParseUTF8String( char *s)
+{
+   unsigned int  i;
+
+   if( ! s)
+      return( 0);
+
+   for( i = 0;; i++)
+   {
+      if( ! encoding_table[ i].name)
+         return( 0);
+      if( ! strcmp( s, encoding_table[ i].name))
+         return( encoding_table[ i].encoding);
+   }
+}
+
+
+char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
+{
+   unsigned int  i;
+
+   for( i = 0;; i++)
+   {
+      if( ! encoding_table[ i].encoding)
+         return( "???");
+      if( encoding == encoding_table[ i].encoding)
+         return( encoding_table[ i].name);
+   }
+}
 
 
 - (NSData *) _dataUsingEncoding:(NSStringEncoding) encoding
@@ -210,15 +245,38 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    switch( encoding)
    {
    default :
-      MulleObjCThrowInvalidArgumentExceptionCString( "encoding %s (%ld) is not supported",
-         MulleStringEncodingCStringDescription( encoding),
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "encoding %s (%ld) is not supported",
+         MulleStringEncodingUTF8String( encoding),
          (long) encoding);
 
    case NSASCIIStringEncoding  :
       data = [self _asciiData];
       if( ! data)
-         MulleObjCThrowInvalidArgumentExceptionCString( "Can not convert this string to ASCII");
+         MulleObjCThrowInvalidArgumentExceptionUTF8String( "Can not convert this string to ASCII");
       return( data);
+
+   case NSISOLatin1StringEncoding  :
+   {
+      char           *s;
+      char           *end;
+      NSUInteger     iso1_length;
+      NSUInteger     length;
+
+      data   = [self _utf8Data];
+      length = [data length];
+      if( ! length)
+         return( data);
+
+      s           = mulle_allocator_malloc( &mulle_stdlib_allocator, length);
+      end         = _mulle_utf8_convert_to_iso1( [data bytes], length, s, '?');
+      iso1_length = end - s;
+      s           = mulle_allocator_realloc( &mulle_stdlib_allocator,
+                                             s,
+                                             iso1_length);
+      return( [NSData dataWithBytesNoCopy:s
+                                   length:iso1_length
+                             freeWhenDone:YES]);
+   }
 
    case NSUTF8StringEncoding  :
       return( [self _utf8Data]);
@@ -282,7 +340,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    struct mulle_data               data;
 
    if( mulle_utf16_information( chars, length, &info))
-      MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF16");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "invalid UTF16");
 
    allocator = MulleObjCInstanceGetAllocator( self);
 
@@ -354,20 +412,64 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
 }
 
 
+static id   initByConvertingFromEncoding( NSString *self,
+                                          void *bytes,
+                                          NSUInteger length,
+                                          NSStringEncoding encoding)
+{
+   mulle_utf8_t   *s;
+   mulle_utf8_t   *end;
+   NSUInteger     utf8_length;
+
+   s           = mulle_allocator_malloc( &mulle_stdlib_allocator, length * 2);
+   switch( encoding)
+   {
+   case NSMacOSRomanStringEncoding :
+      end = _mulle_macroman_convert_to_utf8( bytes, length, s);
+      break;
+
+   case NSISOLatin1StringEncoding :
+      end = _mulle_iso1_convert_to_utf8( bytes, length, s);
+      break;
+
+   case NSNEXTSTEPStringEncoding :
+      end = _mulle_nextstep_convert_to_utf8( bytes, length, s);
+      break;
+   }
+   utf8_length = end - s;
+   s           = mulle_allocator_realloc( &mulle_stdlib_allocator,
+                                          s,
+                                          utf8_length);
+   return( [self initWithBytesNoCopy:s
+                              length:utf8_length
+                            encoding:NSUTF8StringEncoding
+                        freeWhenDone:YES]);
+}
+
+
 - (instancetype) initWithBytes:(void *) bytes
                         length:(NSUInteger) length
                       encoding:(NSUInteger) encoding
 
 {
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "null bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "null bytes");
+
+   // do this here, because iso conversion is otherwise unhappy
+   if( ! length)
+      return( @"");
 
    switch( encoding)
    {
    default :
-      MulleObjCThrowInvalidArgumentExceptionCString( "encoding %s (%ld) is not supported",
-         MulleStringEncodingCStringDescription( encoding),
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "encoding %s (%ld) is not supported",
+         MulleStringEncodingUTF8String( encoding),
          (long) encoding);
+
+   case NSMacOSRomanStringEncoding :
+   case NSISOLatin1StringEncoding :
+   case NSNEXTSTEPStringEncoding :
+      return( initByConvertingFromEncoding( self, bytes, length, encoding));
 
    case NSASCIIStringEncoding :
    case NSUTF8StringEncoding  :
@@ -432,7 +534,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
    allocator = flag ? &mulle_stdlib_allocator : NULL;
 
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "null bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "null bytes");
 
    // has zero termination ?
    switch( encoding)
@@ -553,7 +655,7 @@ char   *MulleStringEncodingCStringDescription( NSStringEncoding encoding)
       return( length);
 
    if( mulle_utf8_information( s, length, &info))
-      MulleObjCThrowInternalInconsistencyExceptionCString( "supposed UTF8 is not UTF8");
+      MulleObjCThrowInternalInconsistencyExceptionUTF8String( "supposed UTF8 is not UTF8");
 
    switch( encoding)
    {
@@ -665,7 +767,7 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
                  range:NSMakeRange( 0, tmp_length)];
 
    if( mulle_utf32_information( tmp_buf, tmp_length, &info))
-      MulleObjCThrowInvalidArgumentExceptionCString( "invalid UTF32");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "invalid UTF32");
 
    utf16total = info.utf16len;
    if( prefixWithBOM)
