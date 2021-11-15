@@ -186,14 +186,14 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    return( grab_ascii_char5( self, (char *) buf, maxLength));
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range
 {
@@ -261,7 +261,7 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
   // other is known to have same length
   // and each unichar can expand into 4 chars max
 
-   [other mulleGetUTF8Characters:buf
+   [other mulleGetUTF8Characters:(char *) buf
                        maxLength:sizeof( buf)];
    for( i = 0; i < length; i++)
    {

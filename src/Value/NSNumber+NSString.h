@@ -42,7 +42,18 @@
 
 @interface NSNumber (NSString)
 
-- (NSString *) description;
+- (NSString *) description;   // more readable for FP
+
+//
+// this is not 100% like descriptionWithLocale:nil as it's taken
+// pains to be more accurate for FP.
+// It's assume that the program is running with setlocale( LC_ALL, "C");
+//
 - (NSString *) stringValue;
 
+- (instancetype) mulleInitWithString:(NSString *) s;
+
 @end
+
+NSNumber  *MulleNewNumberWithUTF8Data( struct mulle_utf8data text);
+NSNumber  *MulleNewBoolWithUTF8Data( struct mulle_utf8data text);

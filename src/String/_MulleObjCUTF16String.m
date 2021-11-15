@@ -96,15 +96,15 @@
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    struct mulle_utf8_conversion_context  ctxt;
    struct mulle_utf16data                data;
    BOOL                                  flag;
 
-   ctxt.buf      = buf;
-   ctxt.sentinel = &buf[ maxLength];
+   ctxt.buf      = (mulle_utf8_t *) buf;
+   ctxt.sentinel = (mulle_utf8_t *) &buf[ maxLength];
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);
@@ -112,19 +112,19 @@
                                       data.length,
                                       &ctxt,
                                       mulle_utf8_conversion_context_add_bytes);
-   assert( ! memchr( buf, 0, ctxt.buf - buf));
-   return( ctxt.buf - buf);
+   assert( ! memchr( buf, 0, ctxt.buf - (mulle_utf8_t *) buf));
+   return( (char *) ctxt.buf - buf);
 }
 
 
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {
-   mulle_utf16_t             *sentinel;
-   mulle_utf16_t             *src;
-   unichar                   *dst;
+   mulle_utf16_t            *sentinel;
+   mulle_utf16_t            *src;
+   unichar                  *dst;
    struct mulle_utf16data   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);

@@ -102,6 +102,19 @@
 }
 
 
+#ifdef DEBUG
+- (id) retain
+{
+   return( [super retain]);
+}
+
+- (void) release
+{
+   [super release];
+}
+#endif
+
+
 - (id) copy
 {
    return( [self retain]);

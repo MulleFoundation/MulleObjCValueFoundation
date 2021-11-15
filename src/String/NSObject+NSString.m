@@ -103,9 +103,9 @@ BOOL   MulleDebugDescriptionEllideAddressOutput = NO;
 }
 
 
-- (char *) cStringDescription
+- (char *) UTF8String
 {
-   return( [[self description] cStringDescription]);
+   return( [[self description] UTF8String]);
 }
 
 

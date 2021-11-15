@@ -149,14 +149,14 @@ static NSUInteger   grab_ascii_range( id self,
 
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    return( grab_ascii( self, (char *) buf, maxLength));
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range
 {
@@ -771,7 +771,7 @@ static _MulleObjCAllocatorASCIIString   *
                                                   allocator:(struct mulle_allocator *) allocator
 {
    if( s[ length])
-      MulleObjCThrowInvalidArgumentExceptionCString( "is not zero terminated");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "is not zero terminated");
 
    return( (_MulleObjCAllocatorZeroTerminatedASCIIString *)
                _MulleObjCAllocatorASCIIStringNew( self, s, length, allocator));

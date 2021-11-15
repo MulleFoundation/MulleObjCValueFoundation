@@ -134,11 +134,11 @@
    NSUInteger   real;
 
    if( ! bytes && size)
-      MulleObjCThrowInvalidArgumentExceptionCString( "NULL bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "NULL bytes");
 
    NSGetSizeAndAlignment( [self objCType], &real, NULL);
    if( real != size)
-      MulleObjCThrowInvalidArgumentExceptionCString( "size should be %ld bytes on this platform", real);
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "size should be %ld bytes on this platform", real);
 
    [self getValue:bytes];
 }

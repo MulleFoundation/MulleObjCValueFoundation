@@ -57,7 +57,7 @@ static inline unsigned int   hex( unsigned int c)
 
 #define WORD_SIZE   4
 
-- (NSString *) description
+- (NSString *) stringValue
 {
    NSUInteger               full_lines;
    NSUInteger               i;
@@ -124,6 +124,12 @@ static inline unsigned int   hex( unsigned int c)
    return( [NSString mulleStringWithUTF8CharactersNoCopy:data.bytes
                                                   length:data.length
                                                allocator:allocator]);
+}
+
+
+- (NSString *) description
+{
+   return( [self stringValue]);
 }
 
 

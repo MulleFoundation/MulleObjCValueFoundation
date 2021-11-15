@@ -33,12 +33,12 @@ NSString   *NSStringFromClass( Class cls)
 {
    char   *s;
 
-   s = MulleObjCClassGetName( cls);
+   s = MulleObjCClassGetNameUTF8String( cls);
    if( ! s)
    {
       if( ! cls)
          return( nil);
-      MulleObjCThrowInternalInconsistencyExceptionCString( "unknown class %p", cls);
+      MulleObjCThrowInternalInconsistencyExceptionUTF8String( "unknown class %p", cls);
    }
 
    return( [NSString stringWithUTF8String:s]);
@@ -49,12 +49,12 @@ NSString   *NSStringFromSelector( SEL sel)
 {
    char   *s;
 
-   s = MulleObjCSelectorGetName( sel);
+   s = MulleObjCSelectorGetNameUTF8String( sel);
    if( ! s)
    {
       if( ! sel)
          return( nil);
-      MulleObjCThrowInternalInconsistencyExceptionCString( "unknown selector id %08x (register selector first)", (uint32_t ) sel);
+      MulleObjCThrowInternalInconsistencyExceptionUTF8String( "unknown selector id %08x (register selector first)", (uint32_t ) sel);
    }
    return( [NSString stringWithUTF8String:s]);
 }
@@ -64,12 +64,12 @@ NSString   *NSStringFromProtocol( PROTOCOL proto)
 {
    char   *s;
 
-   s = MulleObjCProtocolGetName( proto);
+   s = MulleObjCProtocolGetNameUTF8String( proto);
    if( ! s)
    {
       if( ! proto)
          return( nil);
-      MulleObjCThrowInternalInconsistencyExceptionCString( "unknown protocol id %08x", (uint32_t ) proto);
+      MulleObjCThrowInternalInconsistencyExceptionUTF8String( "unknown protocol id %08x", (uint32_t ) proto);
    }
    return( [NSString stringWithUTF8String:s]);
 }
@@ -78,7 +78,8 @@ NSString   *NSStringFromProtocol( PROTOCOL proto)
 NSString   *NSStringFromRange( NSRange range)
 {
    // Apple does it with {}
-   return( [NSString stringWithFormat:@"{ %lu, %lu }", range.location, range.length]);
+   return( [NSString stringWithFormat:@"{ %lu, %lu }",
+                  (unsigned long) range.location, (unsigned long) range.length]);
 }
 
 
@@ -89,8 +90,8 @@ NSString  *MulleObjCStringByCombiningPrefixAndCapitalizedKey( NSString *prefix,
    NSUInteger               prefix_len;
    NSUInteger               key_len;
    NSUInteger               len;
-   uint8_t                  *buf;
-   uint8_t                  c;
+   char                     *buf;
+   int                      c;
    NSString                 *s;
    struct mulle_allocator   *allocator;
 
@@ -104,7 +105,7 @@ NSString  *MulleObjCStringByCombiningPrefixAndCapitalizedKey( NSString *prefix,
    prefix_len = [prefix mulleUTF8StringLength];
    len        = key_len + prefix_len + (tailColon == YES);
 
-   buf = (uint8_t *) mulle_allocator_malloc( allocator, len);
+   buf = mulle_allocator_malloc( allocator, len);
 
    [prefix mulleGetUTF8Characters:buf];
    [key mulleGetUTF8Characters:&buf[ prefix_len]];

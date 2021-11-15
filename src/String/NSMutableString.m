@@ -248,7 +248,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8Characters:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8Characters:(char *) chars
                                       length:(NSUInteger) length
 {
    NSString  *s;
@@ -268,7 +268,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) chars
                                             length:(NSUInteger) length
                                       freeWhenDone:(BOOL) flag
 {
@@ -312,7 +312,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) chars
                                             length:(NSUInteger) length
                                          allocator:(struct mulle_allocator *) allocator
 {
@@ -334,7 +334,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) chars
                                             length:(NSUInteger) length
                                      sharingObject:(id) object
 {
@@ -754,14 +754,14 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    id             *sentinel;
    NSString       **strings;
    NSString       *s;
    NSUInteger     len;
-   mulle_utf8_t   *p;
+   char           *p;
 
    strings  = _storage;
    sentinel = &strings[ _count];

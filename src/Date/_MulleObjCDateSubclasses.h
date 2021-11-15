@@ -1,9 +1,9 @@
 //
-//  mulle_sprintf_object.h
+//  _MulleObjCDateSubclasses.m
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2011 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2011 Codeon GmbH.
+//  Copyright (c) 2021 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2021 Codeon GmbH.
 //  All rights reserved.
 //
 //
@@ -33,6 +33,41 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#include "include.h"
+#ifdef __has_include
+# if __has_include( "NSDate.h")
+#  import "NSDate.h"
+# endif
+#endif
 
-void  mulle_sprintf_register_object_functions( struct mulle_sprintf_conversion *tables);
+#import "import.h"
+
+//
+// NSDate is supposed to be a container for UTC. UTC is a calendar time
+// variant. It is not a physical time.
+//
+// This means that if you asked on 31.Dez.2016 23:59:59 for [NSDate date]
+// and did this again in the next physical second, you should be getting a
+// duplicate because of the leap second being added. But leap seconds are
+// generally ignored when doing calendrical calculations...
+//
+// Arithmetic on NSDate is useful in terms of seconds, minutes and
+// days, but is errorprone when extended to months or years due to
+// leap years with varyiing numbers of days. When you use the proleptic
+// gregorian calendar, as pretty much everyone is doing, interval values
+// before 15.10.1582 will deviate by days from physical time!
+//
+//
+// _MulleObjCConcreteDate is floating point with all it's problems.
+@interface _MulleObjCConcreteDate : NSDate < MulleObjCImmutable>
+{
+   NSTimeInterval   _interval;
+}
+
++ (instancetype) newWithTimeIntervalSinceReferenceDate:(NSTimeInterval) interval;
+
+@end
+
+
+@interface _MulleObjCConcreteDate( NSCoder) <NSCoding>
+@end
+

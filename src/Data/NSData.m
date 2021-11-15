@@ -80,7 +80,10 @@
 static NSData  *_newData( void *buf, NSUInteger length)
 {
    if( ! buf && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
+
+   if( length == (NSUInteger) -1)
+      length = strlen( buf);
 
    switch( length)
    {
@@ -131,7 +134,10 @@ static NSData  *_newData( void *buf, NSUInteger length)
                                 allocator:(struct mulle_allocator *) allocator
 {
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
+
+   if( length == (NSUInteger) -1)
+      length = strlen( bytes);
 
    self = [_MulleObjCAllocatorData mulleNewWithBytesNoCopy:bytes
                                                     length:length
@@ -145,7 +151,10 @@ static NSData  *_newData( void *buf, NSUInteger length)
                             sharingObject:(id) owner
 {
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
+
+   if( length == (NSUInteger) -1)
+      length = strlen( bytes);
 
    self = [_MulleObjCSharedData mulleNewWithBytesNoCopy:bytes
                                                  length:length
@@ -160,7 +169,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
                               length:(NSUInteger) length
 {
    if( ! bytes && length)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
 
    self = [self mulleInitWithBytesNoCopy:bytes
                                   length:length

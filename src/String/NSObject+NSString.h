@@ -23,7 +23,7 @@
 // any pointer addresses or other text that varies between test runs
 //
 - (NSString *) mulleTestDescription;
-- (char *) cStringDescription;
+- (char *) UTF8String;
 - (NSComparisonResult) mulleCompareDescription:(id) other;
 
 // this is intended to possibly output quoted for NSNumber and NSString
