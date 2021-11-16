@@ -1,0 +1,20 @@
+nil
+   a=*nil* laterDate: b=*nil* = a
+   a=*nil* laterDate: b=-1.5 = a
+   a=*nil* laterDate: b=0.0 = a
+   a=*nil* laterDate: b=1.5 = a
+1
+   a=-1.5 laterDate: b=*nil* = a
+   a=-1.5 laterDate: b=-1.5 = a
+   a=-1.5 laterDate: b=0.0 = b
+   a=-1.5 laterDate: b=1.5 = b
+2
+   a=0.0 laterDate: b=*nil* = a
+   a=0.0 laterDate: b=-1.5 = a
+   a=0.0 laterDate: b=0.0 = a
+   a=0.0 laterDate: b=1.5 = b
+3
+   a=1.5 laterDate: b=*nil* = a
+   a=1.5 laterDate: b=-1.5 = a
+   a=1.5 laterDate: b=0.0 = a
+   a=1.5 laterDate: b=1.5 = a

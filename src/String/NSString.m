@@ -354,7 +354,11 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
    if( space.length >= 4)
    {
       // for TPS and other small strings try to grab into local area
+<<<<<<< HEAD
       data.length = [self mulleGetUTF8Characters:(char *) space.characters
+=======
+      data.length = [self mulleGetUTF8Characters:space.characters
+>>>>>>> b6aba3c99898bf4a49bb9a7c9e15a67e13910d65
                                        maxLength:space.length];
 
       // If we are unlucky, than the following scenario pans out. We have a

@@ -206,6 +206,15 @@ if( NOT __ENVIRONMENT__CMAKE__)
    message( STATUS "CMAKE_PREFIX_PATH=\"${CMAKE_PREFIX_PATH}\"" )
    message( STATUS "CMAKE_INSTALL_PREFIX=\"${CMAKE_INSTALL_PREFIX}\"" )
    # message( STATUS "TMP_INCLUDE_DIRS=\"${TMP_INCLUDE_DIRS}\"" )
+<<<<<<< HEAD
+=======
+
+   # these generate -isystem arguments, that add to the system search path
+   # if we use BEFORE we would need to reverse the order in TMP_INCLUDE_DIRS
+   include_directories( SYSTEM
+      ${TMP_INCLUDE_DIRS}
+   )
+>>>>>>> b6aba3c99898bf4a49bb9a7c9e15a67e13910d65
 
    # not sure why cmake doesn't do this itself, we only add the custom
    # paths though

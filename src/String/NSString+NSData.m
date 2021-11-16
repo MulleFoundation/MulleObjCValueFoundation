@@ -654,7 +654,11 @@ static id   initByConvertingFromEncoding( NSString *self,
    if( encoding == NSUTF8StringEncoding)
       return( length);
 
+<<<<<<< HEAD
    if( mulle_utf8_information( (mulle_utf8_t *) s, length, &info))
+=======
+   if( mulle_utf8_information( s, length, &info))
+>>>>>>> b6aba3c99898bf4a49bb9a7c9e15a67e13910d65
       MulleObjCThrowInternalInconsistencyExceptionUTF8String( "supposed UTF8 is not UTF8");
 
    switch( encoding)
