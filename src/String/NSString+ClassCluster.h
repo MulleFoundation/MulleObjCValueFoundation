@@ -54,14 +54,14 @@
 
 // mulle additions
 
-- (instancetype) mulleInitWithUTF8Characters:(mulle_utf8_t *) s
+- (instancetype) mulleInitWithUTF8Characters:(char *) s
                                       length:(NSUInteger) len;
 
 // lenient, if UTF8 is corrupt returns nil and doesn't raise
-- (instancetype) mulleInitOrNilWithUTF8Characters:(mulle_utf8_t *) s
+- (instancetype) mulleInitOrNilWithUTF8Characters:(char *) s
                                            length:(NSUInteger) len;
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) s
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) s
                                             length:(NSUInteger) length
                                       freeWhenDone:(BOOL) flag;
 
@@ -71,11 +71,11 @@
                                      allocator:(struct mulle_allocator *) allocator;
 
 // use allocator: NULL for static text only
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) s
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) s
                                             length:(NSUInteger) lengt
                                          allocator:(struct mulle_allocator *) allocator;
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) s
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) s
                                             length:(NSUInteger) length
                                      sharingObject:(id) object;
 
@@ -85,9 +85,12 @@
 
 @end
 
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 NSString  *_MulleObjCNewASCIIStringWithASCIICharacters( char *s,
                                                         NSUInteger length,
                                                         struct _mulle_objc_universe *universe);
+
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
                                                         NSUInteger length,
                                                         struct _mulle_objc_universe *universe);

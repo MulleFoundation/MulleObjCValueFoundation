@@ -23,7 +23,7 @@
 // any pointer addresses or other text that varies between test runs
 //
 - (NSString *) mulleTestDescription;
-- (char *) cStringDescription;
+- (char *) UTF8String;
 - (NSComparisonResult) mulleCompareDescription:(id) other;
 
 // this is intended to possibly output quoted for NSNumber and NSString
@@ -33,5 +33,6 @@
 @end
 
 // useful to set to 1 for tests, since it suppresses the varying pointer value
-extern BOOL   MulleDebugDescriptionEllideAddressOutput;
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+BOOL   MulleDebugDescriptionEllideAddressOutput;
 

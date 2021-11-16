@@ -42,6 +42,7 @@
 @end
 
 
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 NSString  *MulleObjCTaggedPointerSingleCharacterStringWithCharacter( unichar c);
 
 

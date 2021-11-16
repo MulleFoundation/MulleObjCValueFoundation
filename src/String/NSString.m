@@ -272,7 +272,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
-+ (instancetype) mulleStringWithUTF8Characters:(mulle_utf8_t *) s
++ (instancetype) mulleStringWithUTF8Characters:(char *) s
                                         length:(NSUInteger) len
 {
    return( [[[self alloc] mulleInitWithUTF8Characters:s
@@ -280,7 +280,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
-+ (instancetype) mulleStringWithUTF8CharactersNoCopy:(mulle_utf8_t *) s
++ (instancetype) mulleStringWithUTF8CharactersNoCopy:(char *) s
                                               length:(NSUInteger) len
                                            allocator:(struct mulle_allocator *) allocator
 {
@@ -323,6 +323,13 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 #pragma mark - generic code
 
+
+- (NSString *) stringValue
+{
+   return( self);
+}
+
+
 - (NSString *) description
 {
    return( self);
@@ -335,15 +342,6 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
-//
-// default for sprintf (and exceptions ?)
-//
-- (char *) cStringDescription
-{
-  return( [self UTF8String]);
-}
-
-
 MULLE_C_NEVER_INLINE
 struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
                                                struct mulle_utf8data space)
@@ -353,15 +351,24 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
    if( [self mulleFastGetUTF8Data:&data])
       return( data);
 
-   // for TPS and other small strings try to grab into local area
-   data.length = [self mulleGetUTF8Characters:space.characters
-                                    maxLength:space.length];
-   // if buffer is not full, then self is known not to be
-   // truncated
-   if( data.length < space.length)
+   if( space.length >= 4)
    {
-      data.characters = space.characters;
-      return( data);
+      // for TPS and other small strings try to grab into local area
+      data.length = [self mulleGetUTF8Characters:(char *) space.characters
+                                       maxLength:space.length];
+
+      // If we are unlucky, than the following scenario pans out. We have a
+      // space = 6 and our string is abc\xx\xx\xx\xx. So we will only get 3 back.
+      // We have to reduce the space.length by the worst case to figure out if the
+      // string was truncated. Worst case is 4. So reduce space.length by 3
+      // truncated. TODO: for combined emoji we would need to fix thisif
+      // mulleGetUTF8Characters:maxLength: becomes smarter.
+      //
+      if( data.length < space.length - 3)
+      {
+         data.characters = space.characters;
+         return( data);
+      }
    }
 
    // probably exhausted so use painful slow code
@@ -372,23 +379,23 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
-                            maxLength:(NSUInteger) maxLength
-{
-   struct mulle_utf8data   data;
-   NSUInteger               length;
+// - (NSUInteger) mulleGetUTF8Characters:(char *) buf
+//                             maxLength:(NSUInteger) maxLength
+// {
+//    struct mulle_utf8data   data;
+//    NSUInteger               length;
+//
+//    data   = MulleStringGetUTF8Data( self,
+//                                     mulle_utf8data_make( buf, maxLength));
+//    length = data.length <= maxLength ? data.length : maxLength;
+//    if( data.characters != buf)
+//       memcpy( buf, data.characters, length);
+//    assert( ! memchr( buf, 0, length));
+//    return( length);
+// }
 
-   data   = MulleStringGetUTF8Data( self,
-                                    mulle_utf8data_make( buf, maxLength));
-   length = data.length <= maxLength ? data.length : maxLength;
-   if( data.characters != buf)
-      memcpy( buf, data.characters, length);
-   assert( ! memchr( buf, 0, length));
-   return( length);
-}
 
-
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range
 {
@@ -405,7 +412,7 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 // buffer must be large enough to contain maxLength - 1 chars plus a
 // terminating zero char (which this method adds).
 //
-- (NSUInteger) mulleGetUTF8String:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8String:(char *) buf
                        bufferSize:(NSUInteger) size
 {
    NSUInteger   length;
@@ -422,14 +429,14 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 }
 
 
-- (void) mulleGetUTF8String:(mulle_utf8_t *) buf
+- (void) mulleGetUTF8String:(char *) buf
 {
    [self mulleGetUTF8String:buf
                  bufferSize:ULONG_MAX];
 }
 
 
-- (void) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (void) mulleGetUTF8Characters:(char *) buf
 {
    [self mulleGetUTF8Characters:buf
                       maxLength:LONG_MAX];
@@ -521,12 +528,12 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 }
 
 
-+ (BOOL) mulleAreValidUTF8Characters:(mulle_utf8_t *) buf
++ (BOOL) mulleAreValidUTF8Characters:(char *) buf
                               length:(NSUInteger) len
 {
    struct mulle_utf_information  info;
 
-   if( mulle_utf8_information( buf, len, &info))
+   if( mulle_utf8_information( (mulle_utf8_t *) buf, len, &info))
       return( NO);
 
    return( YES);
@@ -762,6 +769,13 @@ static mulle_utf8_t   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
 {
    return( strtod( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL));
 }
+
+
+- (long double) mulleLongDoubleValue
+{
+   return( strtold( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL));
+}
+
 
 
 - (float) floatValue

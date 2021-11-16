@@ -16,38 +16,26 @@
 
 // You can tweak the following #include with these commands.
 // (Use F69042E6-D516-412C-A887-1D9DC5F53E5D instead of mulle-buffer if there are duplicate entries)
-//    remove:             `mulle-sourcetree mark mulle-buffer no-header`
+//    remove:             `mulle-sde dependency mark mulle-buffer no-header`
 //    rename:             `mulle-sde dependency|library set mulle-buffer include whatever.h`
-//    reorder:            `mulle-sourcetree move mulle-buffer <up|down>`
-//    toggle #include:    `mulle-sourcetree mark mulle-buffer [no-]import`
-//    toggle public:      `mulle-sourcetree mark mulle-buffer [no-]public`
-//    toggle optional:    `mulle-sourcetree mark mulle-buffer [no-]require`
-//    remove for platform:`mulle-sourcetree mark mulle-buffer no-platform-<uname>`
-//        (use mulle-sourcetree-to-c --unames for known values)
+//    reorder:            `mulle-sde dependency move mulle-buffer <up|down>`
+//    toggle #include:    `mulle-sde dependency mark mulle-buffer [no-]import`
+//    toggle public:      `mulle-sde dependency mark mulle-buffer [no-]public`
+//    toggle optional:    `mulle-sde dependency mark mulle-buffer [no-]require`
+//    remove for platform:`mulle-sde dependency mark mulle-buffer no-platform-<uname>`
+//        (use `mulle-sourcetree-to-c --unames` to list known values)
 #include <mulle-buffer/mulle-buffer.h>   // mulle-buffer
 
 // You can tweak the following #include with these commands.
 // (Use F88CEF95-466E-4F31-B7A1-5C5FCA0F0D89 instead of mulle-utf if there are duplicate entries)
-//    remove:             `mulle-sourcetree mark mulle-utf no-header`
+//    remove:             `mulle-sde dependency mark mulle-utf no-header`
 //    rename:             `mulle-sde dependency|library set mulle-utf include whatever.h`
-//    reorder:            `mulle-sourcetree move mulle-utf <up|down>`
-//    toggle #include:    `mulle-sourcetree mark mulle-utf [no-]import`
-//    toggle public:      `mulle-sourcetree mark mulle-utf [no-]public`
-//    toggle optional:    `mulle-sourcetree mark mulle-utf [no-]require`
-//    remove for platform:`mulle-sourcetree mark mulle-utf no-platform-<uname>`
-//        (use mulle-sourcetree-to-c --unames for known values)
+//    reorder:            `mulle-sde dependency move mulle-utf <up|down>`
+//    toggle #include:    `mulle-sde dependency mark mulle-utf [no-]import`
+//    toggle public:      `mulle-sde dependency mark mulle-utf [no-]public`
+//    toggle optional:    `mulle-sde dependency mark mulle-utf [no-]require`
+//    remove for platform:`mulle-sde dependency mark mulle-utf no-platform-<uname>`
+//        (use `mulle-sourcetree-to-c --unames` to list known values)
 #include <mulle-utf/mulle-utf.h>   // mulle-utf
-
-// You can tweak the following #include with these commands.
-// (Use C58ADEBB-C366-4304-9F01-B4C9400C4DB1 instead of mulle-sprintf if there are duplicate entries)
-//    remove:             `mulle-sourcetree mark mulle-sprintf no-header`
-//    rename:             `mulle-sde dependency|library set mulle-sprintf include whatever.h`
-//    reorder:            `mulle-sourcetree move mulle-sprintf <up|down>`
-//    toggle #include:    `mulle-sourcetree mark mulle-sprintf [no-]import`
-//    toggle public:      `mulle-sourcetree mark mulle-sprintf [no-]public`
-//    toggle optional:    `mulle-sourcetree mark mulle-sprintf [no-]require`
-//    remove for platform:`mulle-sourcetree mark mulle-sprintf no-platform-<uname>`
-//        (use mulle-sourcetree-to-c --unames for known values)
-#include <mulle-sprintf/mulle-sprintf.h>   // mulle-sprintf
 
 #endif

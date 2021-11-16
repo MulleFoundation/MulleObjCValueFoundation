@@ -55,9 +55,9 @@
    size_t                    type_size;
 
    if( ! bytes)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
    if( ! type)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty type");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty type");
 
    NSGetSizeAndAlignment( type, &size, NULL);
    assert( size);
@@ -98,7 +98,7 @@
 - (void) getValue:(void *) bytes
 {
    if( ! bytes)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
 
    memcpy( bytes, _MulleObjCConcreteValueBytes( self), _size);
 }
@@ -108,9 +108,9 @@
              size:(NSUInteger) size
 {
    if( ! bytes && size)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
    if( size != _size)
-      MulleObjCThrowInvalidArgumentExceptionCString( "size should be %ld bytes on this platform", _size);
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "size should be %ld bytes on this platform", _size);
 
    memcpy( bytes, _MulleObjCConcreteValueBytes( self), _size);
 }

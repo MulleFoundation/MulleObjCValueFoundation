@@ -1,0 +1,360 @@
+C: 0.8 <op> 12.2 : < !=
+C: 12.2 <op> 0.8 : != >
+   [0.8 compare:12.2] : <
+   [12.2 compare:0.8] : >
+   [0.8 isEqual:12.2] : NO
+   [12.2 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:12.2] : NO
+   [12.2 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 0.7 : != >
+C: 0.7 <op> 0.8 : < !=
+   [0.8 compare:0.7] : >
+   [0.7 compare:0.8] : <
+   [0.8 isEqual:0.7] : NO
+   [0.7 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:0.7] : NO
+   [0.7 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 1848 : < !=
+C: 1848 <op> 0.8 : != >
+   [0.8 compare:1848] : <
+   [1848 compare:0.8] : >
+   [0.8 isEqual:1848] : NO
+   [1848 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:1848] : NO
+   [1848 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 1.17549e-38 : != >
+C: 1.17549e-38 <op> 0.8 : < !=
+   [0.8 compare:1.17549e-38] : >
+   [1.17549e-38 compare:0.8] : <
+   [0.8 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:0.8] : NO
+C: 0.8 <op> -1e-05 : != >
+C: -1e-05 <op> 0.8 : < !=
+   [0.8 compare:-1e-05] : >
+   [-1e-05 compare:0.8] : <
+   [0.8 isEqual:-1e-05] : NO
+   [-1e-05 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:-1e-05] : NO
+   [-1e-05 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 0.8 : != >
+   [0.8 compare:3.40282e+38] : <
+   [3.40282e+38 compare:0.8] : >
+   [0.8 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 0.8 : != >
+   [0.8 compare:3.40282e+38] : <
+   [3.40282e+38 compare:0.8] : >
+   [0.8 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 0.8 : < !=
+   [0.8 compare:1.2e-63] : >
+   [1.2e-63 compare:0.8] : <
+   [0.8 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:0.8] : NO
+C: 0.8 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 0.8 : != >
+   [0.8 compare:1.2e+63] : <
+   [1.2e+63 compare:0.8] : >
+   [0.8 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:0.8] : NO
+   [0.8 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:0.8] : NO
+C: 12.2 <op> 0.7 : != >
+C: 0.7 <op> 12.2 : < !=
+   [12.2 compare:0.7] : >
+   [0.7 compare:12.2] : <
+   [12.2 isEqual:0.7] : NO
+   [0.7 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:0.7] : NO
+   [0.7 isEqualToNumber:12.2] : NO
+C: 12.2 <op> 1848 : < !=
+C: 1848 <op> 12.2 : != >
+   [12.2 compare:1848] : <
+   [1848 compare:12.2] : >
+   [12.2 isEqual:1848] : NO
+   [1848 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:1848] : NO
+   [1848 isEqualToNumber:12.2] : NO
+C: 12.2 <op> 1.17549e-38 : != >
+C: 1.17549e-38 <op> 12.2 : < !=
+   [12.2 compare:1.17549e-38] : >
+   [1.17549e-38 compare:12.2] : <
+   [12.2 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:12.2] : NO
+C: 12.2 <op> -1e-05 : != >
+C: -1e-05 <op> 12.2 : < !=
+   [12.2 compare:-1e-05] : >
+   [-1e-05 compare:12.2] : <
+   [12.2 isEqual:-1e-05] : NO
+   [-1e-05 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:-1e-05] : NO
+   [-1e-05 isEqualToNumber:12.2] : NO
+C: 12.2 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 12.2 : != >
+   [12.2 compare:3.40282e+38] : <
+   [3.40282e+38 compare:12.2] : >
+   [12.2 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:12.2] : NO
+C: 12.2 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 12.2 : != >
+   [12.2 compare:3.40282e+38] : <
+   [3.40282e+38 compare:12.2] : >
+   [12.2 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:12.2] : NO
+C: 12.2 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 12.2 : < !=
+   [12.2 compare:1.2e-63] : >
+   [1.2e-63 compare:12.2] : <
+   [12.2 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:12.2] : NO
+C: 12.2 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 12.2 : != >
+   [12.2 compare:1.2e+63] : <
+   [1.2e+63 compare:12.2] : >
+   [12.2 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:12.2] : NO
+   [12.2 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:12.2] : NO
+C: 0.7 <op> 1848 : < !=
+C: 1848 <op> 0.7 : != >
+   [0.7 compare:1848] : <
+   [1848 compare:0.7] : >
+   [0.7 isEqual:1848] : NO
+   [1848 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:1848] : NO
+   [1848 isEqualToNumber:0.7] : NO
+C: 0.7 <op> 1.17549e-38 : != >
+C: 1.17549e-38 <op> 0.7 : < !=
+   [0.7 compare:1.17549e-38] : >
+   [1.17549e-38 compare:0.7] : <
+   [0.7 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:0.7] : NO
+C: 0.7 <op> -1e-05 : != >
+C: -1e-05 <op> 0.7 : < !=
+   [0.7 compare:-1e-05] : >
+   [-1e-05 compare:0.7] : <
+   [0.7 isEqual:-1e-05] : NO
+   [-1e-05 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:-1e-05] : NO
+   [-1e-05 isEqualToNumber:0.7] : NO
+C: 0.7 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 0.7 : != >
+   [0.7 compare:3.40282e+38] : <
+   [3.40282e+38 compare:0.7] : >
+   [0.7 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:0.7] : NO
+C: 0.7 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 0.7 : != >
+   [0.7 compare:3.40282e+38] : <
+   [3.40282e+38 compare:0.7] : >
+   [0.7 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:0.7] : NO
+C: 0.7 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 0.7 : < !=
+   [0.7 compare:1.2e-63] : >
+   [1.2e-63 compare:0.7] : <
+   [0.7 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:0.7] : NO
+C: 0.7 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 0.7 : != >
+   [0.7 compare:1.2e+63] : <
+   [1.2e+63 compare:0.7] : >
+   [0.7 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:0.7] : NO
+   [0.7 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:0.7] : NO
+C: 1848 <op> 1.17549e-38 : != >
+C: 1.17549e-38 <op> 1848 : < !=
+   [1848 compare:1.17549e-38] : >
+   [1.17549e-38 compare:1848] : <
+   [1848 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqual:1848] : NO
+   [1848 isEqualToNumber:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:1848] : NO
+C: 1848 <op> -1e-05 : != >
+C: -1e-05 <op> 1848 : < !=
+   [1848 compare:-1e-05] : >
+   [-1e-05 compare:1848] : <
+   [1848 isEqual:-1e-05] : NO
+   [-1e-05 isEqual:1848] : NO
+   [1848 isEqualToNumber:-1e-05] : NO
+   [-1e-05 isEqualToNumber:1848] : NO
+C: 1848 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 1848 : != >
+   [1848 compare:3.40282e+38] : <
+   [3.40282e+38 compare:1848] : >
+   [1848 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:1848] : NO
+   [1848 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1848] : NO
+C: 1848 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 1848 : != >
+   [1848 compare:3.40282e+38] : <
+   [3.40282e+38 compare:1848] : >
+   [1848 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:1848] : NO
+   [1848 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1848] : NO
+C: 1848 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 1848 : < !=
+   [1848 compare:1.2e-63] : >
+   [1.2e-63 compare:1848] : <
+   [1848 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:1848] : NO
+   [1848 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:1848] : NO
+C: 1848 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 1848 : != >
+   [1848 compare:1.2e+63] : <
+   [1.2e+63 compare:1848] : >
+   [1848 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:1848] : NO
+   [1848 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:1848] : NO
+C: 1.17549e-38 <op> -1e-05 : != >
+C: -1e-05 <op> 1.17549e-38 : < !=
+   [1.17549e-38 compare:-1e-05] : >
+   [-1e-05 compare:1.17549e-38] : <
+   [1.17549e-38 isEqual:-1e-05] : NO
+   [-1e-05 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:-1e-05] : NO
+   [-1e-05 isEqualToNumber:1.17549e-38] : NO
+C: 1.17549e-38 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 1.17549e-38 : != >
+   [1.17549e-38 compare:3.40282e+38] : <
+   [3.40282e+38 compare:1.17549e-38] : >
+   [1.17549e-38 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1.17549e-38] : NO
+C: 1.17549e-38 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> 1.17549e-38 : != >
+   [1.17549e-38 compare:3.40282e+38] : <
+   [3.40282e+38 compare:1.17549e-38] : >
+   [1.17549e-38 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1.17549e-38] : NO
+C: 1.17549e-38 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 1.17549e-38 : < !=
+   [1.17549e-38 compare:1.2e-63] : >
+   [1.2e-63 compare:1.17549e-38] : <
+   [1.17549e-38 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:1.17549e-38] : NO
+C: 1.17549e-38 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 1.17549e-38 : != >
+   [1.17549e-38 compare:1.2e+63] : <
+   [1.2e+63 compare:1.17549e-38] : >
+   [1.17549e-38 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:1.17549e-38] : NO
+   [1.17549e-38 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:1.17549e-38] : NO
+C: -1e-05 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> -1e-05 : != >
+   [-1e-05 compare:3.40282e+38] : <
+   [3.40282e+38 compare:-1e-05] : >
+   [-1e-05 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:-1e-05] : NO
+   [-1e-05 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:-1e-05] : NO
+C: -1e-05 <op> 3.40282e+38 : < !=
+C: 3.40282e+38 <op> -1e-05 : != >
+   [-1e-05 compare:3.40282e+38] : <
+   [3.40282e+38 compare:-1e-05] : >
+   [-1e-05 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqual:-1e-05] : NO
+   [-1e-05 isEqualToNumber:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:-1e-05] : NO
+C: -1e-05 <op> 1.2e-63 : < !=
+C: 1.2e-63 <op> -1e-05 : != >
+   [-1e-05 compare:1.2e-63] : <
+   [1.2e-63 compare:-1e-05] : >
+   [-1e-05 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:-1e-05] : NO
+   [-1e-05 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:-1e-05] : NO
+C: -1e-05 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> -1e-05 : != >
+   [-1e-05 compare:1.2e+63] : <
+   [1.2e+63 compare:-1e-05] : >
+   [-1e-05 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:-1e-05] : NO
+   [-1e-05 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:-1e-05] : NO
+C: 3.40282e+38 <op> 3.40282e+38 : ==
+C: 3.40282e+38 <op> 3.40282e+38 : ==
+   [3.40282e+38 compare:3.40282e+38] : =
+   [3.40282e+38 compare:3.40282e+38] : =
+   [3.40282e+38 isEqual:3.40282e+38] : YES
+   [3.40282e+38 isEqual:3.40282e+38] : YES
+   [3.40282e+38 isEqualToNumber:3.40282e+38] : YES
+   [3.40282e+38 isEqualToNumber:3.40282e+38] : YES
+C: 3.40282e+38 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 3.40282e+38 : < !=
+   [3.40282e+38 compare:1.2e-63] : >
+   [1.2e-63 compare:3.40282e+38] : <
+   [3.40282e+38 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:3.40282e+38] : NO
+C: 3.40282e+38 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 3.40282e+38 : != >
+   [3.40282e+38 compare:1.2e+63] : <
+   [1.2e+63 compare:3.40282e+38] : >
+   [3.40282e+38 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:3.40282e+38] : NO
+C: 3.40282e+38 <op> 1.2e-63 : != >
+C: 1.2e-63 <op> 3.40282e+38 : < !=
+   [3.40282e+38 compare:1.2e-63] : >
+   [1.2e-63 compare:3.40282e+38] : <
+   [3.40282e+38 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:3.40282e+38] : NO
+C: 3.40282e+38 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 3.40282e+38 : != >
+   [3.40282e+38 compare:1.2e+63] : <
+   [1.2e+63 compare:3.40282e+38] : >
+   [3.40282e+38 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:3.40282e+38] : NO
+   [3.40282e+38 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:3.40282e+38] : NO
+C: 1.2e-63 <op> 1.2e+63 : < !=
+C: 1.2e+63 <op> 1.2e-63 : != >
+   [1.2e-63 compare:1.2e+63] : <
+   [1.2e+63 compare:1.2e-63] : >
+   [1.2e-63 isEqual:1.2e+63] : NO
+   [1.2e+63 isEqual:1.2e-63] : NO
+   [1.2e-63 isEqualToNumber:1.2e+63] : NO
+   [1.2e+63 isEqualToNumber:1.2e-63] : NO

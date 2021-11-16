@@ -81,7 +81,7 @@ enum
    NSNEXTSTEPStringEncoding      = 2,    // no support
    NSJapaneseEUCStringEncoding   = 3,    // no support
    NSUTF8StringEncoding          = 4,
-   NSISOLatin1StringEncoding     = 5,    // no support
+   NSISOLatin1StringEncoding     = 5,
    NSSymbolStringEncoding        = 6,    // no support
    NSNonLossyASCIIStringEncoding = 7,    // no support
    NSShiftJISStringEncoding      = 8,    // no support
@@ -93,7 +93,7 @@ enum
    NSWindowsCP1254StringEncoding = 14,   // no support
    NSWindowsCP1250StringEncoding = 15,   // no support
    NSISO2022JPStringEncoding     = 21,   // no support
-   NSMacOSRomanStringEncoding    = 30,   // no support
+   NSMacOSRomanStringEncoding    = 30,   // support for reading
 };
 
 // too big for enums
@@ -107,6 +107,10 @@ enum
 #define NSUnicodeStringEncoding              NSUTF32StringEncoding // different(!)
 
 
+//
+// MEMO: its good to have this as not an int, because of id <-> NSUInteger and
+// the ease of using performSelector: with it
+//
 typedef NSUInteger   NSStringEncoding;
 
 
@@ -119,7 +123,11 @@ enum
 
 typedef NSUInteger   NSStringEncodingConversionOptions;
 
-char  *MulleStringEncodingCStringDescription( NSStringEncoding encoding);
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+char              *MulleStringEncodingUTF8String( NSStringEncoding encoding);
+
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 
 
 @interface NSString (NSData)
