@@ -14,14 +14,14 @@
 #include <assert.h>
 
 
-NSString   *_mulleNewUTF8StringWithStringContext( mulle_utf8_t *start,
-                                                  mulle_utf8_t *end,
+NSString   *_mulleNewUTF8StringWithStringContext( char *start,
+                                                  char *end,
                                                   struct _MulleStringContext *ctxt)
 {
    NSUInteger   length;
 
    if( ctxt->sepLen == -1)
-      _mulle_utf8_previous_utf32character( &end);
+      _mulle_utf8_previous_utf32character( (mulle_utf8_t **) &end);
    else
       end -= ctxt->sepLen;
 

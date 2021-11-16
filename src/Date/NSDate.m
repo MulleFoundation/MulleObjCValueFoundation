@@ -38,6 +38,7 @@
 // other files in this library
 
 // other libraries of MulleObjCValueFoundation
+#import "_MulleObjCDateSubclasses.h"
 
 // std-c and dependencies
 
@@ -60,15 +61,29 @@
 }
 
 
-- (instancetype) initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)seconds
-{
-   self->_interval = seconds;
 
-   return( self);
+//
+// -init is overridden later on in MulleObjCOSFoundation, this is just a
+// placeholder for tests
+//
+- (instancetype) init
+{
+   return( [_MulleObjCConcreteDate newWithTimeIntervalSinceReferenceDate:0]);
+}
+
+
+- (instancetype) initWithTimeIntervalSinceReferenceDate:(NSTimeInterval) interval
+{
+   return( [_MulleObjCConcreteDate newWithTimeIntervalSinceReferenceDate:interval]);
 }
 
 
 # pragma mark - convenience constructors
+
++ (NSDate *) date
+{
+   return( [[[self alloc] init] autorelease]);
+}
 
 
 + (instancetype) dateWithTimeIntervalSince1970:(NSTimeInterval) seconds
@@ -100,7 +115,7 @@
 # pragma mark - Various inits
 
 - (instancetype) initWithTimeInterval:(NSTimeInterval) seconds
-                  sinceDate:(NSDate *) refDate
+                            sinceDate:(NSDate *) refDate
 {
    return( [self initWithTimeIntervalSinceReferenceDate:seconds - [refDate timeIntervalSinceReferenceDate]]);
 }
@@ -116,8 +131,8 @@
 {
    NSTimeInterval  diff;
 
-   if( ! other)
-      return( NSOrderedDescending);
+   if( ! other)               // (stabilize sort)
+      return( NSOrderedSame); // this is compatible with Apple Foundation
 
    diff = [self timeIntervalSinceReferenceDate] - [other timeIntervalSinceReferenceDate];
    if( diff < 0)
@@ -139,21 +154,36 @@
 {
    NSTimeInterval   diff;
 
+   if( ! other)
+      return( self); // weird but compatible
+
    diff = [self timeIntervalSinceDate:other];  // according to dox
-   if( diff < 0)
+   if( diff <= 0.0)
       return( self);
    return( other);
 }
 
 
-- (NSTimeInterval) timeIntervalSinceReferenceDate
+- (NSDate *) laterDate:(NSDate *) other
 {
-   return( _interval);
+   NSTimeInterval   diff;
+
+   if( ! other)
+      return( self); // weird but compatible
+
+   diff = [self timeIntervalSinceDate:other];  // according to dox
+   if( diff >= 0.0)
+      return( self);
+   return( other);
 }
 
 
 - (NSTimeInterval) timeIntervalSinceDate:(NSDate *) other
 {
+   // compatible would be NAN, but that's just weird IMO
+   // if( ! other)
+   //   return( NaN);
+
    return( [self timeIntervalSinceReferenceDate] -
            [other timeIntervalSinceReferenceDate]);
 }
@@ -161,7 +191,7 @@
 
 - (NSTimeInterval) timeIntervalSince1970
 {
-   return( [self timeIntervalSinceReferenceDate] + NSTimeIntervalSince1970);
+   return( _NSTimeIntervalSinceReferenceDateAsSince1970( [self timeIntervalSinceReferenceDate]));
 }
 
 
@@ -169,9 +199,8 @@
 
 - (NSUInteger) hash
 {
-   return( mulle_double_hash( self->_interval));
+   return( mulle_double_hash( [self timeIntervalSinceReferenceDate]));
 }
-
 
 - (BOOL) isEqualToDate:(NSDate *) other
 {

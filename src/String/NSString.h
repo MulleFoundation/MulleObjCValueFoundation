@@ -43,10 +43,12 @@ enum
    NSAnchoredSearch                = 0x008,
    NSNumericSearch                 = 0x040,
 };
-
 typedef NSUInteger   NSStringCompareOptions;
 
+
 typedef mulle_utf32_t  unichar;
+
+#include "mulle-chardata.h"
 
 
 //
@@ -106,12 +108,14 @@ typedef mulle_utf32_t  unichar;
 - (NSString *) substringFromIndex:(NSUInteger) index;
 - (NSString *) substringToIndex:(NSUInteger) index;
 
-- (double) doubleValue;
-- (float) floatValue;
-- (int) intValue;
-- (long long) longLongValue;
-- (NSInteger) integerValue;
 - (BOOL) boolValue;
+- (int) intValue;
+- (NSInteger) integerValue;
+- (long long) longLongValue;
+
+- (float) floatValue;
+- (double) doubleValue;
+- (long double) mulleLongDoubleValue;
 
 - (BOOL) isEqualToString:(NSString *) other;
 
@@ -157,35 +161,35 @@ typedef mulle_utf32_t  unichar;
 + (instancetype) mulleStringWithCharactersNoCopy:(unichar *) s
                                           length:(NSUInteger) len
                                        allocator:(struct mulle_allocator *) allocator;
-+ (instancetype) mulleStringWithUTF8CharactersNoCopy:(mulle_utf8_t *) s
++ (instancetype) mulleStringWithUTF8CharactersNoCopy:(char *) s
                                               length:(NSUInteger) len
                                            allocator:(struct mulle_allocator *) allocator;
 
 //
 // UTF8
 // keep "old" UTF8Strings methods using char *
-+ (instancetype) mulleStringWithUTF8Characters:(mulle_utf8_t *) s
++ (instancetype) mulleStringWithUTF8Characters:(char *) s
                                         length:(NSUInteger) len;
 
 // characters are not zero terminated
-- (void) mulleGetUTF8Characters:(mulle_utf8_t *) buf;
+- (void) mulleGetUTF8Characters:(char *) buf;
 
 // returns actual UTF8 length
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength;
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range;
 
-+ (BOOL) mulleAreValidUTF8Characters:(mulle_utf8_t *) buffer
++ (BOOL) mulleAreValidUTF8Characters:(char *) buffer
                           length:(NSUInteger) length;
 
 // strings are zero terminated, zero stored in
 // buf[ size - 1]
 //
-- (NSUInteger) mulleGetUTF8String:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8String:(char *) buf
                        bufferSize:(NSUInteger) size;
-- (void) mulleGetUTF8String:(mulle_utf8_t *) buf;
+- (void) mulleGetUTF8String:(char *) buf;
 
 @end
 
@@ -198,7 +202,7 @@ typedef mulle_utf32_t  unichar;
 
 - (void) getCharacters:(unichar *) buffer
                  range:(NSRange) range;
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buffer
+- (NSUInteger) mulleGetUTF8Characters:(char *) buffer
                             maxLength:(NSUInteger) length;
 
 @end
@@ -298,10 +302,16 @@ static inline uintptr_t   mulle_hash_init_nsstring( void)
 
 
 // mulle_utf16_t characters must be 15 bit and no surrogates
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 uintptr_t   _mulle_utf16_15bit_fnv1a( mulle_utf16_t *buf, size_t len);
+
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 uintptr_t   _mulle_utf16_15bit_fnv1a_chained( mulle_utf16_t *buf, size_t len, uintptr_t hash);
 
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 uintptr_t   _mulle_utf32_fnv1a( mulle_utf32_t *buf, size_t len);
+
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 uintptr_t   _mulle_utf32_fnv1a_chained( mulle_utf32_t *buf, size_t len, uintptr_t hash);
 
 
@@ -368,11 +378,12 @@ static inline NSUInteger   MulleObjCStringHashUTF32( mulle_utf32_t *buf, NSUInte
 
 
 //
-// A safe version to get converted or raw UTF8 characters from a string
-// the returned data always represents the wholw string, space is used
-// for temporary storage. Therefore the returned data is only valid as
-// long as space isn't touched
+// A safe version to get converted or raw UTF8 characters from a string.
+// The returned data always represents the whole string, space may be used
+// for temporary storage, but may not if its too small. Therefore the returned
+// data is only valid as long as space isn't touched
 //
+MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
 struct mulle_utf8data   MulleStringGetUTF8Data( NSString *self,
-                                                 struct mulle_utf8data space);
+                                                struct mulle_utf8data space);
 

@@ -11,13 +11,13 @@
    struct mulle_data   data;
 
    if( c < ' ' || c >= 0x7F)
-      MulleObjCThrowInvalidArgumentExceptionCString( "character must be printable ascii");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "character must be printable ascii");
 
    data = [self mulleMutableData];
    switch( encoding)
    {
    default :
-      MulleObjCThrowInvalidArgumentExceptionCString( "encoding not supported for replacement");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "encoding not supported for replacement");
 
    case NSASCIIStringEncoding :
       {

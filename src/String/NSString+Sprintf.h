@@ -37,7 +37,13 @@
 #import "NSString.h"
 
 
-@interface NSString (Sprintf)
+//
+// MEMO: if you are getting suprising "nil" returns here your string
+//       likely contains an unsupported formatting character.
+//       If this is not the case, ensure that mulle-sprintf is "force"
+//       linked (all-load) to your executable.
+//
+@interface NSString( Sprintf)
 
 + (instancetype) stringWithFormat:(NSString *) format
                   mulleVarargList:(mulle_vararg_list) arguments;
@@ -47,8 +53,6 @@
 
 + (instancetype) stringWithFormat:(NSString *) format, ...;
 
-- (NSString *) stringByAppendingFormat:(NSString *) format, ...;
-
 - (instancetype) initWithFormat:(NSString *) format
                 mulleVarargList:(mulle_vararg_list) arguments;
 - (instancetype) initWithFormat:(NSString *) format
@@ -56,15 +60,7 @@
 
 - (instancetype) initWithFormat:(NSString *) format, ...;
 
+- (NSString *) stringByAppendingFormat:(NSString *) format, ...;
 
 @end
 
-
-// Return with dynamically created c-strings, that are already autoreleases.
-// The default mulle_allocator will have been used for them.
-//
-// These functions are similiar to asprintf and vasprintf but use
-// a different calling signature.
-
-char   *MulleObjC_vasprintf( char *format, va_list args);
-char   *MulleObjC_asprintf( char *format, ...);

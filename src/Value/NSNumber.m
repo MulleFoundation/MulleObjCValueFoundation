@@ -49,6 +49,7 @@
 #import "import-private.h"
 
 #include <string.h>
+#include <math.h> // only for a macro
 
 
 @implementation NSObject( _NSNumber)
@@ -468,6 +469,10 @@ static inline id   initWithDouble( NSNumber *self, double value)
    long long                                   ll_val;
    unsigned long long                          ull_val;
 
+   // isnan == nil is not compatible and I don't care that much
+   // if( isnan( value))
+   //   return( nil);
+
    //
    // don't want to link against -lm so keep to C for calculations
    // we only check integers known to fit into IEE-754 FP
@@ -495,6 +500,10 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    struct _mulle_objc_universe                 *universe;
    long long                                   ll_val;
    unsigned long long                          ull_val;
+
+   // isnan == nil is not compatible and I don't care that much
+   // if( isnan( value))
+   //   return( nil);
 
    // see comment above
    if( value >= (double) -((1LL<<52)+1) && value <= (double) ((1LL<<52)+1))
@@ -537,9 +546,9 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
                       objCType:(char *) type
 {
    if( ! value)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty bytes");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty bytes");
    if( ! type)
-      MulleObjCThrowInvalidArgumentExceptionCString( "empty type");
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "empty type");
 
    switch( type[ 0])
    {
@@ -558,7 +567,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    case _C_FLT      : return( [self initWithFloat:*(float *) value]);
    case _C_DBL      : return( [self initWithDouble:*(double *) value]);
    case _C_LNG_DBL  : return( [self initWithLongDouble:*(long double *) value]);
-   default          : MulleObjCThrowInvalidArgumentExceptionCString( "unknown type '%c'", type[ 0]);
+   default          : MulleObjCThrowInvalidArgumentExceptionUTF8String( "unknown type '%c'", type[ 0]);
    }
 }
 
@@ -758,6 +767,9 @@ static int  simplify_type_for_comparison( int type)
    int             type;
    int             other_type;
 
+   if( ! other)
+      return( NSOrderedSame);  // stabilize
+
    // apple dox says: must be a number, can't be nil
 
    assert( [other __isNSNumber]);
@@ -836,6 +848,14 @@ do_128_128_diff :
 do_d_d_diff :
    da = [self doubleValue];
    db = [other doubleValue];
+   if( isnan( da))
+   {
+      if( isnan( db))
+         return( NSOrderedSame);
+      return( db >= 0 ?  NSOrderedAscending : NSOrderedDescending);
+   }
+   if( isnan( db))
+      return( da >= 0 ? NSOrderedDescending : NSOrderedAscending);
    if( da == db)
       return( NSOrderedSame);
    return( da < db ? NSOrderedAscending : NSOrderedDescending);
@@ -843,12 +863,21 @@ do_d_d_diff :
 do_ld_ld_diff :
    lda = [self longDoubleValue];
    ldb = [other longDoubleValue];
+   if( isnan( lda))
+   {
+      if( isnan( ldb))
+         return( NSOrderedSame);
+      return( lda >= 0 ? NSOrderedAscending : NSOrderedDescending);
+   }
+   if( isnan( ldb))
+      return( lda >= 0 ? NSOrderedDescending : NSOrderedAscending);
+
    if( lda == ldb)
       return( NSOrderedSame);
    return( lda < ldb ? NSOrderedAscending : NSOrderedDescending);
 
 bail:
-   MulleObjCThrowInternalInconsistencyExceptionCString( "unknown objctype");
+   MulleObjCThrowInternalInconsistencyExceptionUTF8String( "unknown objctype");
 }
 
 

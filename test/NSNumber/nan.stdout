@@ -1,0 +1,48 @@
+C: nan <op> inf : !=
+C: inf <op> nan : !=
+   [nan compare:inf] : <
+   [inf compare:nan] : >
+   [nan isEqual:inf] : NO
+   [inf isEqual:nan] : NO
+   [nan isEqualToNumber:inf] : NO
+   [inf isEqualToNumber:nan] : NO
+C: nan <op> -inf : !=
+C: -inf <op> nan : !=
+   [nan compare:-inf] : >
+   [-inf compare:nan] : <
+   [nan isEqual:-inf] : NO
+   [-inf isEqual:nan] : NO
+   [nan isEqualToNumber:-inf] : NO
+   [-inf isEqualToNumber:nan] : NO
+C: nan <op> 1848 : !=
+C: 1848 <op> nan : !=
+   [nan compare:1848] : <
+   [1848 compare:nan] : >
+   [nan isEqual:1848] : NO
+   [1848 isEqual:nan] : NO
+   [nan isEqualToNumber:1848] : NO
+   [1848 isEqualToNumber:nan] : NO
+C: inf <op> -inf : != >
+C: -inf <op> inf : < !=
+   [inf compare:-inf] : >
+   [-inf compare:inf] : <
+   [inf isEqual:-inf] : NO
+   [-inf isEqual:inf] : NO
+   [inf isEqualToNumber:-inf] : NO
+   [-inf isEqualToNumber:inf] : NO
+C: inf <op> 1848 : != >
+C: 1848 <op> inf : < !=
+   [inf compare:1848] : >
+   [1848 compare:inf] : <
+   [inf isEqual:1848] : NO
+   [1848 isEqual:inf] : NO
+   [inf isEqualToNumber:1848] : NO
+   [1848 isEqualToNumber:inf] : NO
+C: -inf <op> 1848 : < !=
+C: 1848 <op> -inf : != >
+   [-inf compare:1848] : <
+   [1848 compare:-inf] : >
+   [-inf isEqual:1848] : NO
+   [1848 isEqual:-inf] : NO
+   [-inf isEqualToNumber:1848] : NO
+   [1848 isEqualToNumber:-inf] : NO

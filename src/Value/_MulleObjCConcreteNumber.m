@@ -38,6 +38,7 @@
 
 #include <limits.h>
 #include <float.h>
+#include <math.h>  // for isnan macro and NAN, if we need to link we fail
 
 // other files in this library
 
@@ -520,7 +521,7 @@ static inline NSUInteger  hashLongDouble( long double value)
    _MulleObjCDoubleNumber  *obj;
 
    obj = NSAllocateObject( self, 0, NULL);
-   obj->_value = value;
+   obj->_value = isnan( value) ? NAN : value; // get rid of sign of -NAN
    return( obj);
 }
 
@@ -596,7 +597,8 @@ static inline NSUInteger  hashLongDouble( long double value)
    _MulleObjCLongDoubleNumber  *obj;
 
    obj = NSAllocateObject( self, 0, NULL);
-   obj->_value = value;
+   obj->_value = isnan( value) ? NAN : value;  // get rid of sign of -NAN
+                                               // more cross-platformy
    return( obj);
 }
 

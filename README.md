@@ -10,6 +10,9 @@ value classes expected in a Foundation library.
 > -count or a -length method. If it counts members with -length (number of
 > bytes) it's a value.
 
+There is no I/O in these classes. That is added by MulleObjcOSFoundation
+and later.
+
 
 #### Classes
 

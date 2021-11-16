@@ -21,6 +21,8 @@ old/
 src.old/
 tmp/
 xcuserdata/
+*.apple.stdout
+*.stdout.apple 
 
 environment-host-*.sh
 environment-user-*.sh

@@ -168,14 +168,14 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    return( grab_ascii_char7( self, (char *) buf, maxLength));
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
                                 range:(NSRange) range
 {
@@ -226,7 +226,7 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
    uintptr_t      value;
    unsigned int   i;
    mulle_utf8_t   c;
-   mulle_utf8_t   buf[ mulle_char7_maxlength64 * 4];
+   char           buf[ mulle_char7_maxlength64 * 4];
 
    value       = _MulleObjCTaggedPointerChar7ValueFromString( self);
    length      = (NSUInteger) mulle_char7_strlen( value);
@@ -242,7 +242,7 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
    for( i = 0; i < length; i++)
    {
       c = mulle_char7_next( &value);
-      if( c != buf[ i])
+      if( c != (mulle_utf8_t) buf[ i])
          return( NO);
    }
    return( YES);

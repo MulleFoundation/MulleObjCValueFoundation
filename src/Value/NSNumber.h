@@ -86,6 +86,11 @@ enum MulleNumberIsEqualType
 + (instancetype) numberWithLongLong:(long long) value;
 + (instancetype) numberWithUnsignedLongLong:(unsigned long long) value;
 + (instancetype) numberWithFloat:(float) value;
+
+//
+// -Nan in Apple Foundation is converted to Nan. I am not superkeen on NaN
+// anyway, but that seems to be more a bug than a feature right now.
+//
 + (instancetype) numberWithDouble:(double) value;
 + (instancetype) numberWithLongDouble:(long double) value;
 + (instancetype) numberWithBool:(BOOL) value;

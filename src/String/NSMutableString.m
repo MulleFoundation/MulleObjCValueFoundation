@@ -248,7 +248,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8Characters:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8Characters:(char *) chars
                                       length:(NSUInteger) length
 {
    NSString  *s;
@@ -268,7 +268,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) chars
                                             length:(NSUInteger) length
                                       freeWhenDone:(BOOL) flag
 {
@@ -312,7 +312,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) chars
                                             length:(NSUInteger) length
                                          allocator:(struct mulle_allocator *) allocator
 {
@@ -334,7 +334,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (instancetype) mulleInitWithUTF8CharactersNoCopy:(mulle_utf8_t *) chars
+- (instancetype) mulleInitWithUTF8CharactersNoCopy:(char *) chars
                                             length:(NSUInteger) length
                                      sharingObject:(id) object
 {
@@ -736,10 +736,10 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
                                          unsigned int n,
                                          struct mulle_buffer *buffer)
 {
-   NSString       *s;
-   mulle_utf8_t   *p;
-   id             *sentinel;
-   NSUInteger     len;
+   NSString     *s;
+   char         *p;
+   id           *sentinel;
+   NSUInteger   len;
 
    sentinel = &strings[ n];
    while( strings < sentinel)
@@ -748,20 +748,20 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
       len = [s mulleUTF8StringLength];
       p   = mulle_buffer_advance( buffer, len);
       [s mulleGetUTF8Characters:p
-                     maxLength:len];
+                      maxLength:len];
    }
    mulle_buffer_add_byte( buffer, 0);
 }
 
 
-- (NSUInteger) mulleGetUTF8Characters:(mulle_utf8_t *) buf
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
    id             *sentinel;
    NSString       **strings;
    NSString       *s;
    NSUInteger     len;
-   mulle_utf8_t   *p;
+   char           *p;
 
    strings  = _storage;
    sentinel = &strings[ _count];
