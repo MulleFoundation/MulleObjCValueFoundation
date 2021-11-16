@@ -48,8 +48,16 @@ typedef NSUInteger   NSStringCompareOptions;
 
 typedef mulle_utf32_t  unichar;
 
+<<<<<<< HEAD
 #include "mulle-chardata.h"
 
+=======
+typedef struct MulleUTF8Data
+{
+   char         *characters;
+   NSUInteger   length;
+} MulleUTF8Data;
+>>>>>>> b6aba3c99898bf4a49bb9a7c9e15a67e13910d65
 
 //
 // NSString is outside of NSObject, the most fundamental class

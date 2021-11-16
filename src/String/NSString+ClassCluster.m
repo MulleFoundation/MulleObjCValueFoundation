@@ -492,7 +492,11 @@ static NSString *
 {
    struct mulle_utf_information   info;
 
+<<<<<<< HEAD
    if( mulle_utf8_information( (mulle_utf8_t *) s, length, &info))
+=======
+   if( mulle_utf8_information( s, length, &info))
+>>>>>>> b6aba3c99898bf4a49bb9a7c9e15a67e13910d65
       _NSThrowInvalidUTF8Exception( s, length, &info);
 
    if( ! info.utf8len)
