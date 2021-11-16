@@ -168,13 +168,6 @@ static id   string_from_buffer( NSString *self,
    return( s);
 }
 
-<<<<<<< HEAD
-
-- (NSString *) stringByAppendingFormat:(NSString *) format, ...
-{
-   NSString             *s;
-   mulle_vararg_list    args;
-=======
 
 - (NSString *) stringByAppendingFormat:(NSString *) format, ...
 {
@@ -191,31 +184,3 @@ static id   string_from_buffer( NSString *self,
 
 @end
 
-
-//
-// MulleObjC_printf and friends are in OS Foundation
-//
-char   *MulleObjC_vasprintf( char *format, va_list args)
-{
-   char                  *s;
-   struct mulle_buffer   buffer;
-
-   if( ! format)
-      return( NULL);
-
-   mulle_buffer_init( &buffer, NULL);
-   mulle_buffer_vsprintf( &buffer, format, args);
-   mulle_buffer_add_byte( &buffer, 0);
-   s = mulle_buffer_extract_bytes( &buffer);
-   mulle_buffer_done( &buffer);
->>>>>>> b6aba3c99898bf4a49bb9a7c9e15a67e13910d65
-
-   mulle_vararg_start( args, format);
-   s = [NSString stringWithFormat:format
-                  mulleVarargList:args];
-   mulle_vararg_end( args);
-
-   return( [self stringByAppendingString:s]);
-}
-
-@end
