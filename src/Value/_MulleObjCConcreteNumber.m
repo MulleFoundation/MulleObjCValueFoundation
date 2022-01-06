@@ -386,6 +386,10 @@ static struct
    return( [nr retain]);
 }
 
+- (BOOL) __mulleIsBoolNumber
+{
+   return( YES);
+}
 
 - (int32_t) _int32Value               { return( (int32_t) _value); }
 - (int64_t) _int64Value               { return( (int64_t) _value); }
