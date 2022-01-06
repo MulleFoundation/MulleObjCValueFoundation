@@ -76,6 +76,7 @@ src/Data/NSMutableData+Unicode.h
 src/Data/NSMutableData.h
 src/Date/_MulleObjCDateSubclasses.h
 src/Date/NSDateFactory.h
+src/Date/NSDate+NSCoder.h
 src/Date/NSDate.h
 src/MulleObjCLoader+MulleObjCValueFoundation.h
 src/MulleObjCValueFoundation.h
@@ -106,5 +107,6 @@ src/Value/NSNumber.h
 src/Value/NSThread+NSDate.h
 src/Value/NSValue+NSCoder.h
 src/Value/NSValue.h
+src/reflect/_MulleObjCValueFoundation-versioncheck.h
 )
 

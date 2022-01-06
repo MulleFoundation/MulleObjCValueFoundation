@@ -61,24 +61,13 @@
 
 
 
-@implementation _MulleObjCConcreteDate( NSCoder)
-
-# pragma mark - NSCoding
-
-- (instancetype) initWithCoder:(NSCoder *) coder
-{
-   NSTimeInterval   value;
-
-   [coder decodeValueOfObjCType:@encode( NSTimeInterval)
-                             at:&value];
-   return( [self initWithTimeIntervalSinceReferenceDate:value]);
-}
-
-
-- (void) encodeWithCoder:(NSCoder *) coder
-{
-   [coder encodeValueOfObjCType:@encode( NSTimeInterval)
-                             at:&_interval];
-}
-
-@end
+// @implementation _MulleObjCConcreteDate( NSCoder)
+//
+// - (void) encodeWithCoder:(NSCoder *) coder
+// {
+//    [coder encodeValueOfObjCType:@encode( NSTimeInterval)
+//                              at:&_interval];
+// }
+//
+// @end
+//

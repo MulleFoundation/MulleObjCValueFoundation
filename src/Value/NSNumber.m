@@ -467,7 +467,6 @@ static inline id   initWithDouble( NSNumber *self, double value)
    struct _mulle_objc_universefoundationinfo   *config;
    struct _mulle_objc_universe                 *universe;
    long long                                   ll_val;
-   unsigned long long                          ull_val;
 
    // isnan == nil is not compatible and I don't care that much
    // if( isnan( value))
@@ -498,15 +497,19 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 {
    struct _mulle_objc_universefoundationinfo   *config;
    struct _mulle_objc_universe                 *universe;
+   double                                      dvalue;
    long long                                   ll_val;
-   unsigned long long                          ull_val;
 
    // isnan == nil is not compatible and I don't care that much
    // if( isnan( value))
    //   return( nil);
 
-   // see comment above
-   if( value >= (double) -((1LL<<52)+1) && value <= (double) ((1LL<<52)+1))
+   // this works for decimals, but as soon as we get into "real" FP this
+   // test never hits, so we don't create doubles ever:
+   // dvalue = (double) value;
+   // if( (long double) dvalue == value)
+   //    return( initWithDouble( self, dvalue));
+   if( value >= (long double) -((1LL<<52)+1) && value <= (long double) ((1LL<<52)+1))
    {
       ll_val = (long long) value;
       if( (long double) ll_val == value)

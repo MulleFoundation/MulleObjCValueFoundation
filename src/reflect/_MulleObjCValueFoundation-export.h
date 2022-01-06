@@ -15,6 +15,7 @@
 #import "NSMutableData+Unicode.h"
 #import "NSMutableData.h"
 #import "NSDateFactory.h"
+#import "NSDate+NSCoder.h"
 #import "NSDate.h"
 #import "MulleObjCLoader+MulleObjCValueFoundation.h"
 #import "NSConstantString.h"

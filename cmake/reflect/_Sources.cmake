@@ -19,6 +19,7 @@ src/Data/NSData.m
 src/Data/NSMutableData+Unicode.m
 src/Data/NSMutableData.m
 src/Date/_MulleObjCDateSubclasses.m
+src/Date/NSDate+NSCoder.m
 src/Date/NSDate.m
 src/String/_MulleObjCASCIIString.m
 src/String/_MulleObjCCheatingASCIIString.m

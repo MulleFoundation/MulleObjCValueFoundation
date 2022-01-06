@@ -79,12 +79,12 @@
 
    /* this is OS specific, yikes. BSD prints everything with %g
     * linux messes this up. We need something that converts back into atof
-    * losslessly
+    * losslessly. So a test would be sprintf -> atof -> same value
     * https://en.wikipedia.org/wiki/Single-precision_floating-point_format
     * 2^23 = 16,777,216
     */
    case _C_FLT :
-      return( [NSString stringWithFormat:@"%0.8g", [self floatValue]]);
+      return( [NSString stringWithFormat:@"%0.8g", [self doubleValue]]);
 
    // https://en.wikipedia.org/wiki/Double-precision_floating-point_format
    // 2^52=4,503,599,627,370,496 and 2^53=9,007,199,254,740,992
@@ -128,7 +128,7 @@
    // and it is documented thusly. The non-lossy value is stringValue
    //
    case _C_FLT :
-      return( [NSString stringWithFormat:@"%0.7g", [self doubleValue]]);
+      return( [NSString stringWithFormat:@"%0.7g", [self doubleValue]]); // sic
    case _C_DBL :
       return( [NSString stringWithFormat:@"%0.16g", [self doubleValue]]);
    case _C_LNG_DBL :
