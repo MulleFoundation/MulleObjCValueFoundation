@@ -1,6 +1,9 @@
 ## 0.20.0
 
-* Various small improvements
+* rewrote the code for floating point string encoding
+* improved NSDate
+* NSData respects -1 as a length input as well
+* supports NSISOLatin1StringEncoding on input
 
 
 ## 0.19.0
