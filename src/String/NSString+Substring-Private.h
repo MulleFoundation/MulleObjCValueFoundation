@@ -6,19 +6,19 @@ struct _MulleStringContext
 };
 
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString   *_mulleNewUTF32StringWithStringContext( mulle_utf32_t *start,
                                                    mulle_utf32_t *end,
                                                    struct _MulleStringContext *ctxt);
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString   *_mulleNewASCIIStringWithStringContext( char *start,
                                                    char *end,
                                                    struct _MulleStringContext *ctxt);
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString   *_mulleNewUTF16StringWithStringContext( mulle_utf16_t *start,
                                                    mulle_utf16_t *end,
                                                    struct _MulleStringContext *ctxt);
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString   *_mulleNewUTF8StringWithStringContext( char *start,
                                                   char *end,
                                                   struct _MulleStringContext *ctxt);

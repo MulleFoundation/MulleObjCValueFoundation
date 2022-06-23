@@ -45,13 +45,13 @@
 @end
 
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar7StringWithASCIICharacters( char *s, NSUInteger length);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar7StringWithUTF16Characters( mulle_utf16_t *s, NSUInteger length);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar7StringWithCharacters( unichar *s, NSUInteger length);
 
 

@@ -85,12 +85,12 @@
 
 @end
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *_MulleObjCNewASCIIStringWithASCIICharacters( char *s,
                                                         NSUInteger length,
                                                         struct _mulle_objc_universe *universe);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
                                                         NSUInteger length,
                                                         struct _mulle_objc_universe *universe);

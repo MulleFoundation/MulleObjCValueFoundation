@@ -302,16 +302,16 @@ static inline uintptr_t   mulle_hash_init_nsstring( void)
 
 
 // mulle_utf16_t characters must be 15 bit and no surrogates
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 uintptr_t   _mulle_utf16_15bit_fnv1a( mulle_utf16_t *buf, size_t len);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 uintptr_t   _mulle_utf16_15bit_fnv1a_chained( mulle_utf16_t *buf, size_t len, uintptr_t hash);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 uintptr_t   _mulle_utf32_fnv1a( mulle_utf32_t *buf, size_t len);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 uintptr_t   _mulle_utf32_fnv1a_chained( mulle_utf32_t *buf, size_t len, uintptr_t hash);
 
 
@@ -383,7 +383,7 @@ static inline NSUInteger   MulleObjCStringHashUTF32( mulle_utf32_t *buf, NSUInte
 // for temporary storage, but may not if its too small. Therefore the returned
 // data is only valid as long as space isn't touched
 //
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 struct mulle_utf8data   MulleStringGetUTF8Data( NSString *self,
                                                 struct mulle_utf8data space);
 

@@ -126,3 +126,26 @@ NSString  *MulleObjCStringByCombiningPrefixAndCapitalizedKey( NSString *prefix,
    return( s);
 }
 
+
+int   MulleObjCPrintf( NSString *format, ...)
+{
+   va_list   va;
+   int       rc;
+
+   va_start( va, format);
+   rc = mulle_vprintf( [format UTF8String], va);
+   va_end( va);
+   return( rc);
+}
+
+int   MulleObjCFprintf( FILE *fp,  NSString *format, ...)
+{
+   va_list   va;
+   int       rc;
+
+   va_start( va, format);
+   rc = mulle_vfprintf( fp, [format UTF8String], va);
+   va_end( va);
+   return( rc);
+}
+

@@ -123,13 +123,13 @@ enum
 
 typedef NSUInteger   NSStringEncodingConversionOptions;
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 char              *MulleStringEncodingUTF8String( NSStringEncoding encoding);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 char              *MulleStringEncodingUTF8String( NSStringEncoding encoding);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 
 

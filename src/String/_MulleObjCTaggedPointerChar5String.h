@@ -56,13 +56,13 @@
 @end
 
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar5StringWithASCIICharacters( char *s, NSUInteger length);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar5StringWithUTF16Characters( mulle_utf16_t *s, NSUInteger length);
 
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar5StringWithCharacters( unichar *s, NSUInteger length);
 
 

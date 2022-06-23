@@ -17,7 +17,7 @@ endif()
 # Disable for this platform: `mulle-sourcetree mark MulleObjC no-cmake-platform-${MULLE_UNAME}`
 #
 if( NOT MULLE_OBJC_LIBRARY)
-   find_library( MULLE_OBJC_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjC${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjC NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+   find_library( MULLE_OBJC_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjC${CMAKE_DEBUG_POSTFIX}${CMAKE_STATIC_LIBRARY_SUFFIX} ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjC${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjC NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
    message( STATUS "MULLE_OBJC_LIBRARY is ${MULLE_OBJC_LIBRARY}")
    #
    # The order looks ascending, but due to the way this file is read
@@ -97,7 +97,7 @@ endif()
 # Disable for this platform: `mulle-sourcetree mark mulle-buffer no-cmake-platform-${MULLE_UNAME}`
 #
 if( NOT MULLE_BUFFER_LIBRARY)
-   find_library( MULLE_BUFFER_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-buffer${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-buffer NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+   find_library( MULLE_BUFFER_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-buffer${CMAKE_DEBUG_POSTFIX}${CMAKE_STATIC_LIBRARY_SUFFIX} ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-buffer${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-buffer NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
    message( STATUS "MULLE_BUFFER_LIBRARY is ${MULLE_BUFFER_LIBRARY}")
    #
    # The order looks ascending, but due to the way this file is read
@@ -168,7 +168,7 @@ endif()
 # Disable for this platform: `mulle-sourcetree mark mulle-utf no-cmake-platform-${MULLE_UNAME}`
 #
 if( NOT MULLE_UTF_LIBRARY)
-   find_library( MULLE_UTF_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-utf${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-utf NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+   find_library( MULLE_UTF_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-utf${CMAKE_DEBUG_POSTFIX}${CMAKE_STATIC_LIBRARY_SUFFIX} ${CMAKE_STATIC_LIBRARY_PREFIX}mulle-utf${CMAKE_STATIC_LIBRARY_SUFFIX} mulle-utf NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
    message( STATUS "MULLE_UTF_LIBRARY is ${MULLE_UTF_LIBRARY}")
    #
    # The order looks ascending, but due to the way this file is read
