@@ -13,9 +13,9 @@ endif()
 set( INCLUDE_DIRS
 src
 src/Data
-src/Date
 src/String
 src/Value
+src/generic
 src/reflect
 )
 
@@ -31,8 +31,8 @@ src/reflect/_MulleObjCValueFoundation-include-private.h
 # contents selected with patternfile ??-header--private-generic-headers
 #
 set( PRIVATE_GENERIC_HEADERS
-src/import-private.h
-src/include-private.h
+src/generic/import-private.h
+src/generic/include-private.h
 )
 
 #
@@ -59,8 +59,8 @@ src/reflect/_MulleObjCValueFoundation-provide.h
 # contents selected with patternfile ??-header--public-generic-headers
 #
 set( PUBLIC_GENERIC_HEADERS
-src/import.h
-src/include.h
+src/generic/import.h
+src/generic/include.h
 )
 
 #
@@ -74,10 +74,6 @@ src/Data/NSData+Unicode.h
 src/Data/NSData.h
 src/Data/NSMutableData+Unicode.h
 src/Data/NSMutableData.h
-src/Date/_MulleObjCDateSubclasses.h
-src/Date/NSDateFactory.h
-src/Date/NSDate+NSCoder.h
-src/Date/NSDate.h
 src/MulleObjCLoader+MulleObjCValueFoundation.h
 src/MulleObjCValueFoundation.h
 src/String/_MulleObjCASCIIString.h
@@ -104,7 +100,6 @@ src/Value/NSNull.h
 src/Value/NSNumber+NSCoder.h
 src/Value/NSNumber+NSString.h
 src/Value/NSNumber.h
-src/Value/NSThread+NSDate.h
 src/Value/NSValue+NSCoder.h
 src/Value/NSValue.h
 src/reflect/_MulleObjCValueFoundation-versioncheck.h

@@ -18,9 +18,6 @@ src/Data/NSData+Unicode.m
 src/Data/NSData.m
 src/Data/NSMutableData+Unicode.m
 src/Data/NSMutableData.m
-src/Date/_MulleObjCDateSubclasses.m
-src/Date/NSDate+NSCoder.m
-src/Date/NSDate.m
 src/String/_MulleObjCASCIIString.m
 src/String/_MulleObjCCheatingASCIIString.m
 src/String/_MulleObjCTaggedPointerChar5String.m
@@ -41,6 +38,7 @@ src/String/NSStringObjCFunctions.m
 src/String/NSString+Sprintf.m
 src/String/NSString+Substring-Private.m
 src/String/NSString.m
+src/String/NSThread+NSString.m
 src/Value/_MulleObjCConcreteNumber+NSString.m
 src/Value/_MulleObjCConcreteNumber.m
 src/Value/_MulleObjCConcreteValue.m
@@ -49,7 +47,6 @@ src/Value/NSNull.m
 src/Value/NSNumber+NSCoder.m
 src/Value/NSNumber+NSString.m
 src/Value/NSNumber.m
-src/Value/NSThread+NSDate.m
 src/Value/NSValue+NSCoder.m
 src/Value/NSValue+NSString.m
 src/Value/NSValue.m

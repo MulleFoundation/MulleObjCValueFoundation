@@ -1,3 +1,10 @@
+## 0.21.0
+
+* moved NSDate related stuff to MulleObjCTimeFoundation
+* changed GLOBALs for Windows
+* moved MulleObjCPrintf here
+
+
 ## 0.20.0
 
 * rewrote the code for floating point string encoding

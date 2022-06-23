@@ -33,6 +33,6 @@
 @end
 
 // useful to set to 1 for tests, since it suppresses the varying pointer value
-MULLE_OBJC_VALUE_FOUNDATION_EXTERN_GLOBAL
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 BOOL   MulleDebugDescriptionEllideAddressOutput;
 
