@@ -70,8 +70,7 @@ static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
 
 - (_MulleObjCByteOrderMark) _byteOrderMark
 {
-   NSUInteger     len;
-   unsigned char  *p;
+   NSUInteger   len;
 
    len = [self length];
    if( len < 2)
@@ -113,7 +112,6 @@ static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
    struct mulle_allocator   *allocator;
    size_t                   length;
    mulle_utf16_t            *srcBytes;
-   mulle_utf8_t             *dstBytes;
    struct mulle_data        data;
 
    allocator = MulleObjCInstanceGetAllocator( self);

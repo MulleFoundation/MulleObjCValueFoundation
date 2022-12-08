@@ -268,7 +268,6 @@ static void   *
    validated_range_pointer( _MulleObjCConcreteMutableData *self, NSRange *range)
 {
    unsigned char  *p;
-   NSUInteger     len;
    size_t         buf_len;
 
    p       = mulle_buffer_get_bytes( &self->_storage);

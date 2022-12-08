@@ -44,7 +44,6 @@
 - (void) mulleSwapUTF16Characters
 {
    mulle_utf16_t        *p;
-   mulle_utf16_t        *buf;
    mulle_utf16_t        *sentinel;
    struct mulle_data    data;
 

@@ -211,7 +211,6 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
                  range:(NSRange) range
 {
    NSUInteger   length;
-   NSUInteger   value;
    char         tmp[ mulle_char5_maxlength64];
 
    length = MulleObjCTaggedPointerChar5StringGetLength( self);
@@ -240,8 +239,6 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
 {
    NSUInteger     length;
    NSUInteger     otherLength;
-   mulle_utf8_t   *ours;
-   mulle_utf8_t   *theirs;
    uintptr_t      value;
    unsigned int   i;
    mulle_utf8_t   c;

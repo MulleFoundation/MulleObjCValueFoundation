@@ -122,7 +122,6 @@ static inline NSUInteger  hashNSUInteger( NSUInteger value)
 
 - (BOOL) isEqualToNumber:(NSNumber *) other
 {
-   enum MulleNumberIsEqualType   myType;
    enum MulleNumberIsEqualType   otherType;
    NSInteger                     value;
    NSInteger                     otherValue;

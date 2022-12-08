@@ -401,7 +401,6 @@ static void   shrinkWithStrings( NSMutableString *self,
 
 - (id) copy
 {
-   char                     *s;
    struct mulle_allocator   *allocator;
    unichar                  *buf;
    unichar                  tmp[ 64];
@@ -460,7 +459,6 @@ static void   shrinkWithStrings( NSMutableString *self,
    NSString     **p;
    NSString     **sentinel;
    NSUInteger   length;
-   NSString     *s;
 
    if( _shadow)
       return( _shadowLen);
@@ -541,16 +539,13 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
                  range:(NSRange) inRange
 {
    NSString     **p;
-   NSString     **sentinel;
    NSUInteger   length;
    NSString     *s;
    NSUInteger   grab_len;
    NSRange      range;
 
    range    = MulleObjCValidateRangeAgainstLength( inRange, _length);
-
    p        = &_storage[ 0];
-   sentinel = &p[ _count];
 
 
    // `s` is first string with `length`

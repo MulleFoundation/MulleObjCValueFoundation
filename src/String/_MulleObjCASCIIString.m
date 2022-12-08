@@ -188,8 +188,6 @@ static NSUInteger   grab_ascii_range( id self,
 
 - (NSString *) substringWithRange:(NSRange) range
 {
-   char                     *s;
-   NSUInteger               length;
    struct mulle_asciidata   data;
    BOOL                     flag;
 
@@ -668,8 +666,7 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
 
 - (char *) UTF8String
 {
-   struct mulle_buffer  buffer;
-   struct mulle_data    data;
+   struct mulle_buffer   buffer;
 
    if( ! _shadow)
    {

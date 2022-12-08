@@ -238,8 +238,7 @@ static struct _MulleStringContext   empty;
 
 - (NSString *) stringValue
 {
-   char                      tmp[ 32];
-   int                       len;
+   char                     tmp[ 32];
    struct mulle_asciidata   data;
 
    data = mulle_asciidata_make( tmp, sizeof( tmp));
