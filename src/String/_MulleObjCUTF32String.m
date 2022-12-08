@@ -150,10 +150,8 @@
 
 - (NSString *) substringWithRange:(NSRange) range
 {
-   mulle_utf32_t             *s;
-   NSUInteger                length;
    struct mulle_utf32data   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    flag   = [self mulleFastGetUTF32Data:&data];
    assert( flag);

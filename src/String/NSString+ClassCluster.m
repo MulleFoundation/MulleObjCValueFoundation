@@ -187,8 +187,6 @@ static NSString  *
                                                NSUInteger length,
                                                struct mulle_allocator *allocator)
 {
-   NSUInteger            utf16len;
-   mulle_utf16_t         *utf16;
    struct mulle_buffer   buffer;
    struct mulle_data     data;
 
@@ -210,15 +208,13 @@ static NSString  *
                                                               allocator:allocator]);
 }
 
-
+#if 0 // UNUSED
 static NSString  *
    MulleObjCNewUTF32StringWithUTF8Characters( char *s,
                                               NSUInteger length,
                                               struct mulle_allocator *allocator)
 {
    struct mulle_buffer   buffer;
-   NSUInteger            utf32len;
-   mulle_utf32_t         *utf32;
    struct mulle_data     data;
 
    assert( length);
@@ -240,7 +236,7 @@ static NSString  *
                                                                  length:data.length / sizeof( unichar)
                                                               allocator:allocator]);
 }
-
+#endif
 
 static NSString  *MulleObjCNewUTF32StringWithUTF32Characters( mulle_utf32_t *s,
                                                               NSUInteger length)
@@ -366,9 +362,8 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 - (instancetype) initWithCharacters:(unichar *) s
                              length:(NSUInteger) len
 {
-   struct mulle_allocator       *allocator;
+   struct mulle_allocator        *allocator;
    struct _mulle_objc_universe   *universe;
-   id                           old;
 
    assert( [self __isClassClusterObject]);
 
@@ -437,7 +432,6 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
                                      allocator:(struct mulle_allocator *) allocator
 {
    struct mulle_utf_information   info;
-   id                             old;
 
    if( mulle_utf32_information( s, length, &info))
       _NSThrowInvalidUTF32Exception( s, length, &info, allocator);

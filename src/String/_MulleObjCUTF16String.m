@@ -152,9 +152,8 @@
 
 - (NSString *) substringWithRange:(NSRange) range
 {
-   mulle_utf16_t             *s;
    struct mulle_utf16data   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    flag  = [self mulleFastGetUTF16Data:&data];
    assert( flag);

@@ -201,7 +201,7 @@ static struct
    { NSUTF32StringEncoding            , "UTF32" },
    { NSUTF32BigEndianStringEncoding   , "UTF32BigEndian" },
    { NSUTF32LittleEndianStringEncoding, "UTF32LittleEndian" },
-   0, 0
+   { 0, 0 }
 };
 
 
@@ -335,7 +335,6 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
 {
    struct mulle_utf_information    info;
    struct mulle_buffer             buffer;
-   void                            *p;
    struct mulle_allocator          *allocator;
    struct mulle_data               data;
 

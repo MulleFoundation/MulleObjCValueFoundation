@@ -272,7 +272,7 @@ static inline id   initWithLongLong( NSNumber *self,
 }
 
 
-# pragma signed init methods
+# pragma mark - signed init methods
 
 - (instancetype) initWithChar:(char) value
 {
@@ -431,8 +431,7 @@ static inline id   initWithUnsignedInteger( NSNumber *self,
 }
 
 
-#pragma mark -
-#pragma marl FP inits
+#pragma mark - FP inits
 
 
 //
@@ -497,7 +496,6 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 {
    struct _mulle_objc_universefoundationinfo   *config;
    struct _mulle_objc_universe                 *universe;
-   double                                      dvalue;
    long long                                   ll_val;
 
    // isnan == nil is not compatible and I don't care that much

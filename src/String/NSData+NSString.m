@@ -136,7 +136,6 @@ static inline unsigned int   hex( unsigned int c)
 - (NSString *) debugDescription
 {
    NSUInteger               length;
-   mulle_utf8_t             *s;
    struct mulle_allocator   *allocator;
    struct mulle_buffer      buffer;
    unsigned char            *bytes;
