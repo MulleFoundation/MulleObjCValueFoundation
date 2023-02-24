@@ -101,6 +101,8 @@ static void   grab_utf32( id self,
 
    flag = [self mulleFastGetASCIIData:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    grab_utf32( self, _cmd, data, buf, range);
 }
 
@@ -111,14 +113,15 @@ static NSUInteger   grab_ascii( id self,
 {
    struct mulle_asciidata   data;
    BOOL                     flag;
+   NSUInteger               length;
 
    flag = [self mulleFastGetASCIIData:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
 
-   if( data.length > maxLength)
-      data.length = maxLength;
-   memcpy( dst, data.characters, data.length);
-   return( data.length);
+   length = data.length > maxLength ? maxLength : data.length;
+   memcpy( dst, data.characters, length);
+   return( length);
 }
 
 
@@ -134,6 +137,8 @@ static NSUInteger   grab_ascii_range( id self,
 
    flag  = [self mulleFastGetASCIIData:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    range = MulleObjCValidateRangeAgainstLength( range, length);
    memcpy( dst, &data.characters[ range.location], range.length);
    return( range.length);
@@ -152,7 +157,7 @@ static NSUInteger   grab_ascii_range( id self,
 - (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   return( grab_ascii( self, (char *) buf, maxLength));
+   return( grab_ascii( self, buf, maxLength));
 }
 
 
@@ -172,10 +177,12 @@ static NSUInteger   grab_ascii_range( id self,
 - (NSUInteger) hash
 {
    struct mulle_asciidata   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    flag = [self mulleFastGetASCIIData:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    return( MulleObjCStringHashASCII( data.characters, data.length));
 }
 
@@ -193,6 +200,8 @@ static NSUInteger   grab_ascii_range( id self,
 
    flag  = [self mulleFastGetASCIIData:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    range = MulleObjCValidateRangeAgainstLength( range, data.length);
    if( range.length == data.length)
       return( self);

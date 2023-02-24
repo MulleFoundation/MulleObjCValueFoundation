@@ -127,9 +127,6 @@ MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 char              *MulleStringEncodingUTF8String( NSStringEncoding encoding);
 
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-char              *MulleStringEncodingUTF8String( NSStringEncoding encoding);
-
-MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 
 
@@ -147,9 +144,9 @@ NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 - (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
           allowLossyConversion:(BOOL) flag;
 
-- (NSData *) _dataUsingEncoding:(NSStringEncoding) encoding
-                  prefixWithBOM:(BOOL) withBOM
-              terminateWithZero:(BOOL) withTerminatingZero;
+- (NSData *) mulleDataUsingEncoding:(NSStringEncoding) encoding
+                      prefixWithBOM:(BOOL) withBOM
+                  terminateWithZero:(BOOL) withTerminatingZero;
 
 - (instancetype) initWithData:(NSData *) data
                      encoding:(NSUInteger) encoding;
@@ -205,8 +202,9 @@ NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 @interface NSString( NSDataPrivate)
 
 // private and mulleprefix needed
-- (NSData *) _asciiData;
-- (NSData *) _utf8Data;
+- (NSData *) _asciiDataWithTerminatingZero:(BOOL) flag;
+- (NSData *) _utf8DataPrefixedWithBOM:(BOOL) prefixWithBOM
+                  withTerminatingZero:(BOOL) withZero;
 - (NSData *) _utf16DataWithEndianness:(unsigned int) endianess
                         prefixWithBOM:(BOOL) prefixWithBOM
                     terminateWithZero:(BOOL) terminateWithZero;

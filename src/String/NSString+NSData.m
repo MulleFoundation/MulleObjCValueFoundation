@@ -236,9 +236,9 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
 }
 
 
-- (NSData *) _dataUsingEncoding:(NSStringEncoding) encoding
-                  prefixWithBOM:(BOOL) withBOM
-              terminateWithZero:(BOOL) withZero
+- (NSData *) mulleDataUsingEncoding:(NSStringEncoding) encoding
+                      prefixWithBOM:(BOOL) withBOM
+                  terminateWithZero:(BOOL) withZero
 {
    NSData   *data;
 
@@ -250,40 +250,47 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
          (long) encoding);
 
    case NSASCIIStringEncoding  :
-      data = [self _asciiData];
+      data = [self _asciiDataWithTerminatingZero:withZero];
       if( ! data)
-         MulleObjCThrowInvalidArgumentExceptionUTF8String( "Can not convert this string to ASCII");
+         MulleObjCThrowInvalidArgumentExceptionUTF8String( "Can not convert this data to ASCII");
       return( data);
 
    case NSISOLatin1StringEncoding  :
-   {
-      char           *s;
-      char           *end;
-      NSUInteger     iso1_length;
-      NSUInteger     length;
+      {
+         char           *s;
+         char           *end;
+         NSUInteger     iso1_length;
+         NSUInteger     length;
 
-      data   = [self _utf8Data];
-      length = [data length];
-      if( ! length)
-         return( data);
+         data   = [self _utf8DataPrefixedWithBOM:NO
+                             withTerminatingZero:withZero];
+         length = [data length];
+         if( ! length)
+            return( data);
 
-      s           = mulle_allocator_malloc( &mulle_stdlib_allocator, length);
-      end         = _mulle_utf8_convert_to_iso1( [data bytes], length, s, '?');
-      iso1_length = end - s;
-      s           = mulle_allocator_realloc( &mulle_stdlib_allocator,
-                                             s,
-                                             iso1_length);
-      return( [NSData dataWithBytesNoCopy:s
-                                   length:iso1_length
-                             freeWhenDone:YES]);
-   }
+         s   = mulle_allocator_malloc( &mulle_stdlib_allocator, length);
+         end = _mulle_utf8_convert_to_iso1( [data bytes], length, s, -1);
+         if( ! end)
+         {
+            mulle_allocator_free( &mulle_stdlib_allocator, s);
+            MulleObjCThrowInvalidArgumentExceptionUTF8String( "Can not convert this data to ISO1");
+         }
+         iso1_length = (end - s);
+         s           = mulle_allocator_realloc( &mulle_stdlib_allocator,
+                                                s,
+                                                iso1_length);
+         return( [NSData dataWithBytesNoCopy:s
+                                      length:iso1_length
+                                freeWhenDone:YES]);
+      }
 
    case NSUTF8StringEncoding  :
-      return( [self _utf8Data]);
+      return( [self _utf8DataPrefixedWithBOM:withBOM
+                         withTerminatingZero:withZero]);
 
    case NSUTF16StringEncoding :
       return( [self _utf16DataWithEndianness:native_end_first
-                                prefixWithBOM:withBOM
+                               prefixWithBOM:withBOM
                            terminateWithZero:withZero]);
    case NSUTF16LittleEndianStringEncoding :
       return( [self _utf16DataWithEndianness:little_end_first
@@ -312,9 +319,9 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
 
 - (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
 {
-   return( [self _dataUsingEncoding:encoding
-                      prefixWithBOM:YES
-                  terminateWithZero:NO]);
+   return( [self mulleDataUsingEncoding:encoding
+                           prefixWithBOM:YES
+                       terminateWithZero:NO]);
 }
 
 
@@ -322,7 +329,7 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
 - (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
           allowLossyConversion:(BOOL) flag
 {
-   return( [self _dataUsingEncoding:encoding
+   return( [self mulleDataUsingEncoding:encoding
                       prefixWithBOM:YES
                   terminateWithZero:NO]);
 }
@@ -701,38 +708,57 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
 
 @implementation NSString( NSDataPrivate)
 
-- (NSData *) _asciiData
+- (NSData *) _asciiDataWithTerminatingZero:(BOOL) withZero
 {
    NSUInteger      length;
+   NSUInteger      utf8length;
    NSMutableData   *data;
-   char            *p;
-   char            *sentinel;
+   char            *bytes;
 
-   length   = [self mulleUTF8StringLength];
-   data     = [NSMutableData mulleNonZeroedDataWithLength:length];
-   p        = [data mutableBytes];
-   sentinel = &p[ length];
-   [self mulleGetUTF8Characters:p
-                      maxLength:length];
+   // give room for trailing zero, if needed
+   // if there are "composed" characters in UTF8 the string length differs
+   // and it can't be ASCII (could check for 7 bit also, but seems pedantic)
+   //
+   utf8length = [self mulleUTF8StringLength];
+   if( utf8length != [self length])
+      return( nil);
 
-   // check that its only ASCII
-   while( p < sentinel)
-      if( *p++ & 0x80)
-         return( nil);
+   length = utf8length + (withZero ? 1 : 0);
+   data   = [NSMutableData mulleNonZeroedDataWithLength:length];
+   bytes  = [data mutableBytes];
+   // get length with out zero back cheaply
+   length = [self mulleGetUTF8Characters:bytes
+                               maxLength:utf8length];
+   if( withZero)
+      bytes[ length] = 0;
 
    return( data);
 }
 
 
-- (NSData *) _utf8Data
+- (NSData *) _utf8DataPrefixedWithBOM:(BOOL) prefixWithBOM
+                  withTerminatingZero:(BOOL) withZero
 {
+   NSUInteger      bomlessLength;
    NSUInteger      length;
    NSMutableData   *data;
+   char            *bytes;
 
-   length = [self mulleUTF8StringLength];
-   data   = [NSMutableData mulleNonZeroedDataWithLength:length];
-   [self mulleGetUTF8Characters:[data mutableBytes]
-                      maxLength:length];
+   bomlessLength = [self mulleUTF8StringLength] + (withZero ? 1 : 0);
+   length        = bomlessLength + (prefixWithBOM ? 3 : 0);
+   data          = [NSMutableData mulleNonZeroedDataWithLength:length];
+   bytes         = [data mutableBytes];
+   if( prefixWithBOM)
+   {
+      *bytes++ = 0xEF;
+      *bytes++ = 0xBB;
+      *bytes++ = 0xBC;
+   }
+
+   length = [self mulleGetUTF8Characters:bytes
+                               maxLength:bomlessLength];
+   if( withZero)
+      bytes[ length] = 0;
    return( data);
 }
 

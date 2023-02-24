@@ -61,7 +61,7 @@ typedef mulle_utf32_t  unichar;
 // The MulleObjCValueFoundation deals with UTF32 and UTF8.
 // UTF-16 is treated just an optimized storage medium for UTF32 strings.
 //
-// A CString is a string with a zero terminator in the characterset of the
+// A CString is a string with a zero terminator in the character set of the
 // current C locale. This particular library (MulleObjCValueFoundation)
 // does not deal with locales, so the concept is postponed until POSIX is
 // introduced (MulleObjCOSFoundation). (Truth be told, c locales suck)
@@ -91,12 +91,12 @@ typedef mulle_utf32_t  unichar;
 // obsolete convenience: use +object!, must be typed for NSScanner ...
 + (instancetype) string;
 
-// As it turns out for class clusters, instancetype is not really helpful
+// As it turns out for class clusters, instance type is not really helpful
 // when implementing a subclass as you may want to return a class of a different
 // class (e.g. @"" from [AString new] as length is 0).
 // As NSMutableString is a subclass of NSString, a type of NSString
 // is also not helpful for initWithString: which can be used by both. The
-// solution is to type it to "id" or redeclare everything in NSMutableString.
+// solution is to type it to "id" or re-declare everything in NSMutableString.
 //
 + (instancetype) stringWithString:(NSString *) other;
 

@@ -158,6 +158,8 @@ static NSString  *
                                        info->utf8len,
                                        buf);
    assert( end == &buf[ info->utf16len]);
+   MULLE_C_UNUSED( end);
+
    return( [_MulleObjCAllocatorUTF16String newWithUTF16CharactersNoCopy:buf
                                                                  length:info->utf16len
                                                               allocator:allocator]);
@@ -176,6 +178,8 @@ static NSString  *
                                        info->utf8len,
                                        buf);
    assert( end == &buf[ info->utf32len]);
+   MULLE_C_UNUSED( end);
+
    return( [_MulleObjCAllocatorUTF32String newWithUTF32CharactersNoCopy:buf
                                                                  length:info->utf32len
                                                               allocator:allocator]);
@@ -569,6 +573,7 @@ static NSString *
    return( self);
 
 }
+
 
 - (instancetype) mulleInitWithCharactersNoCopy:(unichar *) s
                                         length:(NSUInteger) length
