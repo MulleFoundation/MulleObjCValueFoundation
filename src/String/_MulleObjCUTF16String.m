@@ -67,6 +67,8 @@
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    return( mulle_utf16_utf8length( data.characters, data.length));
 }
 
@@ -81,6 +83,8 @@
    {
       flag = [self mulleFastGetUTF16Data:&data];
       assert( flag);
+      MULLE_C_UNUSED( flag);
+
       mulle_buffer_init_with_capacity( &buf, data.length * 4, MulleObjCInstanceGetAllocator( self));
       mulle_utf16_bufferconvert_to_utf8( data.characters,
                                          data.length,
@@ -102,18 +106,22 @@
    struct mulle_utf8_conversion_context  ctxt;
    struct mulle_utf16data                data;
    BOOL                                  flag;
+   NSUInteger                            length;
 
    ctxt.buf      = (mulle_utf8_t *) buf;
    ctxt.sentinel = (mulle_utf8_t *) &buf[ maxLength];
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    mulle_utf16_bufferconvert_to_utf8( data.characters,
                                       data.length,
                                       &ctxt,
                                       mulle_utf8_conversion_context_add_bytes);
    assert( ! memchr( buf, 0, ctxt.buf - (mulle_utf8_t *) buf));
-   return( (char *) ctxt.buf - buf);
+   length = (NSUInteger) ((char *) ctxt.buf - buf);
+   return( length);
 }
 
 
@@ -128,6 +136,7 @@
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
 
    // check both because of overflow range.length == (unsigned) -1 f.e.
    range    = MulleObjCValidateRangeAgainstLength( range, data.length);
@@ -157,6 +166,8 @@
 
    flag  = [self mulleFastGetUTF16Data:&data];
    assert( flag);
+   MULLE_C_UNUSED( flag);
+
    // check both because of overflow range.length == (unsigned) -1 f.e.
    range = MulleObjCValidateRangeAgainstLength( range, data.length);
    if( range.length == data.length)

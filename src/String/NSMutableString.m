@@ -735,15 +735,18 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    char         *p;
    id           *sentinel;
    NSUInteger   len;
+   NSUInteger   actual;
 
    sentinel = &strings[ n];
    while( strings < sentinel)
    {
-      s   = *strings++;
-      len = [s mulleUTF8StringLength];
-      p   = mulle_buffer_advance( buffer, len);
-      [s mulleGetUTF8Characters:p
-                      maxLength:len];
+      s      = *strings++;
+      len    = [s mulleUTF8StringLength];
+      p      = mulle_buffer_advance( buffer, len);
+      actual = [s mulleGetUTF8Characters:p
+                               maxLength:len];
+      assert( actual == len);
+      MULLE_C_UNUSED( actual);
    }
    mulle_buffer_add_byte( buffer, 0);
 }
@@ -756,28 +759,33 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    NSString       **strings;
    NSString       *s;
    NSUInteger     len;
+   NSUInteger     remain;
+   NSUInteger     length;
    char           *p;
 
    strings  = _storage;
    sentinel = &strings[ _count];
    p        = buf;
+   remain   = maxLength;
 
    while( strings < sentinel)
    {
       s   = *strings++;
       len = [s mulleUTF8StringLength];
-      if( len > maxLength)
-         len = maxLength;
+      if( len > remain)
+         len = remain;
 
-      [s mulleGetUTF8Characters:p
-                      maxLength:len];
+      len = [s mulleGetUTF8Characters:p
+                            maxLength:len];
 
-      p          = &p[ len];
-      maxLength -= len;
-      if( ! maxLength)
+      p       = &p[ len];
+      remain -= len;
+      if( ! remain)
          break;
    }
-   return( p - buf);
+
+   length = (NSUInteger) (p - buf);
+   return( length);
 }
 
 

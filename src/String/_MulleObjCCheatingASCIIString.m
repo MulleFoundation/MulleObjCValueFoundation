@@ -63,25 +63,30 @@
 }
 
 
-- (NSUInteger) mulleGetASCIICharacters:(char *) buf
-                             maxLength:(NSUInteger) maxLength
+static NSUInteger  mulleGetASCIICharacters( _MulleObjCCheatingASCIIString *self,
+                                            char *buf,
+                                            NSUInteger maxLength)
+
 {
    NSUInteger   length;
 
-   length = _length > maxLength ? maxLength : _length;
-   memcpy( buf, _storage, length);
+   length = self->_length > maxLength ? maxLength : self->_length;
+   memcpy( buf, self->_storage, length);
    return( length);
+}
+
+
+- (NSUInteger) mulleGetASCIICharacters:(char *) buf
+                             maxLength:(NSUInteger) maxLength
+{
+   return( mulleGetASCIICharacters( self,  buf, maxLength));
 }
 
 
 - (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   NSUInteger   length;
-
-   length = _length > maxLength ? maxLength : _length;
-   memcpy( buf, _storage, length);
-   return( length);
+   return( mulleGetASCIICharacters( self,  buf, maxLength));
 }
 
 

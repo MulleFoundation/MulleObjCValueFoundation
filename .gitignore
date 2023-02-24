@@ -63,3 +63,4 @@ version.old
 .idea/
 cmake-build-*/
 .ackrc
+wilted/
