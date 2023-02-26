@@ -130,4 +130,15 @@
    return( NSOrderedAscending);
 }
 
+//
+// Unknown messages sent to NSNull are just like methods sent to nil.
+// Different to Apple Foundation, but makes it easier to use when they
+// subsitute NSNumber, NSString, NSArray... basically anything because
+// now -count or -length returns 0.
+//
+- (void *) forward:(void *) args
+{
+   return( NULL);
+}
+
 @end
