@@ -114,12 +114,24 @@ enum
 typedef NSUInteger   NSStringEncoding;
 
 
+
+typedef NS_OPTIONS( NSUInteger, MulleStringEncodingOptions)
+{
+   MulleStringEncodingOptionBOM           = 1,     // also for UTF8
+   MulleStringEncodingOptionBOMIfNeeded       = 2,     // for UTF16 or UTF32
+   MulleStringEncodingOptionTerminateWithZero = 4,
+};
+
+#define MulleStringEncodingOptionDefault  MulleStringEncodingOptionBOMIfNeeded
+
 // used for nothing currently
-enum
+typedef NS_OPTIONS( NSUInteger, NSStringEncodingConversions)
 {
    NSStringEncodingConversionAllowLossy             = 1,
    NSStringEncodingConversionExternalRepresentation = 2
 };
+
+#define NSStringEncodingConversionDefault   0
 
 typedef NSUInteger   NSStringEncodingConversionOptions;
 
@@ -145,8 +157,7 @@ NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
           allowLossyConversion:(BOOL) flag;
 
 - (NSData *) mulleDataUsingEncoding:(NSStringEncoding) encoding
-                      prefixWithBOM:(BOOL) withBOM
-                  terminateWithZero:(BOOL) withTerminatingZero;
+                    encodingOptions:(MulleStringEncodingOptions) options;
 
 - (instancetype) initWithData:(NSData *) data
                      encoding:(NSUInteger) encoding;
@@ -202,13 +213,10 @@ NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 @interface NSString( NSDataPrivate)
 
 // private and mulleprefix needed
-- (NSData *) _asciiDataWithTerminatingZero:(BOOL) flag;
-- (NSData *) _utf8DataPrefixedWithBOM:(BOOL) prefixWithBOM
-                  withTerminatingZero:(BOOL) withZero;
+- (NSData *) _asciiDataWithEncodingOptions:(MulleStringEncodingOptions) options;
+- (NSData *) _utf8DataWithEncodingOptions:(MulleStringEncodingOptions) options;
 - (NSData *) _utf16DataWithEndianness:(unsigned int) endianess
-                        prefixWithBOM:(BOOL) prefixWithBOM
-                    terminateWithZero:(BOOL) terminateWithZero;
+                      encodingOptions:(MulleStringEncodingOptions) options;
 - (NSData *) _utf32DataWithEndianness:(unsigned int) endianess
-                        prefixWithBOM:(BOOL) prefixWithBOM
-                    terminateWithZero:(BOOL) terminateWithZero;
+                      encodingOptions:(MulleStringEncodingOptions) options;
 @end
