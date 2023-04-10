@@ -1,0 +1,47 @@
+{
+   project =
+   {
+      description="💶 Value classes NSNumber, NSString, NSDate, NSData";
+      domain="github";
+      name="MulleObjCValueFoundation";
+      user="MulleFoundation";
+      repo="MulleObjCValueFoundation";
+      homepage="https://github.com/MulleFoundation/MulleObjCValueFoundation";
+      license="BSD-3-Clause"
+   };
+   dependencies =
+   (
+      {
+         description="💎 A collection of Objective-C root classes for mulle-objc";
+         domain="github";
+         name="MulleObjC";
+         repo="MulleObjC";
+         url="https://github.com/mulle-objc/MulleObjC";
+         user="mulle-objc";
+      },
+      {
+         description="↗️ A growable C char array and also a stream";
+         domain="github";
+         name="mulle-buffer";
+         repo="mulle-buffer";
+         url="https://github.com/mulle-c/mulle-buffer";
+         user="mulle-c";
+      },
+      {
+         description="🔤 UTF8-16-32 analysis and manipulation library";
+         domain="github";
+         name="mulle-utf";
+         repo="mulle-utf";
+         url="https://github.com/mulle-c/mulle-utf";
+         user="mulle-c";
+      },
+      {
+         description="📒 Lists mulle-objc runtime information contained in executables.";
+         domain="github";
+         name="mulle-objc-list";
+         repo="mulle-objc-list";
+         url="https://github.com/mulle-objc/mulle-objc-list";
+         user="mulle-objc";
+      }
+   )
+}
