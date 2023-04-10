@@ -195,6 +195,8 @@ NSStringEncoding   MulleStringEncodingParseUTF8String( char *s);
 + (instancetype) mulleStringWithData:(NSData *) data
                             encoding:(NSStringEncoding) encoding;
 
++ (instancetype) mulleStringWithUTF8Data:(NSData *) data;
+
 - (instancetype) mulleInitWithBytesNoCopy:(void *) bytes
                                    length:(NSUInteger) length
                                  encoding:(NSStringEncoding) encoding

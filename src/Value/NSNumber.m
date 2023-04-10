@@ -42,8 +42,8 @@
 
 
 // private stuff from MulleObjC
-#import <MulleObjC/private/mulle-objc-exceptionhandlertable-private.h>
-#import <MulleObjC/private/mulle-objc-universeconfiguration-private.h>
+#import <MulleObjC/mulle-objc-exceptionhandlertable-private.h>
+#import <MulleObjC/mulle-objc-universeconfiguration-private.h>
 
 // std-c dependencies
 #import "import-private.h"

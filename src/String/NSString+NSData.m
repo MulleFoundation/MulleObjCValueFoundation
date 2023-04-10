@@ -613,6 +613,13 @@ static id   initByConvertingFromEncoding( NSString *self,
 }
 
 
++ (instancetype) mulleStringWithUTF8Data:(NSData *) data;
+{
+   return( [[[self alloc] initWithData:data
+                              encoding:NSUTF8StringEncoding] autorelease]);
+}
+
+
 
 // this code works for UTF8String and ASCII only
 - (NSUInteger) lengthOfBytesUsingEncoding:(NSStringEncoding) encoding

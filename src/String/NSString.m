@@ -48,7 +48,7 @@
 
 #import <ctype.h>
 #import <string.h>
-#import <MulleObjC/private/mulle-objc-universefoundationinfo-private.h>
+#import <MulleObjC/mulle-objc-universefoundationinfo-private.h>
 
 #if MULLE_UTF_VERSION < ((1 << 20) | (0 << 8) | 0)
 # error "mulle_utf is too old"
