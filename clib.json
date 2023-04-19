@@ -1,6 +1,6 @@
 {
    "name" : "MulleObjCValueFoundation",
-   "version" : "0.21.1",
+   "version" : "0.21.2",
    "description" : "Value classes NSNumber, NSString, NSDate, NSData",
    "keywords" : [],
    "license" : "BSD-3-Clause",
@@ -27,7 +27,6 @@
       "src/MulleObjCLoader+MulleObjCValueFoundation.h",
       "src/MulleObjCLoader+MulleObjCValueFoundation.m",
       "src/MulleObjCValueFoundation.h",
-      "src/reflect/objc-loader.inc",
       "src/reflect/_MulleObjCValueFoundation-export.h",
       "src/reflect/_MulleObjCValueFoundation-import-private.h",
       "src/reflect/_MulleObjCValueFoundation-import.h",
