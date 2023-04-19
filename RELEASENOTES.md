@@ -1,3 +1,12 @@
+### 0.21.2
+
+* added +mulleStringWithUTF8Data: method
+* encoding methods now use options: instead of prefixWithBom: withTerminatingZero:
+* NSNull now accepts all unknown messages and returns nil for them (like nil)
+* fixed mulleDataUsingEncoding:prefixWithBOM:terminateWithZero: for 8 bits representations not properly terminating with zero
+* iso conversion now bails, if it can't represent the string
+* UTF8 can now be emitted with a BOM
+
 ### 0.21.1
 
 * Various small improvements
