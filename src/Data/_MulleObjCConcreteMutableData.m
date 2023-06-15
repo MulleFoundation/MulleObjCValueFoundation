@@ -48,21 +48,19 @@
 @implementation _MulleObjCConcreteMutableData
 
 
+// avoid overlapping add, if bytes point into own buffer
 static void   append_via_tmp_buffer( _MulleObjCConcreteMutableData *self,
                                      void *bytes,
                                      NSUInteger length)
 {
-   void   *tmp;
-
    if( length == (NSUInteger) -1)
       length = strlen( bytes);
 
-   tmp = mulle_malloc( length);
+   mulle_flexbuffer_do( tmp, 128, length)
    {
       memcpy( tmp, bytes, length);
       mulle_buffer_add_bytes( &self->_storage, tmp, length);
    }
-   mulle_free( tmp);
 }
 
 

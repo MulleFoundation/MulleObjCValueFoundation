@@ -27,6 +27,7 @@
       "src/MulleObjCLoader+MulleObjCValueFoundation.h",
       "src/MulleObjCLoader+MulleObjCValueFoundation.m",
       "src/MulleObjCValueFoundation.h",
+      "src/reflect/objc-loader.inc",
       "src/reflect/_MulleObjCValueFoundation-export.h",
       "src/reflect/_MulleObjCValueFoundation-import-private.h",
       "src/reflect/_MulleObjCValueFoundation-import.h",

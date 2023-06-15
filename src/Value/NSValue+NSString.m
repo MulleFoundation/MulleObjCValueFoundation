@@ -49,39 +49,34 @@
 
 @implementation NSValue( NSString)
 
-
 - (NSString *) description
 {
-   char       *type;
-   SEL        sel;
-   id         obj;
-   NSString   *s;
-   //
-   // its not 'stringValue' because the string here is can't be parsed
-   // in all cases
-   //
+    return( [NSString stringWithUTF8String:[self UTF8String]]);
+}
+
+
+- (char *) UTF8String
+{
+   char                     *type;
+   NSUInteger               size;
+   struct mulle_allocator   *allocator;
+   char                     *s;
+
    type = [self objCType];
-   switch( *type)
+   NSGetSizeAndAlignment( type, &size, NULL);
+
+   allocator = NULL;
+   mulle_flexbuffer_do( bytes, 128, size)
    {
-   default :
-      return( @"@( \?\?\?)"); // otherwise a trigraph for ']', LOL
+      [self getValue:bytes
+                size:size];
 
-   case _C_ID       :
-   case _C_ASSIGN_ID:
-   case _C_COPY_ID  :
-      [self getValue:&obj];
-      s = [obj description];
-      return( [NSString stringWithFormat:@"@( %@)", s]);
-
-   case _C_SEL     :
-      [self getValue:&sel];
-      s = NSStringFromSelector( sel);
-      return( [NSString stringWithFormat:@"@( @selector( %@))", s]);
-
-   case _C_PTR     :
-   case _C_CHARPTR :
-      return( [NSString stringWithFormat:@"@(%p)", [self pointerValue]]);
+      mulle_buffer_do_string( buffer, allocator, s)
+      {
+         MulleObjCDescribeMemory( buffer, mulle_data_make( bytes, size), type);
+      }
    }
+   return( MulleObjCAutoreleaseAllocation( s, allocator));
 }
 
 

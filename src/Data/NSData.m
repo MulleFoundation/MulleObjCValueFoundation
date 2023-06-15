@@ -47,7 +47,7 @@
 #import <string.h>
 
 
-#if MULLE_BUFFER_VERSION < ((0 << 20) | (4 << 8) | 1)
+#if MULLE__BUFFER_VERSION < ((0 << 20) | (4 << 8) | 1)
 # error "mulle_buffer is too old"
 #endif
 
