@@ -55,11 +55,34 @@ BOOL   MulleDebugDescriptionEllideAddressOutput = YES;
 BOOL   MulleDebugDescriptionEllideAddressOutput = NO;
 #endif
 
-@implementation NSObject (NSString)
+@implementation NSObject( NSString)
 
 - (NSString *) description
 {
    return( NSStringFromClass( [self class]));
+}
+
+
+//
+// Having it this way around and not description calling UTF8String
+// is convenient, as most classes will probably not want to use a 
+// mulle_buffer to construct a UTF8String for the benefit of the description.
+// For those that do, they should also override descrition with:
+// - (NSString *) description
+// {
+//    return( [NSString stringWithUTF8String:[self UTF8String]]);
+// }
+
+- (char *) UTF8String
+{
+   return( [[self description] UTF8String]);
+}
+
+
+// this is unqoted for NSData, NSDictionary etc.
+- (NSString *) mulleQuotedDescriptionIfNeeded
+{
+   return( [self description]);
 }
 
 
@@ -102,17 +125,5 @@ BOOL   MulleDebugDescriptionEllideAddressOutput = NO;
    return( [NSString stringWithFormat:@"<%@ %p %@>", [self class], self, contents]);
 }
 
-
-- (char *) UTF8String
-{
-   return( [[self description] UTF8String]);
-}
-
-
-// this is unqoted for NSData, NSDictionary etc.
-- (NSString *) mulleQuotedDescriptionIfNeeded
-{
-   return( [self description]);
-}
 
 @end
