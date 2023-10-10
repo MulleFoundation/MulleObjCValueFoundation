@@ -241,8 +241,8 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
    NSUInteger     otherLength;
    uintptr_t      value;
    unsigned int   i;
-   mulle_utf8_t   c;
-   mulle_utf8_t   buf[ mulle_char5_maxlength64 * 4];
+   char           c;
+   char           buf[ mulle_char5_maxlength64 * 4];
 
    //
    // Out main concern is isEqual: and we don't want to duplicate the == other

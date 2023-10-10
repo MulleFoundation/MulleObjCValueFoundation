@@ -3,7 +3,7 @@
 
 
 //
-// mulle_utf8_t is useful on a C level, but in Objective-C there
+// mulle_utf8_t was useful on a C level, but in Objective-C there
 // is only char * -> UTF8 and unichar -> mulle_utf32_t
 //
 // So we need MulleCharData and MulleUnicharData
@@ -78,7 +78,7 @@ static inline struct mulle_data
 static inline struct mulle_utf8data
    MulleCharDataGetUTF8Data( struct MulleCharData data)
 {
-   return( mulle_utf8data_make( (mulle_utf8_t *) data.characters, data.length));
+   return( mulle_utf8data_make( data.characters, data.length));
 }
 
 

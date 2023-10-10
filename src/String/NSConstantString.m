@@ -92,7 +92,7 @@
 
 - (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8data *) space
 {
-   space->characters = (mulle_utf8_t *) _storage;
+   space->characters = _storage;
    space->length     = _length;
    return( YES);
 }

@@ -360,11 +360,11 @@ NSNumber  *MulleNewBoolWithUTF8Data( struct mulle_utf8data region)
 
 - (instancetype) mulleInitWithString:(NSString *) s
 {
-   mulle_utf8_t   *utf8;
+   char   *utf8;
 
    // [self release]; // not needed as class cluster
 
-   utf8 = (mulle_utf8_t *) [s UTF8String];
+   utf8 = (char *) [s UTF8String];
    if( ! utf8)
       return( nil);
    return( MulleNewNumberWithUTF8Data( mulle_utf8data_make( utf8, -1)));

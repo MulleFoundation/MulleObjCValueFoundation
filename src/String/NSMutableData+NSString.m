@@ -10,7 +10,7 @@
 {
    struct mulle_data   data;
 
-   if( c < ' ' || c >= 0x7F)
+   if( (unsigned char) c < ' ' || (unsigned char) c >= 0x7F)
       MulleObjCThrowInvalidArgumentExceptionUTF8String( "character must be printable ascii");
 
    data = [self mulleMutableData];
@@ -42,9 +42,9 @@
 
    case NSUTF8StringEncoding :
       {
-         mulle_utf8_t   *s;
-         mulle_utf8_t   *sentinel;
-         size_t         len;
+         char     *s;
+         char     *sentinel;
+         size_t   len;
 
          s        = data.bytes;
          sentinel = &s[ data.length];
@@ -57,7 +57,7 @@
                return;
             if( ! *s)
             {
-               [self setLength:s - (mulle_utf8_t *) data.bytes];
+               [self setLength:s - (char *) data.bytes];
                return;
             }
             *s  = c;

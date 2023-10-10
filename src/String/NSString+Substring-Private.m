@@ -21,7 +21,7 @@ NSString   *_mulleNewUTF8StringWithStringContext( char *start,
    NSUInteger   length;
 
    if( ctxt->sepLen == -1)
-      _mulle_utf8_previous_utf32character( (mulle_utf8_t **) &end);
+      _mulle_utf8_previous_utf32character( &end);
    else
       end -= ctxt->sepLen;
 

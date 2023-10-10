@@ -384,6 +384,6 @@ static inline NSUInteger   MulleObjCStringHashUTF32( mulle_utf32_t *buf, NSUInte
 // data is only valid as long as space isn't touched
 //
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-struct mulle_utf8data   MulleStringGetUTF8Data( NSString *self,
+struct mulle_utf8data   MulleStringUTF8Data( NSString *self,
                                                 struct mulle_utf8data space);
 
