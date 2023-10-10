@@ -343,7 +343,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 
 MULLE_C_NEVER_INLINE
-struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
+struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
                                                struct mulle_utf8data space)
 {
    struct mulle_utf8data   data;
@@ -372,7 +372,7 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
    }
 
    // probably exhausted so use painful slow code
-   data.characters = (mulle_utf8_t *) [self UTF8String];
+   data.characters = [self UTF8String];
    data.length     = [self mulleUTF8StringLength];
 
    return( data);
@@ -385,7 +385,7 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 //    struct mulle_utf8data   data;
 //    NSUInteger               length;
 //
-//    data   = MulleStringGetUTF8Data( self,
+//    data   = MulleStringUTF8Data( self,
 //                                     mulle_utf8data_make( buf, maxLength));
 //    length = data.length <= maxLength ? data.length : maxLength;
 //    if( data.characters != buf)
@@ -479,32 +479,32 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 - (char *) UTF8String
 {
    // backwards compatibility, actual subclasses SHOULD override
-   unichar        *buf;
+   char           *buf;
+   char           *dst;
    NSUInteger     length;
    NSUInteger     size;
    NSUInteger     used;
    unichar        *src;
    unichar        *sentinel;
    unichar        c;
-   mulle_utf8_t   *dst;
 
    length = [self length];
 
    // allocator NULL ? Well the block doesn't really belong to the class as an
    // instance variable, so...
-   size = length * 4 * sizeof( mulle_utf8_t); // unichar explodes max to 4 bytes
-   buf  = mulle_allocator_malloc( NULL, size + sizeof( mulle_utf8_t));
-   [self getCharacters:buf
+   size = length * 4 + 1; // unichar explodes max to 4 bytes
+   buf  = mulle_allocator_malloc( NULL, size);
+   [self getCharacters:(unichar *) buf
                  range:NSMakeRange( 0, length)];
 
-   // mulle_utf8_t can't become larger than 4 bytes max
+   // mulle_utf32_t can't become larger than 4 bytes max
    // so we can actually inplace convert
 
    assert( sizeof( unichar) >= 4);
 
-   src      = buf;
-   sentinel = &buf[ length];
-   dst      = (mulle_utf8_t *) buf;
+   src      = (unichar *) buf;
+   sentinel = &src[ length];
+   dst      = buf;
 
    while( src < sentinel)
    {
@@ -513,18 +513,18 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
    }
    *dst = 0;
 
-   used = dst - (mulle_utf8_t *) buf;
+   used = dst - buf;
    if( size - used >= 64)  // don't care about waste on small strings
-      buf = mulle_allocator_realloc( NULL, buf, used + sizeof( mulle_utf8_t));
+      buf = mulle_allocator_realloc( NULL, buf, used + 1);
 
    MulleObjCAutoreleaseAllocation( buf, NULL);
-   return( (char *) buf);
+   return( buf);
 }
 
 
 - (NSUInteger) mulleUTF8StringLength
 {
-   return( mulle_utf8_strlen( (mulle_utf8_t *) [self UTF8String]));
+   return( strlen( [self UTF8String]));
 }
 
 
@@ -533,7 +533,7 @@ struct mulle_utf8data  MulleStringGetUTF8Data( NSString *self,
 {
    struct mulle_utf_information  info;
 
-   if( mulle_utf8_information( (mulle_utf8_t *) buf, len, &info))
+   if( mulle_utf8_information( buf, len, &info))
       return( NO);
 
    return( YES);
@@ -741,13 +741,13 @@ static BOOL   hasSuffix( NSString *self, NSUInteger length,
 
 #pragma mark - numerical values
 
-static mulle_utf8_t   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
+static char   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
 {
-   mulle_utf8_t   *s;
-   mulle_utf8_t   *old;
-   unichar        c;
+   char      *s;
+   char      *old;
+   unichar   c;
 
-   s = (mulle_utf8_t *) [self UTF8String];
+   s = [self UTF8String];
    assert( s);
 
    while( *s)

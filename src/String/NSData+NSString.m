@@ -65,7 +65,7 @@ static inline unsigned int   hex( unsigned int c)
    NSUInteger               length;
    NSUInteger               lines;
    NSUInteger               remainder;
-   mulle_utf8_t             *s;
+   char                     *s;
    struct mulle_allocator   *allocator;
    struct mulle_buffer      buffer;
    unsigned char            *bytes;
@@ -93,8 +93,8 @@ static inline unsigned int   hex( unsigned int c)
       {
          value = *bytes++;
 
-         *s++ = (mulle_utf8_t) hex( value >> 4);
-         *s++ = (mulle_utf8_t) hex( value & 0xF);
+         *s++ = (char) hex( value >> 4);
+         *s++ = (char) hex( value & 0xF);
       }
       mulle_buffer_add_byte( &buffer, ' ');
    }
@@ -107,8 +107,8 @@ static inline unsigned int   hex( unsigned int c)
       {
          value = *bytes++;
 
-         *s++ = (mulle_utf8_t) hex( value >> 4);
-         *s++ = (mulle_utf8_t) hex( value & 0xF);
+         *s++ = (char) hex( value >> 4);
+         *s++ = (char) hex( value & 0xF);
       }
    }
    else

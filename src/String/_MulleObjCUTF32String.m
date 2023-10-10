@@ -103,7 +103,7 @@
                  range:(NSRange) range
 {
    struct mulle_utf32data   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    flag = [self mulleFastGetUTF32Data:&data];
    assert( flag);
@@ -127,22 +127,22 @@
    assert( flag);
    MULLE_C_UNUSED( flag);
 
-   ctxt.buf      = (mulle_utf8_t *) buf;
-   ctxt.sentinel = (mulle_utf8_t *) &buf[ maxLength];
+   ctxt.buf      = buf;
+   ctxt.sentinel = &buf[ maxLength];
 
    //
    // mulle_utf32_bufferconvert_to_utf8 will not create incomplete emojis,
    // if the length runs out. But sometimes emojis are composed from multiple
    // emojis, and this routine doesn't know about it.
-   // If you fix this, also fix MulleStringGetUTF8Data.
+   // If you fix this, also fix MulleStringUTF8Data.
    //
    mulle_utf32_bufferconvert_to_utf8( data.characters,
                                       data.length,
                                       &ctxt,
                                       mulle_utf8_conversion_context_add_bytes);
-   assert( ! memchr( buf, 0, ctxt.buf - (mulle_utf8_t *) buf));
+   assert( ! memchr( buf, 0, ctxt.buf - buf));
 
-   length = (NSUInteger) ((char *) ctxt.buf - buf);
+   length = (NSUInteger) (ctxt.buf - buf);
    return( length);
 }
 

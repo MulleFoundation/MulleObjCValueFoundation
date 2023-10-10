@@ -37,8 +37,8 @@
 
 @interface _MulleObjCUTF32String : NSString < MulleObjCImmutable>
 {
-   mulle_utf8_t    *_shadow;
-   NSUInteger      _length;         // 257-max
+   char         *_shadow;
+   NSUInteger   _length;         // 257-max
 }
 @end
 

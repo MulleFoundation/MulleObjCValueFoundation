@@ -43,7 +43,7 @@
 //
 // subclasses provide length
 // ASCII is something that's provided "hidden". It's the best,
-// because it can provide mulle_utf8_t and mulle_utf32_t w/o composition
+// because it can provide utf8 and mulle_utf32_t w/o composition
 //
 @interface _MulleObjCASCIIString : NSString < MulleObjCImmutable>
 
@@ -105,9 +105,9 @@
 // does not have a trailing zero, this is an abstract class
 @interface _MulleObjCReferencingASCIIString : _MulleObjCASCIIString
 {
-   NSUInteger     _length;
-   char           *_storage;
-   mulle_utf8_t   *_shadow;
+   NSUInteger   _length;
+   char         *_storage;
+   char         *_shadow;
 }
 @end
 

@@ -144,7 +144,7 @@ static NSUInteger   grab_utf8( id self,
    length = MulleObjCTaggedPointerSingleCharacterStringGetLength( self);
    if( length > maxLength)
       length = maxLength;
-   length = grab_utf8( self, length, (mulle_utf8_t *) buf, NSMakeRange( 0, length));
+   length = grab_utf8( self, length, buf, NSMakeRange( 0, length));
    return( length);
 }
 

@@ -108,8 +108,8 @@
    BOOL                                  flag;
    NSUInteger                            length;
 
-   ctxt.buf      = (mulle_utf8_t *) buf;
-   ctxt.sentinel = (mulle_utf8_t *) &buf[ maxLength];
+   ctxt.buf      = buf;
+   ctxt.sentinel = &buf[ maxLength];
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);
@@ -119,7 +119,7 @@
                                       data.length,
                                       &ctxt,
                                       mulle_utf8_conversion_context_add_bytes);
-   assert( ! memchr( buf, 0, ctxt.buf - (mulle_utf8_t *) buf));
+   assert( ! memchr( buf, 0, ctxt.buf - buf));
    length = (NSUInteger) ((char *) ctxt.buf - buf);
    return( length);
 }

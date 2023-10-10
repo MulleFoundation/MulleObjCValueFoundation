@@ -52,20 +52,19 @@
 @implementation NSString( ClassCluster)
 
 
-static void   _NSThrowInvalidUTF8Exception( char *sin,
+static void   _NSThrowInvalidUTF8Exception( char *s,
                                             size_t len,
                                             struct mulle_utf_information *info)
 {
    struct mulle_buffer   buffer;
    auto char             space[ 256];
-   mulle_utf8_t          *s = (mulle_utf8_t *) sin;
-   mulle_utf8_t          *p;
-   mulle_utf8_t          *invalid;
+   char                  *p;
+   char                  *invalid;
 
    if( ! s || ! info)
       MulleObjCThrowInternalInconsistencyExceptionUTF8String( "UTF8 internal corruption");
 
-   invalid = (mulle_utf8_t *) info->invalid;
+   invalid = info->invalid;
    if( s > invalid)
       MulleObjCThrowInvalidArgumentExceptionUTF8String( "UTF8 internal corruption, no data can be shown");
 
@@ -228,7 +227,7 @@ static NSString  *
 
    // make initial alloc large enough for optimal case
    mulle_buffer_guarantee( &buffer, length * sizeof( mulle_utf32_t));
-   mulle_utf8_bufferconvert_to_utf32( (mulle_utf8_t *) s,
+   mulle_utf8_bufferconvert_to_utf32( s,
                                       length,
                                       &buffer,
                                       (void (*)()) mulle_buffer_add_bytes);
@@ -261,7 +260,7 @@ static NSString  *newStringOrNilWithUTF8Characters( char *buf,
    if( ! len)
       return( @"");
 
-   if( mulle_utf8_information( (mulle_utf8_t *) buf, len, &info))
+   if( mulle_utf8_information( buf, len, &info))
       return( nil);
 
 #ifdef __MULLE_OBJC_TPS__
@@ -291,7 +290,7 @@ static NSString  *newStringWithUTF8Characters( char *buf,
    if( ! len)
       return( @"");
 
-   if( mulle_utf8_information( (mulle_utf8_t *) buf, len, &info))
+   if( mulle_utf8_information( buf, len, &info))
       _NSThrowInvalidUTF8Exception( buf, len, &info);
 
 #ifdef __MULLE_OBJC_TPS__
@@ -356,7 +355,7 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
    allocator = MulleObjCInstanceGetAllocator( self);
    universe  = MulleObjCObjectGetUniverse( self);
    self      = newStringWithUTF8Characters( s,
-                                            mulle_utf8_strlen( (mulle_utf8_t *) s),
+                                            strlen( s),
                                             allocator,
                                             universe);
    return( self);
@@ -490,7 +489,7 @@ static NSString *
 {
    struct mulle_utf_information   info;
 
-   if( mulle_utf8_information( (mulle_utf8_t *) s, length, &info))
+   if( mulle_utf8_information( s, length, &info))
       _NSThrowInvalidUTF8Exception( s, length, &info);
 
    if( ! info.utf8len)
@@ -555,7 +554,7 @@ static NSString *
    if( ! object)
       MulleObjCThrowInvalidArgumentExceptionUTF8String( "object is nil");
 
-   if( mulle_utf8_information( (mulle_utf8_t *) s, length, &info))
+   if( mulle_utf8_information( s, length, &info))
       _NSThrowInvalidUTF8Exception( s, length, &info);
 
    if( ! info.utf8len)

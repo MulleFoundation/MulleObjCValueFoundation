@@ -412,9 +412,9 @@ static id   initByConvertingFromEncoding( NSString *self,
                                           NSUInteger length,
                                           NSStringEncoding encoding)
 {
-   mulle_utf8_t   *s;
-   mulle_utf8_t   *end;
-   NSUInteger     utf8_length;
+   char         *s;
+   char         *end;
+   NSUInteger   utf8_length;
 
    s = mulle_allocator_malloc( &mulle_stdlib_allocator, length * 2);
    switch( encoding)
@@ -656,7 +656,7 @@ static id   initByConvertingFromEncoding( NSString *self,
    if( encoding == NSUTF8StringEncoding)
       return( length);
 
-   if( mulle_utf8_information( (mulle_utf8_t *) s, length, &info))
+   if( mulle_utf8_information( s, length, &info))
       MulleObjCThrowInternalInconsistencyExceptionUTF8String( "supposed UTF8 is not UTF8");
 
    switch( encoding)
@@ -682,13 +682,13 @@ static id   initByConvertingFromEncoding( NSString *self,
 // rename it in the debugger and use this
 
 NSString   *_NSStringCreateWithBytes( void *allocator,
-                                      mulle_utf8_t *bytes,
+                                      void *bytes,
                                       NSUInteger length,
                                       NSStringEncoding encoding,
                                       char isExternal);
 
 NSString   *_NSStringCreateWithBytes( void *allocator,
-                                      mulle_utf8_t *bytes,
+                                      void *bytes,
                                       NSUInteger length,
                                       NSStringEncoding encoding,
                                       char isExternal)

@@ -51,7 +51,7 @@
    unsigned int   _size;
    NSString       **_storage;
 
-   mulle_utf8_t   *_shadow;
+   char           *_shadow;
    NSUInteger     _shadowLen;
 }
 

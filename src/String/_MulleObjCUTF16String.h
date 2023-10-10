@@ -41,8 +41,8 @@
 //
 @interface _MulleObjCUTF16String: NSString <MulleObjCImmutable>
 {
-   mulle_utf8_t   *_shadow;
-   NSUInteger     _length;
+   char         *_shadow;
+   NSUInteger   _length;
 }
 
 @end
