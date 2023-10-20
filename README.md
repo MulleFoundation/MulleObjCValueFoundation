@@ -88,6 +88,8 @@ Install the requirements:
 | [mulle-utf](https://github.com/mulle-c/mulle-utf)             | 🔤 UTF8-16-32 analysis and manipulation library
 | [mulle-objc-list](https://github.com/mulle-objc/mulle-objc-list)             | 📒 Lists mulle-objc runtime information contained in executables.
 
+Download the latest [tar](https://github.com/MulleFoundation/MulleObjCValueFoundation/archive/refs/tags/latest.tar.gz) or [zip](https://github.com/MulleFoundation/MulleObjCValueFoundation/archive/refs/tags/latest.zip) archive and unpack it.
+
 Install **MulleObjCValueFoundation** into `/usr/local` with [cmake](https://cmake.org):
 
 ``` sh

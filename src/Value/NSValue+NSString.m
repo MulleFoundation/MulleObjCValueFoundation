@@ -57,26 +57,24 @@
 
 - (char *) UTF8String
 {
-   char                     *type;
-   NSUInteger               size;
-   struct mulle_allocator   *allocator;
-   char                     *s;
+   char         *type;
+   NSUInteger   size;
+   char         *s;
 
    type = [self objCType];
    NSGetSizeAndAlignment( type, &size, NULL);
 
-   allocator = NULL;
    mulle_flexbuffer_do( bytes, 128, size)
    {
       [self getValue:bytes
                 size:size];
 
-      mulle_buffer_do_string( buffer, allocator, s)
+      mulle_buffer_do_autoreleased_string( buffer, NULL, s)
       {
          MulleObjCDescribeMemory( buffer, mulle_data_make( bytes, size), type);
       }
    }
-   return( MulleObjCAutoreleaseAllocation( s, allocator));
+   return( s);
 }
 
 
