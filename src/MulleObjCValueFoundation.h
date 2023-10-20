@@ -36,7 +36,7 @@
 
 #import "import.h"
 
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (21 << 8) | 2)
+#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0 << 20) | (22 << 8) | 0)
 
 #import "_MulleObjCValueFoundation-export.h"
 #include "_MulleObjCValueFoundation-provide.h"

@@ -9,6 +9,10 @@
  *
  *      mulle-sde environment set MULLE_MATCH_TO_C_RUN DISABLE
  */
+#ifndef mulle_objc_value_foundation_export_h__
+#define mulle_objc_value_foundation_export_h__
+
+
 #import "NSData+NSCoder.h"
 #import "NSData+Unicode.h"
 #import "NSData.h"
@@ -31,3 +35,6 @@
 #import "NSNumber.h"
 #import "NSValue+NSCoder.h"
 #import "NSValue.h"
+
+
+#endif
