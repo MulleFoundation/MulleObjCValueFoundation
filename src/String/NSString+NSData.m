@@ -356,7 +356,7 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
    mulle_utf16_bufferconvert_to_utf32( info.start,
                                        info.utf16len,
                                        &buffer,
-                                       (void (*)()) mulle_buffer_add_bytes);
+                                       mulle_buffer_add_bytes_callback);
    data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
 
@@ -819,7 +819,7 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
    mulle_utf32_bufferconvert_to_utf16( info.start,
                                        info.utf32len,
                                        &buffer,
-                                       (void (*)()) mulle_buffer_add_bytes);
+                                       mulle_buffer_add_bytes_callback);
    if( withZero)
    {
       bom = 0;

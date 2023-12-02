@@ -95,8 +95,8 @@ static void   sizeStorageWithCount( NSMutableString *self, unsigned int count)
       self->_size = 4;
 
    self->_storage = MulleObjCInstanceReallocateNonZeroedMemory( self,
-                                                              self->_storage,
-                                                              self->_size * sizeof( NSString *));
+                                                                self->_storage,
+                                                                self->_size * sizeof( NSString *));
 }
 
 
@@ -547,7 +547,6 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
    range    = MulleObjCValidateRangeAgainstLength( inRange, _length);
    p        = &_storage[ 0];
 
-
    // `s` is first string with `length`
    // range is offset into s + remaining length
 
@@ -575,6 +574,8 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
       range.length  -= grab_len;
    }
 }
+
+
 
 
 #pragma mark - Operations

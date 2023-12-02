@@ -88,7 +88,7 @@
       mulle_utf32_bufferconvert_to_utf8( data.characters,
                                          data.length,
                                          &buf,
-                                         (mulle_utf_add_bytes_function_t) mulle_buffer_add_bytes);
+                                         mulle_buffer_add_bytes_callback);
 
       mulle_buffer_add_byte( &buf, 0);
       mulle_buffer_size_to_fit( &buf);
@@ -113,6 +113,31 @@
    range = MulleObjCValidateRangeAgainstLength( range, data.length);
    memcpy( buf, &data.characters[ range.location], range.length * sizeof( mulle_utf32_t));
 }
+
+
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength
+{
+   struct mulle_utf32data   data;
+   BOOL                     flag;
+   NSUInteger               length;
+
+   flag = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
+
+   if( index >= data.length)
+      return( 0);
+
+   length = data.length - index;
+   if( length > maxLength)
+      length = maxLength;
+
+   memcpy( buf, &data.characters[ index], length * sizeof( mulle_utf32_t));
+   return( length);
+}
+
 
 
 - (NSUInteger) mulleGetUTF8Characters:(char *) buf
@@ -145,7 +170,6 @@
    length = (NSUInteger) (ctxt.buf - buf);
    return( length);
 }
-
 
 
 - (void) dealloc

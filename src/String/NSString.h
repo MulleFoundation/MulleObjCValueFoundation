@@ -50,7 +50,6 @@ typedef mulle_utf32_t  unichar;
 
 #include "mulle-chardata.h"
 
-
 //
 // NSString is outside of NSObject, the most fundamental class
 // since its totally pervasive in all other classes.
@@ -191,6 +190,9 @@ typedef mulle_utf32_t  unichar;
                        bufferSize:(NSUInteger) size;
 - (void) mulleGetUTF8String:(char *) buf;
 
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength;
 @end
 
 
@@ -385,5 +387,79 @@ static inline NSUInteger   MulleObjCStringHashUTF32( mulle_utf32_t *buf, NSUInte
 //
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 struct mulle_utf8data   MulleStringUTF8Data( NSString *self,
-                                                struct mulle_utf8data space);
+                                             struct mulle_utf8data space);
+
+
+// this could be platform specific, but try to not go lower than 8 on 64 bit
+
+#define NSStringEnumeratorNumberOfCharacters    27
+
+// 128 byte on 64 bit
+struct NSStringEnumerator
+{
+   NSString      *_string;    // 8 byte
+   NSUInteger    _i;          // 8 byte
+   uint16_t      _j;          // 2 byte
+   uint16_t      _m;          // 2 byte
+   unichar       _buf[ NSStringEnumeratorNumberOfCharacters]; // 27 * 4 byte
+};
+
+
+//
+// because this is static inline, I don't feel bad pushing 256 bytes
+// via the "stack", it should be all for naught
+//
+static inline struct NSStringEnumerator   NSStringEnumerate( NSString *self)
+{
+   struct NSStringEnumerator   rover;
+
+   rover._string   = self; // could retain here, but seems superflous
+   rover._i        = 0;
+   rover._j        = 0;
+   rover._m        = 0;
+
+   // try to avoid zeroing _buf uselessly, though compiler will probably
+   // get teary eyed
+   return( rover);
+}
+
+
+static inline BOOL   NSStringEnumeratorNext( struct NSStringEnumerator *rover, unichar *c)
+{
+   extern BOOL  _NSStringEnumeratorFill( struct NSStringEnumerator *rover);
+
+   if( ! rover)
+      return( NO);
+
+   if( rover->_j == rover->_m)
+   {
+      if( ! _NSStringEnumeratorFill( rover))
+         return( NO);
+   }
+
+   if( c)
+      *c = rover->_buf[ rover->_j];
+   ++rover->_j;
+   return( YES);
+}
+
+
+static inline void   NSStringEnumeratorDone( struct NSStringEnumerator *rover)
+{
+//   if( rover)
+//      [rover->_string autorelease];
+}
+
+// because "name" could be a constant string, we play off `c` to generate
+// unique identifiers, as this has to be a variable
+
+#define NSStringFor( name, c)                                           \
+   assert( sizeof( c) == sizeof( unichar));                             \
+   for( struct NSStringEnumerator                                       \
+           rover__ ## c = NSStringEnumerate( name),                     \
+           *rover___  ## c ## __i = (void *) 0;                         \
+        ! rover___  ## c ## __i;                                        \
+        rover___ ## c ## __i = (NSStringEnumeratorDone( &rover__ ## c), \
+                               (void *) 1))                             \
+      while( NSStringEnumeratorNext( &rover__ ## c, &c))
 

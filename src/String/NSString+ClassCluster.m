@@ -201,7 +201,7 @@ static NSString  *
    mulle_utf32_bufferconvert_to_utf16( s,
                                        length,
                                        &buffer,
-                                       (void (*)()) mulle_buffer_add_bytes);
+                                       mulle_buffer_add_bytes_callback);
 
    data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);
@@ -230,7 +230,7 @@ static NSString  *
    mulle_utf8_bufferconvert_to_utf32( s,
                                       length,
                                       &buffer,
-                                      (void (*)()) mulle_buffer_add_bytes);
+                                      mulle_buffer_add_bytes_callback);
 
    data = mulle_buffer_extract_data( &buffer);
    mulle_buffer_done( &buffer);

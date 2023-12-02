@@ -189,7 +189,6 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
 }
 
 
-
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
 {
@@ -201,6 +200,30 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
    _mulle_ascii_convert_to_utf32( tmp, length, buf);
 }
 
+
+
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength
+{
+   NSUInteger   length;
+   char         tmp[ mulle_char7_maxlength64];  // known ascii max 8
+   NSRange      range;
+
+   length = MulleObjCTaggedPointerChar7StringGetLength( self);
+   if( index >= length)
+      return( 0);
+
+   range.length = length - index;
+   if( range.length > maxLength)
+      range.length = maxLength;
+   range.location = index;
+
+   length = grab_ascii_char7_range( self, length, tmp, range);
+   _mulle_ascii_convert_to_utf32( tmp, length, buf);
+
+   return( length);
+}
 
 
 #pragma mark - hash and equality

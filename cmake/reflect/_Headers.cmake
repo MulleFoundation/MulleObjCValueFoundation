@@ -96,7 +96,6 @@ src/String/mulle-chardata.h
 src/Value/_MulleObjCConcreteNumber.h
 src/Value/_MulleObjCConcreteValue.h
 src/Value/_MulleObjCTaggedPointerIntegerNumber.h
-src/Value/NSNull.h
 src/Value/NSNumber+NSCoder.h
 src/Value/NSNumber+NSString.h
 src/Value/NSNumber.h
