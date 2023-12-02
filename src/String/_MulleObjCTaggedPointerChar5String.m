@@ -219,6 +219,29 @@ static NSUInteger   grab_ascii_char5( _MulleObjCTaggedPointerChar5String *self,
 }
 
 
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength
+{
+   NSUInteger   length;
+   char         tmp[ mulle_char5_maxlength64];
+   NSRange      range;
+
+   length = MulleObjCTaggedPointerChar5StringGetLength( self);
+   if( index >= length)
+      return( 0);
+
+   range.length = length - index;
+   if( range.length > maxLength)
+      range.length = maxLength;
+   range.location = index;
+
+   length = grab_ascii_char5_range( self, length, tmp, range);
+   _mulle_ascii_convert_to_utf32( tmp, length, buf);
+
+   return( length);
+}
+
 
 
 #pragma mark - hash and equality

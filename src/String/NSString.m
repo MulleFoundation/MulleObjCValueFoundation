@@ -833,6 +833,55 @@ static char   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
    return( NO);
 }
 
+
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength
+{
+   NSUInteger   length;
+
+   length = [self length];
+   if( index >= length)
+      return( 0);
+
+   length -= index;
+   if( length > maxLength)
+      length = maxLength;
+
+   [self getCharacters:buf
+                 range:NSMakeRange( index, length)];
+   return( length);
+}
+
+
+// MEMO: n
+BOOL  _NSStringEnumeratorFill( struct NSStringEnumerator *rover)
+{
+   NSUInteger   n;
+
+   n = [rover->_string mulleGetCharacters:rover->_buf
+                                fromIndex:rover->_i
+                                maxLength:NSStringEnumeratorNumberOfCharacters];
+   if( ! n)
+      return( NO);
+
+   rover->_i += n;
+   rover->_j  = 0;
+   rover->_m  = (uint16_t) n;
+
+   // nice trick to get rid of _m, but too costly...
+   // Could change mulleGetCharacters fill semantics though so that gaps are in
+   // front. But too obscure ain't it ?
+   // As _buf is often not properly filled, reposition to back
+   // rover->_j = NSStringEnumeratorNumberOfCharacters  - n;
+   // if( rover->_j)
+   //   memmove( &rover->_buf[ rover->_j], &rover->_buf[ 0], n * sizeof( unichar));
+
+   return( YES);
+}
+
+
+
 @end
 
 

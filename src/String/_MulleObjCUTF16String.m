@@ -63,7 +63,7 @@
 - (NSUInteger) mulleUTF8StringLength
 {
    struct mulle_utf16data   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    flag = [self mulleFastGetUTF16Data:&data];
    assert( flag);
@@ -75,9 +75,9 @@
 
 - (char *) UTF8String
 {
-   struct mulle_buffer       buf;
+   struct mulle_buffer      buf;
    struct mulle_utf16data   data;
-   BOOL                      flag;
+   BOOL                     flag;
 
    if( ! _shadow)
    {
@@ -89,7 +89,7 @@
       mulle_utf16_bufferconvert_to_utf8( data.characters,
                                          data.length,
                                          &buf,
-                                         (mulle_utf_add_bytes_function_t) mulle_buffer_add_bytes);
+                                         mulle_buffer_add_bytes_callback);
 
       mulle_buffer_add_byte( &buf, 0);
       mulle_buffer_size_to_fit( &buf);
@@ -103,10 +103,10 @@
 - (NSUInteger) mulleGetUTF8Characters:(char *) buf
                             maxLength:(NSUInteger) maxLength
 {
-   struct mulle_utf8_conversion_context  ctxt;
-   struct mulle_utf16data                data;
-   BOOL                                  flag;
-   NSUInteger                            length;
+   struct mulle_utf8_conversion_context   ctxt;
+   struct mulle_utf16data                 data;
+   BOOL                                   flag;
+   NSUInteger                             length;
 
    ctxt.buf      = buf;
    ctxt.sentinel = &buf[ maxLength];
@@ -148,6 +148,40 @@
    // compile with -O3 and this will expand to 256 bytes of XMM code!
    while( src < sentinel)
       *dst++ = *src++;
+}
+
+
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength
+{
+   struct mulle_utf16data   data;
+   BOOL                     flag;
+   mulle_utf16_t            *sentinel;
+   mulle_utf16_t            *src;
+   unichar                  *dst;
+   NSUInteger               length;
+
+   flag = [self mulleFastGetUTF16Data:&data];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
+
+   if( index >= data.length)
+      return( 0);
+
+   length = data.length - index;
+   if( length > maxLength)
+      length = maxLength;
+
+   src      = &data.characters[ index];
+   sentinel = &src[ length];
+   dst      = buf;
+
+   // compile with -O3 and this will expand to 256 bytes of XMM code!
+   while( src < sentinel)
+      *dst++ = *src++;
+
+   return( length);
 }
 
 

@@ -43,7 +43,6 @@ src/Value/_MulleObjCConcreteNumber+NSString.m
 src/Value/_MulleObjCConcreteNumber.m
 src/Value/_MulleObjCConcreteValue.m
 src/Value/_MulleObjCTaggedPointerIntegerNumber.m
-src/Value/NSNull.m
 src/Value/NSNumber+NSCoder.m
 src/Value/NSNumber+NSString.m
 src/Value/NSNumber.m

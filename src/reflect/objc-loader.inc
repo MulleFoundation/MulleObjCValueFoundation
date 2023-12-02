@@ -11,7 +11,6 @@
       { @selector( NSMutableData), MULLE_OBJC_NO_CATEGORYID },      // 5d7fdc81;NSMutableData;;
       { @selector( NSMutableString), @selector( NSData) },      // 63662493;NSMutableString;8fce7861;NSData
       { @selector( NSMutableString), MULLE_OBJC_NO_CATEGORYID },      // 63662493;NSMutableString;;
-      { @selector( NSNull), MULLE_OBJC_NO_CATEGORYID },      // f0c42d79;NSNull;;
       { @selector( NSNumber), @selector( NSCoder) },      // 8ba34f39;NSNumber;100c54ba;NSCoder
       { @selector( NSNumber), @selector( NSString) },      // 8ba34f39;NSNumber;1994a171;NSString
       { @selector( NSNumber), MULLE_OBJC_NO_CATEGORYID },      // 8ba34f39;NSNumber;;
@@ -19,7 +18,6 @@
       { @selector( NSObject), @selector( _NSData) },      // b3a66256;NSObject;7f24339e;_NSData
       { @selector( NSObject), @selector( _NSMutableData) },      // b3a66256;NSObject;1a3fbdd6;_NSMutableData
       { @selector( NSObject), @selector( _NSMutableString) },      // b3a66256;NSObject;7bd64f0d;_NSMutableString
-      { @selector( NSObject), @selector( _NSNull) },      // b3a66256;NSObject;90d3fc87;_NSNull
       { @selector( NSObject), @selector( _NSNumber) },      // b3a66256;NSObject;9343014d;_NSNumber
       { @selector( NSObject), @selector( _NSString) },      // b3a66256;NSObject;37e49041;_NSString
       { @selector( NSObject), @selector( _NSValue) },      // b3a66256;NSObject;8fc3f568;_NSValue

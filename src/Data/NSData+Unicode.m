@@ -131,7 +131,7 @@ static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
    mulle_utf16_bufferconvert_to_utf8( srcBytes,
                                       length,
                                       &buf,
-                                      (void (*)()) mulle_buffer_add_bytes);
+                                      mulle_buffer_add_bytes_callback);
 
    mulle_buffer_size_to_fit( &buf);
    data = mulle_buffer_extract_data( &buf);

@@ -1,6 +1,6 @@
 {
    "name" : "MulleObjCValueFoundation",
-   "version" : "0.21.2",
+   "version" : "0.22.0",
    "description" : "Value classes NSNumber, NSString, NSDate, NSData",
    "keywords" : [],
    "license" : "BSD-3-Clause",
@@ -74,8 +74,6 @@
       "src/String/_MulleObjCUTF16String.m",
       "src/String/_MulleObjCUTF32String.h",
       "src/String/_MulleObjCUTF32String.m",
-      "src/Value/NSNull.h",
-      "src/Value/NSNull.m",
       "src/Value/NSNumber+NSCoder.h",
       "src/Value/NSNumber+NSCoder.m",
       "src/Value/NSNumber+NSString.h",
