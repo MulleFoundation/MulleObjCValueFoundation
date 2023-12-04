@@ -36,6 +36,7 @@
 #import "NSString.h"
 
 // other files in this library
+#import "NSString+Hash.h"
 #import "_MulleObjCTaggedPointerChar5String.h"
 //#import "NSMutableData.h"
 

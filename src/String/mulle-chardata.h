@@ -2,6 +2,8 @@
 #define mulle_chardata_h__
 
 
+// MEMO: I don't think this is used anywhere.
+
 //
 // mulle_utf8_t was useful on a C level, but in Objective-C there
 // is only char * -> UTF8 and unichar -> mulle_utf32_t

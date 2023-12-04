@@ -38,6 +38,7 @@
 #import "_MulleObjCUTF32String.h"
 
 // other files in this library
+#import "NSString+Hash.h"
 #import "NSString+NSData.h"
 #import "NSString+Substring-Private.h"
 
@@ -138,6 +139,21 @@
    return( length);
 }
 
+
+- (NSUInteger) _mulleFastGetData:(struct mulle_data *) data
+{
+   BOOL                     flag;
+   struct mulle_utf32data   utf32data;
+
+   flag = [self mulleFastGetUTF32Data:&utf32data];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
+
+   data->bytes  = utf32data.characters;
+   data->length = utf32data.length * sizeof( mulle_utf32_t);
+
+   return( sizeof( mulle_utf32_t));
+}
 
 
 - (NSUInteger) mulleGetUTF8Characters:(char *) buf

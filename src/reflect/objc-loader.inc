@@ -22,6 +22,7 @@
       { @selector( NSObject), @selector( _NSString) },      // b3a66256;NSObject;37e49041;_NSString
       { @selector( NSObject), @selector( _NSValue) },      // b3a66256;NSObject;8fc3f568;_NSValue
       { @selector( NSString), @selector( ClassCluster) },      // 1994a171;NSString;d38b16ff;ClassCluster
+      { @selector( NSString), @selector( Enumerator) },      // 1994a171;NSString;bd761fff;Enumerator
       { @selector( NSString), @selector( NSCoder) },      // 1994a171;NSString;100c54ba;NSCoder
       { @selector( NSString), @selector( NSData) },      // 1994a171;NSString;8fce7861;NSData
       { @selector( NSString), @selector( NSDataPrivate) },      // 1994a171;NSString;542e5a5f;NSDataPrivate
