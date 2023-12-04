@@ -36,6 +36,7 @@
 #include "import.h"
 
 #import "NSString.h"
+#import "NSString+Hash.h"
 #import "NSString+ClassCluster.h"
 
 #import "_MulleObjCASCIIString.h"
@@ -193,6 +194,21 @@ static NSUInteger   grab_ascii_range( id self,
    return( grab_ascii_range( self, [self length], (char *) buf, range));
 }
 
+
+- (NSUInteger) _mulleFastGetData:(struct mulle_data *) data
+{
+   BOOL                     flag;
+   struct mulle_asciidata   asciidata;
+
+   flag = [self mulleFastGetASCIIData:&asciidata];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
+
+   data->bytes  = asciidata.characters;
+   data->length = asciidata.length * sizeof( char);
+
+   return( sizeof( char));
+}
 
 
 #pragma mark - hash and equality

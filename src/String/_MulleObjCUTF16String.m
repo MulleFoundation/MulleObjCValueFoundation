@@ -39,6 +39,7 @@
 #import "_MulleObjCUTF16String.h"
 
 // other files in this library
+#import "NSString+Hash.h"
 #import "NSString+NSData.h"
 #import "NSString+Substring-Private.h"
 
@@ -148,6 +149,22 @@
    // compile with -O3 and this will expand to 256 bytes of XMM code!
    while( src < sentinel)
       *dst++ = *src++;
+}
+
+
+- (NSUInteger) _mulleFastGetData:(struct mulle_data *) data
+{
+   BOOL                     flag;
+   struct mulle_utf16data   utf16data;
+
+   flag = [self mulleFastGetUTF16Data:&utf16data];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
+
+   data->bytes  = utf16data.characters;
+   data->length = utf16data.length * sizeof( mulle_utf16_t);
+
+   return( sizeof( mulle_utf16_t));
 }
 
 

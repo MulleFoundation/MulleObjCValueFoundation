@@ -37,6 +37,7 @@
 
 // other files in this library
 #import "NSString+ClassCluster.h"
+#import "NSString+Enumerator.h"
 #import "NSString+Sprintf.h"
 #import "_MulleObjCUTF32String.h"
 #import "_MulleObjCTaggedPointerChar7String.h"
@@ -472,23 +473,23 @@ static void   shrinkWithStrings( NSMutableString *self,
 }
 
 
-- (void) mulleCompact
+- (NSString *) mulleCompact
 {
    NSString   *s;
 
-   if( self->_count < 2)
-      return;
+   if( self->_count <= 1)
+      return( self->_count ? self->_storage[ 0] : self);
 
-   // make one big string and use this has first string
+   // make one big string and use this as the first string
    s = [[self copy] autorelease];
    shrinkWithStrings( self, &s, 1);
+   return( s);
 }
 
 
 static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
 {
    NSString     **p;
-   NSString     **sentinel;
    NSUInteger   length;
    NSString     *s;
 
@@ -501,24 +502,31 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
    if( index >= self->_length)
       MulleObjCThrowInvalidIndexException( index);
 
-   if( index >= 8 && self->_count >= 8)
+   if( index >= 8 && self->_count > 1)
       [self mulleCompact];
-   if( self->_length == 1)
-      return( [self->_storage[ 0] characterAtIndex:index]);
 
-   p        = &self->_storage[ 0];
-   sentinel = &p[ self->_count];
+   p = &self->_storage[ 0];
+   s = *p;
 
-   // find string containing character
-   while( p < sentinel)
+   if( self->_count > 1)
    {
-      s      = *p++;
-      length = [s length];
-      if( index < length)
-         break;
+      //
+      // this code assumes that _length is not broken :) so no sentinel checks
+      // except in an assert
+      //
+      // find string containing character
+      for(;;)
+      {
+         length = [s length];
+         if( index < length)
+            break;
 
-      index -= length;
+         index -= length;
+         s      = *++p;
+         assert( p < &self->_storage[ self->_count]);
+      }
    }
+
    return( [s characterAtIndex:index]);
 }
 
@@ -544,7 +552,17 @@ static unichar   characterAtIndex( NSMutableString *self, NSUInteger index)
    NSUInteger   grab_len;
    NSRange      range;
 
-   range    = MulleObjCValidateRangeAgainstLength( inRange, _length);
+   range = MulleObjCValidateRangeAgainstLength( inRange, _length);
+
+   //
+   // see characterAtIndex: why we do this. Case in point: MulleStringFor
+   // uses getCharacters:range:, but loses by a factor of 50 (!) to
+   // characterAtIndex: without this for large strings. Unfortunately we can't
+   // do this, because compacting uses getCharacters:sigh:
+   //
+   //   if( range.length >= 8)
+   //      [self mulleCompact];
+
    p        = &_storage[ 0];
 
    // `s` is first string with `length`

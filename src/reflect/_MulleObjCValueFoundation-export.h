@@ -24,6 +24,8 @@
 #import "NSMutableString.h"
 #import "NSObject+NSString.h"
 #import "NSString+ClassCluster.h"
+#import "NSString+Enumerator.h"
+#import "NSString+Hash.h"
 #import "NSString+NSCoder.h"
 #import "NSString+NSData.h"
 #import "NSStringObjCFunctions.h"
