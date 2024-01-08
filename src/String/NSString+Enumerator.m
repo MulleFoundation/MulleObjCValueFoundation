@@ -69,68 +69,71 @@
 }
 
 
-BOOL   _NSStringEnumeratorFill( struct NSStringEnumerator *rover)
+static unichar   mulle_get_char_as_unichar( void *s)
 {
-   NSUInteger          n;
-   NSUInteger          size;
-   struct mulle_data   data;
-
-   MULLE_C_ASSERT( sizeof( struct NSStringEnumerator) <= 128);
-
-   // if we are at the very beginning, see if we can do direct access
-   if( rover->_curr == rover->_sentinel)
-   {
-      if( rover->_curr == NULL)
-      {
-         rover->_next = mulle_get_utf32_as_unichar;
-
-         size = [rover->_string _mulleFastGetData:&data];
-         if( size)
-         {
-            if( ! data.length)
-               return( NO);
-
-            rover->_curr     = data.bytes;
-            rover->_sentinel = &((char *) data.bytes)[ data.length];
-            if( size == sizeof( char))
-               rover->_next = mulle_get_char_as_unichar;
-            else
-               if( size == sizeof( mulle_utf16_t))
-                  rover->_next = mulle_get_utf16_as_unichar;
-            return( YES);
-         }
-      }
-      else
-      {
-         // are we refilling ?
-         if( ! rover->_i)
-            return( NO);
-      }
-   }
-
-   n = [rover->_string mulleGetCharacters:rover->_buf
-                                fromIndex:rover->_i
-                                maxLength:NSStringEnumeratorNumberOfCharacters];
-   if( ! n)
-      return( NO);
-
-   rover->_i       += n;
-   rover->_curr     = rover->_buf;
-   rover->_sentinel = &((unichar *) rover->_curr)[ n];
-   // Some old code :D
-   // nice trick to get rid of _m, but too costly...
-   // Could change mulleGetCharacters fill semantics though so that gaps are in
-   // front. But too obscure ain't it ?
-   // As _buf is often not properly filled, reposition to back
-   // rover->_j = NSStringEnumeratorNumberOfCharacters  - n;
-   // if( rover->_j)
-   //   memmove( &rover->_buf[ rover->_j], &rover->_buf[ 0], n * sizeof( unichar));
-
-   return( YES);
+   return( (unichar) *(char *) s);
 }
 
 
-- (NSString *) mulleCompact
+static unichar   mulle_get_utf16_as_unichar( void *s)
+{
+   return( (unichar) *(mulle_utf16_t *) s);
+}
+
+
+static unichar   mulle_get_utf32_as_unichar( void *s)
+{
+   return( (unichar) *(mulle_utf32_t *) s);
+}
+
+
+
+void   _MulleStringEnumeratorInit( struct MulleStringEnumerator *rover, NSString *s)
+{
+   NSUInteger          n;
+   struct mulle_data   data;
+
+   MULLE_C_ASSERT( sizeof( struct MulleStringEnumerator) <= 128);
+
+   rover->_start    =
+   rover->_curr     =
+   rover->_sentinel = NULL;
+   s                = [s mulleCompactedString];
+   rover->_size     = [s _mulleFastGetData:&data];
+   rover->_get      = mulle_get_utf32_as_unichar;
+
+   if( rover->_size)
+   {
+      rover->_start    =
+      rover->_curr     = data.bytes;
+      rover->_sentinel = &((char *) data.bytes)[ data.length];
+
+      if( rover->_size == sizeof( char))
+         rover->_get = mulle_get_char_as_unichar;
+      else
+         if( rover->_size == sizeof( mulle_utf16_t))
+            rover->_get = mulle_get_utf16_as_unichar;
+      return;
+   }
+
+   n = [s mulleGetCharacters:rover->_buf
+                   fromIndex:0
+                   maxLength:MulleStringEnumeratorNumberOfCharacters];
+
+   // if we get MulleStringEnumeratorNumberOfCharacters, then
+   // `s` is not TPS, which can't be... (you'd need to resurrect
+   // the paging code...)
+
+   assert( n < MulleStringEnumeratorNumberOfCharacters);
+
+   rover->_start    =
+   rover->_curr     = rover->_buf;
+   rover->_sentinel = &((unichar *) rover->_curr)[ n];
+   rover->_size     = 4;
+}
+
+
+- (NSString *) mulleCompactedString
 {
    return( self);
 }

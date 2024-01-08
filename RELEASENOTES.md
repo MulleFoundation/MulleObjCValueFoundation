@@ -1,3 +1,13 @@
+## 0.22.0
+
+* new character enumeration macros MulleStringFor and MulleStringReverseFor gives you access to unichars faster and more convenient than characterAtIndex: with added undo/redo support for writing parsers
+* new method mulleGetNonCompactedCharacters:range: gives you access to NSMutableString contents w/o compacting
+* NSNull is now part of MulleObjC
+* new experimental MulleStringFor macro
+* transition from `mulle_utf8_t` to char
+* also rename MulleStringGetUTF8Data to MulleStringUTF8Data
+
+
 ### 0.21.2
 
 * added +mulleStringWithUTF8Data: method

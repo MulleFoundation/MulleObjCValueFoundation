@@ -9,7 +9,7 @@ static void    test( NSString *s)
 {
    unichar   c;
 
-   NSStringFor( s, c)
+   MulleStringFor( s, c)
    {
       mulle_printf( "%.1lS", &c);
    }
