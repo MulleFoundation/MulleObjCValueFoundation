@@ -38,7 +38,7 @@
 @interface _MulleObjCUTF32String : NSString < MulleObjCImmutable>
 {
    char         *_shadow;
-   NSUInteger   _length;         // 257-max
+   NSUInteger   _length;
 }
 @end
 

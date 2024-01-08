@@ -49,7 +49,7 @@
    NSUInteger     _length;
    unsigned int   _count;
    unsigned int   _size;
-   NSString       **_storage;
+   NSString       **_storage; // only -copied strings live here
 
    char           *_shadow;
    NSUInteger     _shadowLen;
@@ -81,6 +81,9 @@
 
 - (void) mulleAppendUTF8String:(char *) cStr;
 
+// if you want to keep the NSMutableString internally as is
+- (void) mulleGetNonCompactedCharacters:(unichar *) buf
+                                  range:(NSRange) inRange;
 @end
 
 

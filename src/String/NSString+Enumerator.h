@@ -47,144 +47,243 @@
 
 // used by NSMutableString, others do nuthin but return self,
 // NSMutableString will compact itself, but returns it's internal NSString
-- (NSString *) mulleCompact;
+- (NSString *) mulleCompactedString;
 
 @end
 
 
 //
-// this could be platform specific, but try to not go lower than 8 on 64 bit
-// Memo: to enumerate ranges we would need another `_n` entry, but I don't
-//       think enumerating subranges will be common.
+// Originally, this Enumerator supported "paging" into _buf. To support non
+// contiguous strings (for NSMutableString). But as we `compact` the
+// NSMutableString before enumeration, this is no longer necessary. So the
+// only ones who need _buf are TPS strings. Luckily their size is known to be
+// 12 at most (mulle_char5_maxlength64). So it is guaranteed that the full
+// character range is available in the enumerator. This makes writing parsers
+// much easier, that for instance need to backtrack..
 //
-#define NSStringEnumeratorNumberOfCharacters    22
+#define MulleStringEnumeratorNumberOfCharacters    (mulle_char5_maxlength64+1)
 
-struct NSStringEnumerator
+struct MulleStringEnumerator
 {
-   void          *_curr;                  // 8 byte
-   void          *_sentinel;              // 8 byte
-   // NSUInteger _size;
-   unichar       (*_next)( void **curr);  // 8 byte
-   NSUInteger    _i;                      // 8 byte
-   NSString      *_string;                // 8 byte, if set use copy/else direct ?
-   unichar       _buf[ NSStringEnumeratorNumberOfCharacters]; // 128 - 40 / 4
+   void          *_curr;
+   void          *_start;
+   void          *_sentinel;
+   NSUInteger    _size;
+   unichar       (*_get)( void *curr);
+   //NSString      *_string;  // no longer needed
+   unichar       _buf[ MulleStringEnumeratorNumberOfCharacters];
 };
 
 
+void   _MulleStringEnumeratorInit( struct MulleStringEnumerator *rover, NSString *s);
+
+
+
+static inline void   MulleStringEnumeratorRestart( struct MulleStringEnumerator *rover)
+{
+   if( rover)
+      rover->_curr = rover->_start;
+}
+
+
+static inline void   MulleStringEnumeratorFinish( struct MulleStringEnumerator *rover)
+{
+   if( rover)
+      rover->_curr = rover->_sentinel;
+}
+
+
+
+static inline void
+   _MulleStringEnumeratorInitReverse( struct MulleStringEnumerator *rover, NSString *self)
+{
+   _MulleStringEnumeratorInit( rover, self);
+   MulleStringEnumeratorFinish( rover);  // sic!
+}
+
+
+
+// "Next" reads the current character if available and moves the rover one
+// character ahead.
 //
-// because this is static inline, I don't feel bad pushing 256 bytes
-// via the "stack", it should be all for naught. Notice that the address
-// of _buf (but not the content) will change when returning by value(!)
-// so don't reference _buf in here
-static inline struct NSStringEnumerator   NSStringEnumerate( NSString *self)
+// v      v
+// c..   c..
+static inline BOOL   MulleStringEnumeratorNext( struct MulleStringEnumerator *rover, unichar *c)
 {
-   struct NSStringEnumerator   rover;
-
-   rover._curr     = NULL;
-   rover._sentinel = NULL;
-   rover._next     = 0;
-   rover._i        = 0;
-   rover._string   = [self mulleCompact];  // needed for NSMutableString
-
-   // try to avoid zeroing _buf uselessly, though compiler will probably
-   // get teary eyed
-   return( rover);
-}
-
-
-static inline unichar   mulle_get_char_as_unichar( void **s)
-{
-   char   *p_c;
-   char   **pp_c;
-   char   c;
-
-   pp_c  = (char **) s;
-   p_c   = *pp_c;
-   c     = *p_c++;
-   *s    = p_c;
-   return( c);
-}
-
-
-static inline unichar   mulle_get_utf16_as_unichar( void **s)
-{
-   mulle_utf16_t   *p_c;
-   mulle_utf16_t   **pp_c;
-   mulle_utf16_t   c;
-
-   pp_c  = (mulle_utf16_t **) s;
-   p_c   = *pp_c;
-   c     = *p_c++;
-   *s    = p_c;
-   return( c);
-}
-
-
-static inline unichar   mulle_get_utf32_as_unichar( void **s)
-{
-   mulle_utf32_t   *p_c;
-   mulle_utf32_t   **pp_c;
-   mulle_utf32_t   c;
-
-   pp_c  = (mulle_utf32_t **) s;
-   p_c   = *pp_c;
-   c     = *p_c++;
-   *s    = p_c;
-   return( c);
-}
-
-//
-// alternative version, but the indirect jump oughta be better because of
-// less branching and much less code
-//
-static inline unichar   mulle_get_varsized_unichar( void **s, unsigned int size)
-{
-   if( size == sizeof( char))
-      return( mulle_get_char_as_unichar( s));
-
-   if( size == sizeof( mulle_utf32_t))
-      return( mulle_get_utf32_as_unichar( s));
-
-   return( mulle_get_utf16_as_unichar( s));
-}
-
-
-static inline BOOL   NSStringEnumeratorNext( struct NSStringEnumerator *rover, unichar *c)
-{
-   extern BOOL  _NSStringEnumeratorFill( struct NSStringEnumerator *rover);
-   unichar   d;
-
    if( ! rover)
       return( NO);
 
    if( MULLE_C_UNLIKELY( rover->_curr == rover->_sentinel))
-   {
-      if( ! _NSStringEnumeratorFill( rover))
-         return( NO);
-   }
+      return( NO);
 
-   // d = mulle_get_varsized_unichar( &rover->_curr, rover->_size);
-   d = (*rover->_next)( &rover->_curr);
    if( c)
-      *c = d;
+      *c = (*rover->_get)( rover->_curr);
+   rover->_curr = &((char *) rover->_curr)[ rover->_size];
    return( YES);
 }
 
 
-static inline void   NSStringEnumeratorDone( struct NSStringEnumerator *rover)
+//   v        v
+// dc..  ->  d...
+// _MulleStringEnumeratorUndoNext can be useful for parsers, who maintain
+// look ahead
+//
+static inline BOOL   _MulleStringEnumeratorUndoNext( struct MulleStringEnumerator *rover,
+                                                     unichar *c,
+                                                     unichar *d)
+{
+   char   *q;
+
+   if( MULLE_C_UNLIKELY( rover->_curr == rover->_start))
+   {
+      if( c)
+         *c = -1;
+      if( d)
+         *d = 0;
+      return( NO);
+   }
+
+   q = &((char *) rover->_curr)[ - (int) rover->_size * 2];
+
+   if( MULLE_C_UNLIKELY( q < (char *) rover->_start))
+   {
+      if( c)
+         *c = (rover->_curr != rover->_start) ? (*rover->_get)( rover->_start) : 0;
+      if( d)
+         *d = 0;
+      rover->_curr = rover->_start;
+      return( YES);
+   }
+
+   rover->_curr = q;
+   if( d)
+      *d = (*rover->_get)( rover->_curr);
+   rover->_curr = &((char *) rover->_curr)[ rover->_size];
+   if( c)
+      *c = (*rover->_get)( rover->_curr);
+   return( YES);
+}
+
+
+
+//
+// "Previous" moves the rover character one character down (if available)
+// and reads the character.
+//
+//  v    v
+// c..   c..
+//
+static inline BOOL
+   MulleStringEnumeratorPrevious( struct MulleStringEnumerator *rover,
+                                  unichar *c)
+{
+   if( ! rover)
+      return( NO);
+
+   if( MULLE_C_UNLIKELY( rover->_curr == rover->_start))
+      return( NO);
+
+   rover->_curr = &((char *) rover->_curr)[ - (int) rover->_size];
+   if( c)
+      *c = (*rover->_get)( rover->_curr);
+   return( YES);
+}
+
+
+//
+// The next "previous" will return what the previous "previous" returned..
+//
+static inline BOOL
+   _MulleStringEnumeratorUndoPrevious( struct MulleStringEnumerator *rover,
+                                       unichar *c,
+                                       unichar *d)
+{
+   char   *q;
+
+   if( MULLE_C_UNLIKELY( rover->_curr == rover->_sentinel))
+   {
+      if( c)
+         *c = -1;
+      if( d)
+         *d = 0;
+      return( NO);
+   }
+
+   q = &((char *) rover->_curr)[ rover->_size];
+
+   if( MULLE_C_UNLIKELY( q == (char *) rover->_sentinel))
+   {
+      // so we are at the beginning now, with nothing read
+      if( c)
+         *c = 0;
+      if( d)
+         *d = 0;
+      rover->_curr = q;
+      return( YES);
+   }
+
+   rover->_curr = q;
+   if( c)
+      *c = (*rover->_get)( rover->_curr);
+
+   q = &((char *) rover->_curr)[ rover->_size];
+   if( d)
+      *d = (q < (char *) rover->_sentinel) ? (*rover->_get)( q) : 0;
+   return( YES);
+}
+
+
+static inline BOOL   MulleStringEnumeratorHasCharacters( struct MulleStringEnumerator *rover)
+{
+   if( ! rover)
+      return( NO);
+
+   return( rover->_curr < rover->_sentinel);
+}
+
+
+static inline NSUInteger   MulleStringEnumeratorGetIndex( struct MulleStringEnumerator *rover)
+{
+   unsigned int   shift;
+
+   if( ! rover)
+      return( 0);
+
+   shift = (unsigned int) rover->_size >> 1;  // 4->2  2->1  1->0
+   return( ((char *) rover->_curr - (char *) rover->_start) >> shift);
+}
+
+
+
+static inline void   MulleStringEnumeratorDone( struct MulleStringEnumerator *rover)
 {
 }
+
+
+
 
 // because `s` could be a constant string, we play off `c` to generate
 // unique identifiers, as this has to be a variable
 
-#define NSStringFor( s, c)                                              \
-   assert( sizeof( c) == sizeof( unichar));                             \
-   for( struct NSStringEnumerator                                       \
-           rover__ ## c = NSStringEnumerate( s),                        \
-           *rover___  ## c ## __i = (void *) 0;                         \
-        ! rover___  ## c ## __i;                                        \
-        rover___ ## c ## __i = (NSStringEnumeratorDone( &rover__ ## c), \
-                               (void *) 1))                             \
-      while( NSStringEnumeratorNext( &rover__ ## c, &c))
+#define MulleStringFor( s, c)                                              \
+   assert( sizeof( c) == sizeof( unichar));                                \
+   for( struct MulleStringEnumerator   rover__ ## c,                       \
+           *rover___  ## c ## __i = (_MulleStringEnumeratorInit( &rover__ ## c, s), (void *) 0); \
+        ! rover___  ## c ## __i;                                           \
+        rover___ ## c ## __i = (MulleStringEnumeratorDone( &rover__ ## c), \
+                               (void *) 1))                                \
+      while( MulleStringEnumeratorNext( &rover__ ## c, &c))
 
+
+#define MulleStringReverseFor( s, c)                                       \
+   assert( sizeof( c) == sizeof( unichar));                                \
+   for( struct MulleStringEnumerator   rover__ ## c,                       \
+           *rover___  ## c ## __i = (_MulleStringEnumeratorInitReverse( &rover__ ## c, s), (void *) 0); \
+        ! rover___  ## c ## __i;                                           \
+        rover___ ## c ## __i = (MulleStringEnumeratorDone( &rover__ ## c), \
+                               (void *) 1))                                \
+      while( MulleStringEnumeratorPrevious( &rover__ ## c, &c))
+
+
+
+#define MulleStringForGetEnumerator( c)   (&rover__ ## c)

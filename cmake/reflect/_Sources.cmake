@@ -32,6 +32,8 @@ src/String/NSMutableString+NSData.m
 src/String/NSMutableString.m
 src/String/NSObject+NSString.m
 src/String/NSString+ClassCluster.m
+src/String/NSString+Enumerator.m
+src/String/NSString+Hash.m
 src/String/NSString+NSCoder.m
 src/String/NSString+NSData.m
 src/String/NSStringObjCFunctions.m

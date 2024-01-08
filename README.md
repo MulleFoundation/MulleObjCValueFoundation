@@ -13,9 +13,10 @@ value classes expected in a Foundation library.
 There is no I/O in these classes. That is added by MulleObjcOSFoundation
 and later libraries.
 
+
 | Release Version                                       | Release Notes
 |-------------------------------------------------------|--------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag//MulleObjCValueFoundation.svg?branch=release) [![Build Status](https://github.com//MulleObjCValueFoundation/workflows/CI/badge.svg?branch=release)](//github.com//MulleObjCValueFoundation/actions)| [RELEASENOTES](RELEASENOTES.md) |
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleFoundation/MulleObjCValueFoundation.svg?branch=release) [![Build Status](https://github.com/MulleFoundation/MulleObjCValueFoundation/workflows/CI/badge.svg?branch=release)](//github.com/MulleFoundation/MulleObjCValueFoundation/actions) | [RELEASENOTES](RELEASENOTES.md) |
 
 
 ## API
@@ -103,6 +104,6 @@ cmake --install build --config Release
 
 ## Author
 
-[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK
+[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK  
 
 
