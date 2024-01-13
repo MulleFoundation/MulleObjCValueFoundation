@@ -20,22 +20,6 @@
          user="mulle-objc";
       },
       {
-         description="↗️ A growable C char array and also a stream";
-         domain="github";
-         name="mulle-buffer";
-         repo="mulle-buffer";
-         url="https://github.com/mulle-c/mulle-buffer";
-         user="mulle-c";
-      },
-      {
-         description="🔤 UTF8-16-32 analysis and manipulation library";
-         domain="github";
-         name="mulle-utf";
-         repo="mulle-utf";
-         url="https://github.com/mulle-c/mulle-utf";
-         user="mulle-c";
-      },
-      {
          description="📒 Lists mulle-objc runtime information contained in executables.";
          domain="github";
          name="mulle-objc-list";
