@@ -102,8 +102,6 @@
    ],
    "dependencies" : {
       "mulle-objc/MulleObjC": "*",
-      "mulle-c/mulle-buffer": "*",
-      "mulle-c/mulle-utf": "*",
       "mulle-objc/mulle-objc-list": "*"
    }
 }
