@@ -50,7 +50,7 @@
 
 + (void) load
 {
-   if( MulleObjCTaggedPointerRegisterClassAtIndex( self, 0x4))
+   if( MulleObjCTaggedPointerRegisterClassAtIndex( self, 0x6))
    {
       perror( "Need tag pointer aware runtime for _MulleObjCTaggedPointerSingleCharacterString with empty slot #3\n");
       abort();

@@ -39,6 +39,8 @@
 #import "NSString+ClassCluster.h"
 #import "NSString+Enumerator.h"
 #import "NSString+Sprintf.h"
+#import "_MulleObjCValueTaggedPointer.h"
+#import "NSString+Substring-Private.h" // for quickinfo
 #import "_MulleObjCUTF32String.h"
 #import "_MulleObjCTaggedPointerChar7String.h"
 #import "_MulleObjCTaggedPointerChar5String.h"
@@ -72,6 +74,7 @@ static void  flush_shadow( NSMutableString *self)
    MulleObjCInstanceDeallocateMemory( self, self->_shadow);
    self->_shadow = NULL;
 }
+
 
 /*
  *
@@ -428,7 +431,7 @@ static void   shrinkWithStrings( NSMutableString *self,
    if( ! allocator)
    {
 #ifdef __MULLE_OBJC_TPS__
-      switch( _mulle_utf32_charinfo( tmp, _length))
+      switch( _mulle_utf32_quickinfo( tmp, _length))
       {
       case mulle_utf_is_char7 :
          return( MulleObjCTaggedPointerChar7StringWithCharacters( tmp,
@@ -484,7 +487,7 @@ static void   shrinkWithStrings( NSMutableString *self,
       return( self->_count ? self->_storage[ 0] : self);
 
    // make one big string and use this as the first string
-   s = [[self copy] autorelease];
+   s = [self immutableInstance];
    shrinkWithStrings( self, &s, 1);
    return( s);
 }
@@ -813,7 +816,6 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    }
    mulle_buffer_add_byte( buffer, 0);
 }
-
 
 
 - (char *) UTF8String

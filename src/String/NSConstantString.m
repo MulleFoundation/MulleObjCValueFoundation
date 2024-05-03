@@ -68,7 +68,7 @@
    struct _mulle_objc_universe   *universe;
 
    universe = _mulle_objc_infraclass_get_universe( self);
-   _mulle_objc_universe_set_staticstringclass( universe, self);
+   _mulle_objc_universe_set_staticstringclass( universe, self, 0);
 }
 
 

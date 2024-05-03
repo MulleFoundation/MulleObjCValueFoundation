@@ -97,8 +97,14 @@
       "src/Value/_MulleObjCConcreteValue-Private.h",
       "src/Value/_MulleObjCConcreteValue.h",
       "src/Value/_MulleObjCConcreteValue.m",
+      "src/Value/_MulleObjCTaggedPointerDoubleNumber.h",
+      "src/Value/_MulleObjCTaggedPointerDoubleNumber.m",
+      "src/Value/_MulleObjCTaggedPointerFloatNumber.h",
+      "src/Value/_MulleObjCTaggedPointerFloatNumber.m",
       "src/Value/_MulleObjCTaggedPointerIntegerNumber.h",
-      "src/Value/_MulleObjCTaggedPointerIntegerNumber.m"
+      "src/Value/_MulleObjCTaggedPointerIntegerNumber.m",
+      "src/Value/_NSNumberHash.h",
+      "src/_MulleObjCValueTaggedPointer.h"
    ],
    "dependencies" : {
       "mulle-objc/MulleObjC": "*",

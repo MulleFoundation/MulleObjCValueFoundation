@@ -35,10 +35,10 @@
 //
 
 
-@interface _MulleObjCUTF32String : NSString < MulleObjCImmutable>
+@interface _MulleObjCUTF32String : NSString < MulleObjCValueProtocols>
 {
-   char         *_shadow;
-   NSUInteger   _length;
+   NSUInteger               _length;
+   mulle_atomic_pointer_t   _shadow;
 }
 @end
 
@@ -51,14 +51,14 @@
 @end
 
 
-@interface _MulleObjCGenericUTF32String : _MulleObjCUTF32String
+@interface _MulleObjCGenericUTF32String : _MulleObjCUTF32String < MulleObjCValueProtocols>
 {
    mulle_utf32_t   _storage[ 1];
 }
 @end
 
 
-@interface _MulleObjCAllocatorUTF32String  : _MulleObjCUTF32String
+@interface _MulleObjCAllocatorUTF32String  : _MulleObjCUTF32String < MulleObjCValueProtocols>
 {
    mulle_utf32_t            *_storage;
    struct mulle_allocator   *_allocator;
@@ -70,7 +70,7 @@
 @end
 
 
-@interface _MulleObjCSharedUTF32String  : _MulleObjCUTF32String
+@interface _MulleObjCSharedUTF32String  : _MulleObjCUTF32String < MulleObjCValueProtocols>
 {
    mulle_utf32_t   *_storage;
    id               _sharingObject;

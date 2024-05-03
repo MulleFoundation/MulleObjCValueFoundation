@@ -33,27 +33,22 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
+#import "NSNumber.h"
 
+#import "_MulleObjCValueTaggedPointer.h"
 #import "_MulleObjCTaggedPointerIntegerNumber.h"
+#import "_NSNumberHash.h"
+
+#import "import-private.h"
 
 
 #ifdef __MULLE_OBJC_TPS__
-
-static inline NSUInteger  hashNSUInteger( NSUInteger value)
-{
-   return( mulle_hash_avalanche( value));
-}
-
 
 @implementation _MulleObjCTaggedPointerIntegerNumber
 
 + (void) load
 {
-   if( MulleObjCTaggedPointerRegisterClassAtIndex( self, 0x2))
-   {
-      perror( "Need tag pointer aware runtime for _MulleObjCTaggedPointerIntegerNumber with empty slot #2\n");
-      abort();
-   }
+   MulleObjCTaggedPointerRegisterClassAtIndex( self, MulleObjCIntegerTPSIndex);
 }
 
 - (int32_t) _int32Value     { return( (int32_t) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
@@ -74,6 +69,7 @@ static inline NSUInteger  hashNSUInteger( NSUInteger value)
 - (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
 
+- (float) floatValue              { return( (float) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
 - (double) doubleValue            { return( (double) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
 - (long double) longDoubleValue   { return( (long double) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self)); }
 
@@ -116,7 +112,7 @@ static inline NSUInteger  hashNSUInteger( NSUInteger value)
    NSInteger   value;
 
    value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
-   return( hashNSUInteger( value));
+   return( NSNumberHashUnsignedInteger( (NSUInteger) value));
 }
 
 
@@ -124,20 +120,17 @@ static inline NSUInteger  hashNSUInteger( NSUInteger value)
 {
    enum MulleNumberIsEqualType   otherType;
    NSInteger                     value;
-   NSInteger                     otherValue;
 
-   value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
-   if( MulleObjCTaggedPointerGetIndex( other) == 0x2)
-   {
-      otherValue = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( (_MulleObjCTaggedPointerIntegerNumber *) other);
-      return( value == otherValue);
-   }
+   if( self == other)
+      return( YES);
 
    otherType = [other __mulleIsEqualType];
    if( otherType != MulleNumberIsEqualDefault)
    {
       if( MulleNumberIsEqualLongLong != otherType)
          return( NO);
+
+      value = (NSInteger) _MulleObjCTaggedPointerIntegerNumberGetIntegerValue( self);
       return( value == [other longLongValue]);
    }
 

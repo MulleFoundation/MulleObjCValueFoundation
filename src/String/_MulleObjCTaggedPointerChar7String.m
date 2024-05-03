@@ -38,11 +38,13 @@
 // other files in this library
 #import "NSString+Hash.h"
 #import "NSMutableData.h"
+#import "_MulleObjCValueTaggedPointer.h"
 #import "_MulleObjCTaggedPointerChar7String.h"
 
 // std-c and dependencies
 #import "import-private.h"
 #include <assert.h>
+
 
 
 #ifdef __MULLE_OBJC_TPS__
@@ -51,11 +53,7 @@
 
 + (void) load
 {
-   if( MulleObjCTaggedPointerRegisterClassAtIndex( self, 0x3))
-   {
-      perror( "Need tag pointer aware runtime for _MulleObjCTaggedPointerChar7String with empty slot #3\n");
-      abort();
-   }
+   MulleObjCTaggedPointerRegisterClassAtIndex( self, MulleObjCChar7TPSIndex);
 }
 
 

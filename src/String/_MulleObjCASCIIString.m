@@ -40,6 +40,7 @@
 #import "NSString+ClassCluster.h"
 
 #import "_MulleObjCASCIIString.h"
+#import "_MulleObjCValueTaggedPointer.h"
 #import "NSString+Substring-Private.h"
 
 // other files in this library
@@ -714,15 +715,25 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
 
 - (char *) UTF8String
 {
-   struct mulle_buffer   buffer;
+   struct mulle_buffer      buffer;
+   char                     *shadow;
+   char                     *s;
+   struct mulle_allocator   *allocator;
 
+   shadow = _mulle_atomic_pointer_read( &self->_shadow);
    if( ! _shadow)
    {
-      mulle_buffer_init_with_capacity( &buffer, _length + 1, MulleObjCInstanceGetAllocator( self));
+      allocator = MulleObjCInstanceGetAllocator( self);
+      mulle_buffer_init_with_capacity( &buffer, _length + 1, allocator);
       mulle_buffer_add_bytes( &buffer, _storage, _length);
-      mulle_buffer_add_byte( &buffer, 0);
-      _shadow = mulle_buffer_extract_bytes( &buffer);
+      s = mulle_buffer_extract_string( &buffer);
       mulle_buffer_done( &buffer);
+
+      shadow = __mulle_atomic_pointer_cas( &self->_shadow, s, NULL);
+      if( shadow)
+         mulle_allocator_free( allocator, s);
+      else
+         shadow = s;
    }
    return( (char *) _shadow);
 }

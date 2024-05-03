@@ -79,7 +79,7 @@
 
 
 
-- (NSString *) mulleDebugContentsDescription
+- (NSString *) mulleDebugContentsDescription      MULLE_OBJC_THREADSAFE_METHOD
 {
    struct mulle_buffer   buffer;
    char                  tmp[ 512];

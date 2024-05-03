@@ -1,0 +1,2 @@
+NSData -mulleIsThreadSafe: YES
+NSMutableData -mulleIsThreadSafe: NO

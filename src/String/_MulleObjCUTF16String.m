@@ -41,6 +41,7 @@
 // other files in this library
 #import "NSString+Hash.h"
 #import "NSString+NSData.h"
+#import "_MulleObjCValueTaggedPointer.h"
 #import "NSString+Substring-Private.h"
 
 // other libraries of MulleObjCValueFoundation
@@ -76,28 +77,37 @@
 
 - (char *) UTF8String
 {
-   struct mulle_buffer      buf;
-   struct mulle_utf16data   data;
    BOOL                     flag;
+   char                     *s;
+   char                     *shadow;
+   struct mulle_allocator   *allocator;
+   struct mulle_buffer      buffer;
+   struct mulle_utf16data   data;
 
+   shadow = _mulle_atomic_pointer_read( &self->_shadow);
    if( ! _shadow)
    {
       flag = [self mulleFastGetUTF16Data:&data];
       assert( flag);
       MULLE_C_UNUSED( flag);
 
-      mulle_buffer_init_with_capacity( &buf, data.length * 4, MulleObjCInstanceGetAllocator( self));
+      allocator = MulleObjCInstanceGetAllocator( self);
+      mulle_buffer_init_with_capacity( &buffer, data.length * 2 + 1, allocator);
       mulle_utf16_bufferconvert_to_utf8( data.characters,
                                          data.length,
-                                         &buf,
+                                         &buffer,
                                          mulle_buffer_add_bytes_callback);
 
-      mulle_buffer_add_byte( &buf, 0);
-      mulle_buffer_size_to_fit( &buf);
-      _shadow = mulle_buffer_extract_bytes( &buf);
-      mulle_buffer_done( &buf);
+      s = mulle_buffer_extract_string( &buffer);
+      mulle_buffer_done( &buffer);
+
+      shadow = __mulle_atomic_pointer_cas( &self->_shadow, s, NULL);
+      if( shadow)
+         mulle_allocator_free( allocator, s);
+      else
+         shadow = s;
    }
-   return( (char *) _shadow);
+   return( (char *) shadow);
 }
 
 

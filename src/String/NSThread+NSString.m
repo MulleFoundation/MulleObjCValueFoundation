@@ -18,7 +18,7 @@
 }
 
 
-- (NSString *) mulleDebugContentsDescription
+- (NSString *) mulleDebugContentsDescription      MULLE_OBJC_THREADSAFE_METHOD
 {
    return( nil);
 }

@@ -38,7 +38,7 @@
 // #import "_MulleObjCASCIIString.h"
 
 
-@interface _MulleObjCCheatingASCIIString : _MulleObjCReferencingASCIIString
+@interface _MulleObjCCheatingASCIIString : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols>
 @end
 
 
@@ -88,7 +88,7 @@ static inline id   _MulleObjCCheatingASCIIStringStorageInit( struct _MulleObjCCh
 
    MulleObjCObjectConstantify( p);
    MulleObjCObjectSetClass( p, [_MulleObjCCheatingASCIIString class]);
-
+   _mulle_objc_objectheader_set_thread( &storage->_header, mulle_thread_self());
    storage->_storage = buf;
    storage->_length  = length;
    storage->_shadow  = 0;

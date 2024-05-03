@@ -3,6 +3,10 @@
 #include <unistd.h>
 
 
+MULLE_OBJC_GLOBAL
+void   MulleObjCHTMLDumpUniverse( void);
+
+
 int   main( int argc, char *argv[])
 {
 #ifdef __MULLE_OBJC__
@@ -11,6 +15,8 @@ int   main( int argc, char *argv[])
          mulle_objc_universe_is_ok)
       _exit( 1);
 #endif
+
+   MulleObjCHTMLDumpUniverse();
 
    return( [[NSNumber numberWithInt:0] intValue]);
 }

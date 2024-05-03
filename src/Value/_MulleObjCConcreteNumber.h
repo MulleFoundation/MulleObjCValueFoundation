@@ -38,7 +38,7 @@
 
 
 // TODO: coalesce into 8 into 16 and add a @encode ?
-@interface _MulleObjCInt32Number : NSNumber <MulleObjCImmutable>
+@interface _MulleObjCInt32Number : NSNumber <MulleObjCValueProtocols>
 {
    int32_t  _value;
 }
@@ -48,7 +48,7 @@
 @end
 
 
-@interface _MulleObjCInt64Number : NSNumber <MulleObjCImmutable>
+@interface _MulleObjCInt64Number : NSNumber <MulleObjCValueProtocols>
 {
    int64_t  _value;
 }
@@ -61,7 +61,7 @@
 #pragma mark - unsigned variants
 
 
-@interface _MulleObjCUInt32Number : NSNumber <MulleObjCImmutable>
+@interface _MulleObjCUInt32Number : NSNumber <MulleObjCValueProtocols>
 {
    uint32_t  _value;
 }
@@ -71,7 +71,7 @@
 @end
 
 
-@interface _MulleObjCUInt64Number : NSNumber <MulleObjCImmutable>
+@interface _MulleObjCUInt64Number : NSNumber <MulleObjCValueProtocols>
 {
    uint64_t  _value;
 }
@@ -86,7 +86,7 @@
 // this can be useful when you want to serialize into true/false for JSON
 // when you add a -JSONdescription or some such method
 //
-@interface _MulleObjCBoolNumber : NSNumber
+@interface _MulleObjCBoolNumber : NSNumber <MulleObjCValueProtocols>
 {
    BOOL   _value;
 }
@@ -97,8 +97,17 @@
 
 
 
-// assume float losslessly converts to double and back
-@interface _MulleObjCDoubleNumber : NSNumber <MulleObjCImmutable>
+@interface _MulleObjCFloatNumber : NSNumber <MulleObjCValueProtocols>
+{
+   float   _value;
+}
+
++ (instancetype) newWithFloat:(float) value;
+
+@end
+
+
+@interface _MulleObjCDoubleNumber : NSNumber <MulleObjCValueProtocols>
 {
    double   _value;
 }
@@ -108,7 +117,7 @@
 @end
 
 
-@interface _MulleObjCLongDoubleNumber : NSNumber <MulleObjCImmutable>
+@interface _MulleObjCLongDoubleNumber : NSNumber <MulleObjCValueProtocols>
 {
    long double   _value;
 }

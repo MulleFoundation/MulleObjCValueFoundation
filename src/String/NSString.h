@@ -84,7 +84,7 @@ typedef mulle_utf32_t  unichar;
 // in all other cases use UTF8String
 //
 
-@interface NSString : NSObject < MulleObjCClassCluster, NSCopying, MulleObjCValue>
+@interface NSString : NSObject < MulleObjCClassCluster, NSCopying>
 {
 }
 

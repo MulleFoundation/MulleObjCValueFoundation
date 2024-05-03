@@ -37,7 +37,10 @@
 
 // other files in this library
 #import "_MulleObjCConcreteNumber.h"
+#import "_MulleObjCValueTaggedPointer.h"
 #import "_MulleObjCTaggedPointerIntegerNumber.h"
+#import "_MulleObjCTaggedPointerFloatNumber.h"
+#import "_MulleObjCTaggedPointerDoubleNumber.h"
 #import "NSNumber-Private.h"
 
 
@@ -100,7 +103,8 @@
    if( config->numbersubclasses[ _NSNumberClassClusterInt32Type])
       return;
 
-   [super initialize]; // get MulleObjCClassCluster initialize
+   // no longer needed
+   // [super initialize]; // get MulleObjCClassCluster initialize
 
    assert( _MULLE_OBJC_FOUNDATIONINFO_N_NUMBERSUBCLASSES >= _NSNumberClassClusterNumberTypeMax);
 
@@ -114,6 +118,8 @@
       mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCUInt32Number));
    config->numbersubclasses[ _NSNumberClassClusterUInt64Type]     =
       mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCUInt64Number));
+   config->numbersubclasses[ _NSNumberClassClusterFloatType]     =
+      mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCFloatNumber));
    config->numbersubclasses[ _NSNumberClassClusterDoubleType]     =
       mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCDoubleNumber));
    config->numbersubclasses[ _NSNumberClassClusterLongDoubleType] =
@@ -459,6 +465,42 @@ static inline id   initWithUnsignedInteger( NSNumber *self,
 //    *ull_val = (unsigned long long) v;
 //    return( (double) *ull_val == v);
 // }
+static inline id   initWithFloat( NSNumber *self, float value)
+{
+   struct _mulle_objc_universefoundationinfo   *config;
+   struct _mulle_objc_universe                 *universe;
+   long                                        l_val;
+
+   // isnan == nil is not compatible and I don't care that much
+   // if( isnan( value))
+   //   return( nil);
+   //
+   // don't want to link against -lm so keep to C for calculations
+   // we only check integers known to fit into IEE-754 FP
+   //
+   // Then the cast can not "overflow"
+   //
+   if( value >= (float) -((1L<<23)+1) && value <= (double) ((1L<<23)+1))
+   {
+      l_val = (long) value;
+      if( (float) l_val == value)
+         return( initWithLong( self, l_val));
+   }
+
+#ifdef __MULLE_OBJC_TPS__
+   if( MulleObjCTaggedPointerIsFloatValue( value))
+   {
+      self = _MulleObjCTaggedPointerFloatNumberWithFloat( value);
+      return( self);
+   }
+#endif
+
+   universe = _mulle_objc_object_get_universe( self);
+   _mulle_objc_universe_get_foundationspace( universe, (void **) &config, NULL);
+
+   self = [config->numbersubclasses[ _NSNumberClassClusterFloatType] newWithFloat:value];
+   return( self);
+}
 
 
 static inline id   initWithDouble( NSNumber *self, double value)
@@ -466,10 +508,6 @@ static inline id   initWithDouble( NSNumber *self, double value)
    struct _mulle_objc_universefoundationinfo   *config;
    struct _mulle_objc_universe                 *universe;
    long long                                   ll_val;
-
-   // isnan == nil is not compatible and I don't care that much
-   // if( isnan( value))
-   //   return( nil);
 
    //
    // don't want to link against -lm so keep to C for calculations
@@ -483,6 +521,14 @@ static inline id   initWithDouble( NSNumber *self, double value)
       if( (double) ll_val == value)
          return( initWithLongLong( self, ll_val));
    }
+
+#ifdef __MULLE_OBJC_TPS__
+   if( MulleObjCTaggedPointerIsDoubleValue( value))
+   {
+      self = _MulleObjCTaggedPointerDoubleNumberWithDouble( value);
+      return( self);
+   }
+#endif
 
    universe = _mulle_objc_object_get_universe( self);
    _mulle_objc_universe_get_foundationspace( universe, (void **) &config, NULL);
@@ -498,15 +544,12 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    struct _mulle_objc_universe                 *universe;
    long long                                   ll_val;
 
-   // isnan == nil is not compatible and I don't care that much
-   // if( isnan( value))
-   //   return( nil);
-
-   // this works for decimals, but as soon as we get into "real" FP this
-   // test never hits, so we don't create doubles ever:
-   // dvalue = (double) value;
-   // if( (long double) dvalue == value)
-   //    return( initWithDouble( self, dvalue));
+   //
+   // don't want to link against -lm so keep to C for calculations
+   // we only check integers known to fit into IEE-754 FP
+   //
+   // Then the cast can not "overflow"
+   //
    if( value >= (long double) -((1LL<<52)+1) && value <= (long double) ((1LL<<52)+1))
    {
       ll_val = (long long) value;
@@ -522,9 +565,14 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 }
 
 
+// MEMO: unless value is an integer we want to keep precision via
+//       @encode( float) intact, especially for back and forth string
+//       conversion, which means the user decides, if a double can be
+//       represented as a float, not us.
+
 - (instancetype) initWithFloat:(float) value
 {
-   return( initWithDouble( self, value));
+   return( initWithFloat( self, value));
 }
 
 
@@ -576,100 +624,180 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 #pragma mark - convenience constructors
 
 // don't short-circuit for subclasses
-
+// written like this for easier debugging
 + (instancetype) numberWithBool:(BOOL) value
 {
-   return( [[[self alloc] initWithBool:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithBool:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithChar:(char) value
 {
-   return( [[[self alloc] initWithChar:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithChar:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithUnsignedChar:(unsigned char) value
 {
-   return( [[[self alloc] initWithUnsignedChar:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithUnsignedChar:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithShort:(short) value
 {
-   return( [[[self alloc] initWithShort:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithShort:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithUnsignedShort:(unsigned short) value
 {
-   return( [[[self alloc] initWithUnsignedShort:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithUnsignedShort:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithInt:(int) value
 {
-   return( [[[self alloc] initWithInt:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithInt:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithUnsignedInt:(unsigned int) value;
 {
-   return( [[[self alloc] initWithUnsignedInt:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithUnsignedInt:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithLong:(long) value
 {
-   return( [[[self alloc] initWithLong:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithLong:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithUnsignedLong:(unsigned long) value
 {
-   return( [[[self alloc] initWithUnsignedLong:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithUnsignedLong:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithInteger:(NSInteger) value
 {
-   return( [[[self alloc] initWithInteger:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithInteger:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithUnsignedInteger:(NSUInteger) value
 {
-   return( [[[self alloc] initWithUnsignedInteger:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithUnsignedInteger:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithLongLong:(long long) value
 {
-   return( [[[self alloc] initWithLongLong:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithLongLong:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithUnsignedLongLong:(unsigned long long) value
 {
-   return( [[[self alloc] initWithUnsignedLongLong:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithUnsignedLongLong:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithFloat:(float) value
 {
-   return( [[[self alloc] initWithFloat:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithFloat:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithDouble:(double) value
 {
-   return( [[[self alloc] initWithDouble:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithDouble:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
 + (instancetype) numberWithLongDouble:(long double) value
 {
-   return( [[[self alloc] initWithLongDouble:value] autorelease]);
+   NSNumber   *obj;
+
+   obj = [self alloc];
+   obj = [obj initWithLongDouble:value];
+   obj = [obj autorelease];
+   return( obj);
 }
 
 
@@ -1016,6 +1144,186 @@ bail:
 - (char *) objCType
 {
    return( @encode( void));
+}
+
+
+/*
+ * MulleObject Support
+ */
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectLongSetter( MulleObject *self,
+                                      mulle_objc_methodid_t _cmd,
+                                      void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectUnsignedLongSetter( MulleObject *self,
+                                              mulle_objc_methodid_t _cmd,
+                                              void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( unsigned long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectLongLongSetter( MulleObject *self,
+                                          mulle_objc_methodid_t _cmd,
+                                          void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( long long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectUnsignedLongLongSetter( MulleObject *self,
+                                                  mulle_objc_methodid_t _cmd,
+                                                  void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( unsigned long long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectFloatSetter( MulleObject *self,
+                                       mulle_objc_methodid_t _cmd,
+                                       void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( float));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectDoubleSetter( MulleObject *self,
+                                        mulle_objc_methodid_t _cmd,
+                                        void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( double));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectLongDoubleSetter( MulleObject *self,
+                                            mulle_objc_methodid_t _cmd,
+                                            void *_param)
+{
+   _MulleObjectNumberSetter( self, _cmd, _param, @encode( long double));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectNumberSetterWillChange( MulleObject *self,
+                                                  mulle_objc_methodid_t _cmd,
+                                                  void *_param,
+                                                  char *objcType)
+{
+   _mulle_objc_object_call_inline_full( self, MULLE_OBJC_WILLCHANGE_METHODID, self);
+   _MulleObjectNumberSetter( self, _cmd, _param, objcType);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectLongSetterWillChange( MulleObject *self,
+                                                mulle_objc_methodid_t _cmd,
+                                                void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectUnsignedLongSetterWillChange( MulleObject *self,
+                                                        mulle_objc_methodid_t _cmd,
+                                                        void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( unsigned long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectLongLongSetterWillChange( MulleObject *self,
+                                                    mulle_objc_methodid_t _cmd,
+                                                    void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( long long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectUnsignedLongLongSetterWillChange( MulleObject *self,
+                                                            mulle_objc_methodid_t _cmd,
+                                                            void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( unsigned long long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectFloatSetterWillChange( MulleObject *self,
+                                                 mulle_objc_methodid_t _cmd,
+                                                 void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( float));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectDoubleSetterWillChange( MulleObject *self,
+                                                  mulle_objc_methodid_t _cmd,
+                                                  void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( double));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectLongDoubleSetterWillChange( MulleObject *self,
+                                                      mulle_objc_methodid_t _cmd,
+                                                      void *_param)
+{
+   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( long double));
+}
+
+
+
+
+- (IMP) setterImplementationForObjCType:(char *) type
+                           accessorBits:(NSUInteger) bits
+{
+   int   isObservable;
+
+   isObservable = bits & _mulle_objc_property_observable;
+   type         = _mulle_objc_signature_skip_type_qualifier( type);
+
+   switch( *type)
+   {
+   case _C_LNG      : return( (IMP) (isObservable
+                                     ? _MulleObjectLongSetterWillChange
+                                     : _MulleObjectLongSetter));
+   case _C_ULNG     : return( (IMP) (isObservable
+                                     ? _MulleObjectUnsignedLongSetterWillChange
+                                     : _MulleObjectUnsignedLongSetter));
+   case _C_LNG_LNG  : return( (IMP) (isObservable
+                                     ? _MulleObjectLongLongSetterWillChange
+                                     : _MulleObjectLongLongSetter));
+
+   case _C_ULNG_LNG : return( (IMP) (isObservable
+                                     ? _MulleObjectUnsignedLongLongSetterWillChange
+                                     : _MulleObjectUnsignedLongLongSetter));
+
+   case _C_DBL      : return( (IMP) (isObservable
+                                     ? _MulleObjectDoubleSetterWillChange
+                                     : _MulleObjectDoubleSetter));
+   case _C_FLT      : return( (IMP) (isObservable
+                                     ? _MulleObjectFloatSetterWillChange
+                                     : _MulleObjectFloatSetter));
+   case _C_LNG_DBL  : return( (IMP) (isObservable
+                                     ? _MulleObjectLongDoubleSetterWillChange
+                                     : _MulleObjectLongDoubleSetter));
+   }
+   return( 0);
 }
 
 @end

@@ -72,3 +72,78 @@ static inline NSString   *_mulleNewSubstringFromUTF32Data( NSString *self,
 }
 
 
+
+//
+// src must be known to be ASCII, and contain no zeroes
+//
+static inline enum mulle_utf_charinfo    _mulle_ascii_quickinfo( char *src, size_t len)
+{
+   char   _c;
+   char   *start;
+   char   *sentinel;
+
+   assert( len);
+
+   if( MulleObjCChar5TPSIndex > mulle_objc_get_taggedpointer_mask())
+      return( mulle_utf_is_not_char5_or_char7);
+
+   if( MulleObjCChar7TPSIndex <= mulle_objc_get_taggedpointer_mask())
+   {
+      if( len <= mulle_char7_get_maxlength())
+         return( mulle_utf_is_char7);
+   }
+
+   if( len > mulle_char5_get_maxlength())
+      return( mulle_utf_is_not_char5_or_char7);
+
+   start    = src;
+   sentinel = &start[ len];
+   for( ; src < sentinel; src++)
+   {
+      _c = *src;
+      if( ! mulle_utf16_is_char5character( _c))
+         return( mulle_utf_is_not_char5_or_char7);
+   }
+   return( mulle_utf_is_char5);
+}
+
+
+
+static inline enum mulle_utf_charinfo    _mulle_utf16_quickinfo( mulle_utf16_t *src, NSUInteger len)
+{
+   enum mulle_utf_charinfo   info;
+
+   // this should be compile time
+   if( MulleObjCChar5TPSIndex > mulle_objc_get_taggedpointer_mask() &&
+       MulleObjCChar7TPSIndex > mulle_objc_get_taggedpointer_mask())
+   {
+      return( mulle_utf_is_not_char5_or_char7);
+   }
+
+   info = _mulle_utf16_charinfo( src, len);
+   if( MulleObjCChar7TPSIndex <= mulle_objc_get_taggedpointer_mask() && info == mulle_utf_is_char7)
+      return( info);
+   if( MulleObjCChar5TPSIndex <= mulle_objc_get_taggedpointer_mask() && info == mulle_utf_is_char5)
+      return( info);
+   return( mulle_utf_is_not_char5_or_char7);
+}
+
+
+static inline enum mulle_utf_charinfo    _mulle_utf32_quickinfo( mulle_utf32_t *src, NSUInteger len)
+{
+   enum mulle_utf_charinfo   info;
+
+   // this should be compile time
+   if( MulleObjCChar5TPSIndex > mulle_objc_get_taggedpointer_mask() &&
+       MulleObjCChar7TPSIndex > mulle_objc_get_taggedpointer_mask())
+   {
+      return( mulle_utf_is_not_char5_or_char7);
+   }
+
+   info = _mulle_utf32_charinfo( src, len);
+   if( MulleObjCChar7TPSIndex <= mulle_objc_get_taggedpointer_mask() && info == mulle_utf_is_char7)
+      return( info);
+   if( MulleObjCChar5TPSIndex <= mulle_objc_get_taggedpointer_mask() && info == mulle_utf_is_char5)
+      return( info);
+   return( mulle_utf_is_not_char5_or_char7);
+}

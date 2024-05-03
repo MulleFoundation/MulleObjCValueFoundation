@@ -44,13 +44,15 @@
 // NSMutableString can be slow. It is best to convert NSMutableString
 // to a regular NSString after construction with "copy/autorelease"
 //
-@interface NSMutableString : NSString
+@interface NSMutableString : NSString < MulleObjCMutableValueProtocols>
 {
    NSUInteger     _length;
    unsigned int   _count;
    unsigned int   _size;
    NSString       **_storage; // only -copied strings live here
 
+   // memo: can't make this atomic, because competing threads would
+   //       erase it behing our backs
    char           *_shadow;
    NSUInteger     _shadowLen;
 }

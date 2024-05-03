@@ -36,6 +36,12 @@
 #import "NSValue.h"
 
 
+@class MulleObject;
+
+// used by MulleObject
+#define NSNUMBER_DEFINED
+
+
 typedef struct
 {
 #ifdef __LITTLE_ENDIAN__

@@ -92,13 +92,20 @@ BOOL   MulleDebugDescriptionEllideAddressOutput = NO;
 }
 
 
-- (NSString *) mulleDebugContentsDescription
+//
+// This method should be marked as thread safe, it is assumed that ONLY
+// the debugger calls it and that therefore all other threads are stopped
+// 
+- (NSString *) mulleDebugContentsDescription      MULLE_OBJC_THREADSAFE_METHOD
 {
    return( nil);
 }
 
-
-- (NSString *) debugDescription
+//
+// This method should be marked as thread safe, it is assumed that ONLY
+// the debugger calls it and that therefore all other threads are stopped
+// 
+- (NSString *) debugDescription                   MULLE_OBJC_THREADSAFE_METHOD
 {
    NSString     *contents;
    NSUInteger   length;

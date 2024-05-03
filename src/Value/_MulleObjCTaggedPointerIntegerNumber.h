@@ -34,19 +34,18 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSNumber.h"
-
+// private header don't include anything
 
 //
 // this has limited value range
 //
-@interface _MulleObjCTaggedPointerIntegerNumber : NSNumber < MulleObjCTaggedPointer>
+@interface _MulleObjCTaggedPointerIntegerNumber : NSNumber < MulleObjCTaggedPointer, MulleObjCValueProtocols>
 @end
 
 
 static inline NSNumber   *_MulleObjCTaggedPointerIntegerNumberWithInteger( NSInteger value)
 {
-   return( (NSNumber *) MulleObjCCreateTaggedPointerWithIntegerValueAndIndex( value, 0x2));
+   return( (NSNumber *) MulleObjCCreateTaggedPointerWithIntegerValueAndIndex( value, MulleObjCIntegerTPSIndex));
 }
 
 

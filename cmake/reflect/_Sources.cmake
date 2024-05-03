@@ -44,6 +44,8 @@ src/String/NSThread+NSString.m
 src/Value/_MulleObjCConcreteNumber+NSString.m
 src/Value/_MulleObjCConcreteNumber.m
 src/Value/_MulleObjCConcreteValue.m
+src/Value/_MulleObjCTaggedPointerDoubleNumber.m
+src/Value/_MulleObjCTaggedPointerFloatNumber.m
 src/Value/_MulleObjCTaggedPointerIntegerNumber.m
 src/Value/NSNumber+NSCoder.m
 src/Value/NSNumber+NSString.m

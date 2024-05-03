@@ -46,7 +46,7 @@
 
 @implementation NSMethodSignature (NSString)
 
-- (NSString *) mulleDebugContentsDescription
+- (NSString *) mulleDebugContentsDescription      MULLE_OBJC_THREADSAFE_METHOD
 {
    return( [NSString stringWithFormat:@"\"%s\"", _types]);
 }

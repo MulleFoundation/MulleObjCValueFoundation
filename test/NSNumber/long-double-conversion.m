@@ -38,6 +38,11 @@ int   main( void)
    NSInteger     i;
    long double   value;
    long double   converted;
+   union
+   {
+      unsigned char    bytes[ sizeof( long double)];
+      long double      value;
+   } v;
 
    for( i = 0; i < sizeof_array( values); i++)
    {
