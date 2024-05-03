@@ -45,7 +45,7 @@ enum
 };
 
 
-@interface NSData : NSObject < MulleObjCClassCluster, NSCopying, MulleObjCValue>
+@interface NSData : NSObject < MulleObjCClassCluster, NSCopying, MulleObjCValueProtocols>
 
 - (instancetype) initWithBytesNoCopy:(void *) bytes
                               length:(NSUInteger) length;

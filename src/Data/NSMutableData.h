@@ -46,7 +46,7 @@
 @end
 
 
-@interface NSMutableData : NSData < MulleObjCClassCluster>
+@interface NSMutableData : NSData < MulleObjCClassCluster, MulleObjCThreadUnsafe>
 
 + (instancetype) dataWithCapacity:(NSUInteger) aNumItems;
 + (instancetype) dataWithLength:(NSUInteger) length;

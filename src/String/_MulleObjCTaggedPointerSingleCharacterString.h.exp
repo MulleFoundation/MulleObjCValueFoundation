@@ -48,7 +48,7 @@ NSString  *MulleObjCTaggedPointerSingleCharacterStringWithCharacter( unichar c);
 
 static inline NSString   *_MulleObjCTaggedPointerSingleCharacterStringFromValue( unichar value)
 {
-   return( (NSString *) MulleObjCCreateTaggedPointerWithUnsignedIntegerValueAndIndex( value, 0x4));
+   return( (NSString *) MulleObjCCreateTaggedPointerWithUnsignedIntegerValueAndIndex( value, 0x6));
 }
 
 

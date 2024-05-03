@@ -49,7 +49,7 @@
 // the 'self' contains the actual string and the isa only exists in
 // the runtime
 //
-@interface _MulleObjCTaggedPointerChar5String : NSString < MulleObjCTaggedPointer>
+@interface _MulleObjCTaggedPointerChar5String : NSString < MulleObjCTaggedPointer, MulleObjCValueProtocols>
 
 - (NSUInteger) mulleGetASCIICharacters:(char *) buf
                              maxLength:(NSUInteger) maxLength;
@@ -68,7 +68,7 @@ NSString  *MulleObjCTaggedPointerChar5StringWithCharacters( unichar *s, NSUInteg
 
 static inline NSString   *_MulleObjCTaggedPointerChar5StringFromValue( NSUInteger value)
 {
-   return( (NSString *) MulleObjCCreateTaggedPointerWithUnsignedIntegerValueAndIndex( value, 0x1));
+   return( (NSString *) MulleObjCCreateTaggedPointerWithUnsignedIntegerValueAndIndex( value, MulleObjCChar5TPSIndex));
 }
 
 

@@ -35,9 +35,18 @@
 //
 #import "import.h"
 
+@class MulleObject;
+
+// used by MulleObject
+#define NSVALUE_DEFINED
 
 
-@interface NSValue : NSObject < MulleObjCClassCluster, MulleObjCValue>
+//
+// a NSNumber is known to be immutable, but a NSValue could contain a
+// pointer to something... Nevertheless all values are "copied" in and
+// the whole object is thread safe.
+//
+@interface NSValue : NSObject < MulleObjCClassCluster, MulleObjCThreadSafe>
 {
 }
 

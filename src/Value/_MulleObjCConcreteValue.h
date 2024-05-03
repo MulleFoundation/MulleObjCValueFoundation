@@ -36,13 +36,17 @@
 
 #import "NSValue.h"
 
-
+//
+// not a MulleObjCInvariant as this could be a wrapper for a mutable value
+// If this really pains, maybe split it up into _MulleObjCConcreteValueMutableContent
+// and _MulleObjCConcreteValueImmutableContent ?
+//
 @interface _MulleObjCConcreteValue : NSValue <MulleObjCImmutable>
 {
    NSUInteger  _size;
 }
 
 + (instancetype) mulleNewWithBytes:(void *) bytes
-                     objCType:(char *) type;
+                          objCType:(char *) type;
 
 @end

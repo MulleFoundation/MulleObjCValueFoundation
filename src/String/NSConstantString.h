@@ -42,7 +42,7 @@
 //
 // NSConstantString can not contain UTF8 characters though.
 //
-@interface NSConstantString : _MulleObjCASCIIString
+@interface NSConstantString : _MulleObjCASCIIString < MulleObjCValueProtocols>
 {
    char           *_storage;   // ivar #0:: must be defined EXACTLY like this
    unsigned int   _length;     // ivar #1:: must be defined EXACTLY like this

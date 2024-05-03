@@ -92,7 +92,7 @@
                        objCType:(char *) type
 {
    return( [[[self alloc] initWithBytes:bytes
-                              objCType:type] autorelease]);
+                               objCType:type] autorelease]);
 }
 
 
@@ -224,6 +224,41 @@
    }
 
    return( flag);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectRangeSetter( MulleObject *self,
+                                       mulle_objc_methodid_t _cmd,
+                                       void *_param)
+{
+   _MulleObjectValueSetter( self, _cmd, _param, @encode( NSRange));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleObjectRangeSetterWillChange( MulleObject *self,
+                                                 mulle_objc_methodid_t _cmd,
+                                                 void *_param)
+{
+   _mulle_objc_object_call_inline_full( self, MULLE_OBJC_WILLCHANGE_METHODID, self);
+   _MulleObjectValueSetter( self, _cmd, _param, @encode( NSRange));
+}
+
+
+- (IMP) setterImplementationForObjCType:(char *) type
+                           accessorBits:(NSUInteger) bits
+{
+   int   isObservable;
+
+   type         = _mulle_objc_signature_skip_type_qualifier( type);
+   isObservable = bits & _mulle_objc_property_observable;
+
+   if( _mulle_objc_ivarsignature_is_compatible( type, @encode( NSRange)))
+      return( (IMP) (isObservable
+                     ? _MulleObjectRangeSetterWillChange
+                     : _MulleObjectRangeSetter));
+   return( 0);
 }
 
 @end

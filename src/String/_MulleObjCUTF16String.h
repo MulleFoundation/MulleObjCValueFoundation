@@ -39,10 +39,10 @@
 // shadow UTF8 string will have one, for UTF8String
 // access
 //
-@interface _MulleObjCUTF16String: NSString <MulleObjCImmutable>
+@interface _MulleObjCUTF16String: NSString <MulleObjCValueProtocols>
 {
-   char         *_shadow;
-   NSUInteger   _length;
+   NSUInteger               _length;
+   mulle_atomic_pointer_t   _shadow;
 }
 
 @end
@@ -56,14 +56,14 @@
 @end
 
 
-@interface _MulleObjCGenericUTF16String : _MulleObjCUTF16String
+@interface _MulleObjCGenericUTF16String : _MulleObjCUTF16String < MulleObjCValueProtocols>
 {
    mulle_utf16_t    _storage[ 1];
 }
 @end
 
 
-@interface _MulleObjCAllocatorUTF16String  : _MulleObjCUTF16String
+@interface _MulleObjCAllocatorUTF16String  : _MulleObjCUTF16String < MulleObjCValueProtocols>
 {
    mulle_utf16_t            *_storage;
    struct mulle_allocator   *_allocator;
@@ -76,7 +76,7 @@
 @end
 
 
-@interface _MulleObjCSharedUTF16String : _MulleObjCUTF16String
+@interface _MulleObjCSharedUTF16String : _MulleObjCUTF16String < MulleObjCValueProtocols>
 {
    mulle_utf16_t   *_storage;
    id               _sharingObject;

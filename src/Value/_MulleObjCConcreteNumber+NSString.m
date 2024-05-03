@@ -35,12 +35,14 @@
 //
 
 #import "_MulleObjCConcreteNumber.h"
+#import "_MulleObjCValueTaggedPointer.h"
 #import "_MulleObjCTaggedPointerIntegerNumber.h"
 
 
 // other files in this library
 #import "NSString.h"
 #import "NSString+Sprintf.h"
+#import "_MulleObjCValueTaggedPointer.h"
 #import "NSString+Substring-Private.h"
 
 // std-c dependencies
@@ -217,6 +219,39 @@ static struct _MulleStringContext   empty;
 
 @end
 
+
+@implementation _MulleObjCFloatNumber( NSString)
+
+// TODO: there is possibly a problem here, that we don't have a true
+//       float representation
+- (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
+{
+   struct mulle_asciidata   rval;
+
+   assert( data->length >= 8 + 6);  //-e+123
+
+   rval.length = snprintf( data->characters, data->length, "%0.8g", _value);
+   assert( rval.length < data->length);
+
+   rval.characters = data->characters;
+   *data = rval;
+}
+
+
+- (NSString *) stringValue
+{
+   char                     tmp[ 32];
+   struct mulle_asciidata   data;
+
+   data = mulle_asciidata_make( tmp, sizeof( tmp));
+   [self _mulleConvertToASCIICharacters:&data];
+   assert( data.length < sizeof( tmp));
+   return( [_mulleNewASCIIStringWithStringContext( data.characters,
+                                                   &data.characters[ data.length],
+                                                   &empty) autorelease]);
+}
+
+@end
 
 @implementation _MulleObjCDoubleNumber( NSString)
 

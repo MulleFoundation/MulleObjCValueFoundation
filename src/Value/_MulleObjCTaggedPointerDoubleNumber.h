@@ -1,9 +1,6 @@
-//
-//  NSMethodSignature+NSString.m
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2016 Codeon GmbH.
+//  Copyright (c) 2024 Nat! - Mulle kybernetiK.
 //  All rights reserved.
 //
 //
@@ -33,22 +30,24 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "import.h"
+
+// private header don't include anything
+
+//
+// this doesn't work in 32 bit
+//
+@interface _MulleObjCTaggedPointerDoubleNumber : NSNumber < MulleObjCTaggedPointer, MulleObjCValueProtocols>
+@end
 
 
-// other files in this library
-#import "NSString+Sprintf.h"
-
-// other libraries of MulleObjCValueFoundation
-
-// std-c and dependencies
-
-
-@implementation NSMethodSignature (NSString)
-
-- (NSString *) mulleDebugContentsDescription      MULLE_OBJC_THREADSAFE_METHOD
+static inline NSNumber   *_MulleObjCTaggedPointerDoubleNumberWithDouble( double value)
 {
-   return( [NSString stringWithFormat:@"\"%s\"", _types]);
+   return( (NSNumber *) MulleObjCCreateTaggedPointerWithDoubleValueAndIndex( value, MulleObjCDoubleTPSIndex));
 }
 
-@end
+
+static inline double  _MulleObjCTaggedPointerDoubleNumberGetDoubleValue( _MulleObjCTaggedPointerDoubleNumber *obj)
+{
+   return( MulleObjCTaggedPointerGetDoubleValue( obj));
+}
+

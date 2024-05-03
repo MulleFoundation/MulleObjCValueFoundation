@@ -1,9 +1,6 @@
-//
-//  NSMethodSignature+NSString.m
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2016 Codeon GmbH.
+//  Copyright (c) 2024 Nat! - Mulle kybernetiK.
 //  All rights reserved.
 //
 //
@@ -33,22 +30,24 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "import.h"
+
+// private header don't include anything
+
+//
+// this has a limited value range in 32 bit
+//
+@interface _MulleObjCTaggedPointerFloatNumber : NSNumber < MulleObjCTaggedPointer, MulleObjCValueProtocols>
+@end
 
 
-// other files in this library
-#import "NSString+Sprintf.h"
-
-// other libraries of MulleObjCValueFoundation
-
-// std-c and dependencies
-
-
-@implementation NSMethodSignature (NSString)
-
-- (NSString *) mulleDebugContentsDescription      MULLE_OBJC_THREADSAFE_METHOD
+static inline NSNumber   *_MulleObjCTaggedPointerFloatNumberWithFloat( float value)
 {
-   return( [NSString stringWithFormat:@"\"%s\"", _types]);
+   return( (NSNumber *) MulleObjCCreateTaggedPointerWithFloatValueAndIndex( value, MulleObjCFloatTPSIndex));
 }
 
-@end
+
+static inline float  _MulleObjCTaggedPointerFloatNumberGetFloatValue( _MulleObjCTaggedPointerFloatNumber *obj)
+{
+   return( MulleObjCTaggedPointerGetFloatValue( obj));
+}
+

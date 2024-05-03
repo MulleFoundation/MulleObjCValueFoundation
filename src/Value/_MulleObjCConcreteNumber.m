@@ -39,41 +39,13 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>  // for isnan macro and NAN, if we need to link we fail
+#include "_NSNumberHash.h"
 
 // other files in this library
 
 // other libraries of MulleObjCValueFoundation
 
 // std-c and dependencies
-
-
-static inline NSUInteger  hashNSUInteger( NSUInteger value)
-{
-   return( mulle_integer_hash( value));
-}
-
-
-static inline NSUInteger   hashNSUIntegers( NSUInteger *p, int n)
-{
-   NSUInteger   hash;
-
-   assert( n >= 1);
-
-   hash = *p;
-   while( --n)
-   {
-      hash <<= 6;
-      hash  += *++p;
-   }
-   hash = hashNSUInteger( hash);
-   return( hash);
-}
-
-static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
-{
-   return( hashNSUIntegers( p, (n + sizeof( NSUInteger) - 1) / sizeof( NSUInteger)));
-}
-
 
 
 @implementation _MulleObjCInt32Number : NSNumber
@@ -107,6 +79,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
 // 32 bit conversions should pose no problem
+- (float) floatValue              { return( (float) _value); }
 - (double) doubleValue            { return( (double) _value); }
 - (long double) longDoubleValue   { return( (long double) _value); }
 
@@ -125,7 +98,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 
 - (NSUInteger) hash
 {
-   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+   return( NSNumberHashUnsignedIntegerBytes( &_value, sizeof( _value)));
 }
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
@@ -171,12 +144,20 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 // 32 bit conversions should pose no problem
 // the conversion from LLONG_MAX to double will be invalid though
 //
+- (float) floatValue
+{
+   return( (float) _value);
+}
+
 - (double) doubleValue
 {
    return( (double) _value);
 }
 
-- (long double) longDoubleValue   { return( (long double) _value); }
+- (long double) longDoubleValue
+{
+   return( (long double) _value);
+}
 
 
 - (void) getValue:(void *) p_value
@@ -193,7 +174,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 
 - (NSUInteger) hash
 {
-   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+   return( NSNumberHashUnsignedIntegerBytes( &_value, sizeof( _value)));
 }
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
@@ -234,6 +215,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 - (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
+- (float) floatValue              { return( (float) _value); }
 - (double) doubleValue            { return( (double) _value); }
 - (long double) longDoubleValue   { return( (long double) _value); }
 
@@ -262,7 +244,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 
 - (NSUInteger) hash
 {
-   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+   return( NSNumberHashUnsignedIntegerBytes( &_value, sizeof( _value)));
 }
 
 
@@ -305,6 +287,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 - (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
+- (float) floatValue              { return( (float) _value); }
 - (double) doubleValue            { return( (double) _value); }
 - (long double) longDoubleValue   { return( (long double) _value); }
 
@@ -332,7 +315,7 @@ static inline NSUInteger   hashNSUIntegerBytes( void *p, size_t n)
 
 - (NSUInteger) hash
 {
-   return( hashNSUIntegerBytes( &_value, sizeof( _value)));
+   return( NSNumberHashUnsignedIntegerBytes( &_value, sizeof( _value)));
 }
 
 
@@ -409,6 +392,7 @@ static struct
 - (NSUInteger) unsignedIntegerValue   { return( (NSUInteger) _value); }
 - (unsigned long long) unsignedLongLongValue { return( (unsigned long long) _value); }
 
+- (float) floatValue                  { return( (float) _value); }
 - (double) doubleValue                { return( (double) _value); }
 - (long double) longDoubleValue       { return( (long double) _value); }
 
@@ -433,7 +417,7 @@ static struct
 
 - (NSUInteger) hash
 {
-   return( hashNSUInteger( _value));
+   return( NSNumberHashUnsignedInteger( _value));
 }
 
 
@@ -489,33 +473,86 @@ static struct
  */
 
 
-//
-// MEMO: As NSNumber tries to guarantee, that a double value that
-//       can be represented as an integer _IS_ stored as an integer
-//       the compatibility with NSUInteger is possibly pointless.
-//       Same goes for the double == long double check
-//
-static inline NSUInteger  hashDouble( double value)
+
+@implementation _MulleObjCFloatNumber : NSNumber
+
++ (instancetype) newWithFloat:(float) value
 {
-   NSUInteger   y;
+   _MulleObjCFloatNumber  *obj;
 
-   y = (NSUInteger) value;
-   if( (double) y == value && y >= NSIntegerMin && y <= NSIntegerMax)
-       return( hashNSUInteger( y));
-
-   return( mulle_double_hash( value));
+   obj = NSAllocateObject( self, 0, NULL);
+   obj->_value = isnan( value) ? NAN : value; // get rid of sign of -NAN
+   return( obj);
 }
 
 
-static inline NSUInteger  hashLongDouble( long double value)
+// TODO: maybe check out
+//       https://stackoverflow.com/questions/17035464/a-fast-method-to-round-a-double-to-a-32-bit-int-explained
+- (NSInteger) integerValue
 {
-   double   y;
-
-   y = (double) value;
-   if( (long double) y == value)
-       return( hashDouble( y));
-   return( mulle_long_double_hash( value));
+   return( (NSInteger) _value);
 }
+
+
+- (long long) longLongValue
+{
+   return( (long long) _value);
+}
+
+
+- (NSUInteger) unsignedIntegerValue
+{
+   return( (NSUInteger) _value);
+}
+
+
+- (unsigned long long) unsignedLongLongValue
+{
+   return( (unsigned long long) _value);
+}
+
+
+- (float) floatValue
+{
+   return( _value);
+}
+
+
+- (double) doubleValue
+{
+   return( _value);
+}
+
+
+- (long double) longDoubleValue
+{
+   return( _value);
+}
+
+
+- (void) getValue:(void *) value
+{
+   *(float *) value = _value;
+}
+
+
+- (char *) objCType
+{
+   return( @encode( float));
+}
+
+
+- (NSUInteger) hash
+{
+   return( NSNumberHashFloat( _value));
+}
+
+- (enum MulleNumberIsEqualType) __mulleIsEqualType
+{
+   return( MulleNumberIsEqualLongDouble);
+}
+
+@end
 
 
 @implementation _MulleObjCDoubleNumber : NSNumber
@@ -556,6 +593,12 @@ static inline NSUInteger  hashLongDouble( long double value)
 }
 
 
+- (float) floatValue
+{
+   return( _value);
+}
+
+
 - (double) doubleValue
 {
    return( _value);
@@ -582,7 +625,7 @@ static inline NSUInteger  hashLongDouble( long double value)
 
 - (NSUInteger) hash
 {
-   return( hashDouble( _value));
+   return( NSNumberHashDouble( _value));
 }
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
@@ -604,6 +647,12 @@ static inline NSUInteger  hashLongDouble( long double value)
    obj->_value = isnan( value) ? NAN : value;  // get rid of sign of -NAN
                                                // more cross-platformy
    return( obj);
+}
+
+
+- (float) floatValue
+{
+   return( (float) _value);
 }
 
 
@@ -645,7 +694,7 @@ static inline NSUInteger  hashLongDouble( long double value)
 
 - (NSUInteger) hash
 {
-   return( hashLongDouble( _value));
+   return( NSNumberHashLongDouble( _value));
 }
 
 

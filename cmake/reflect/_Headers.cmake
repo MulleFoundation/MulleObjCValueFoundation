@@ -76,6 +76,7 @@ src/Data/NSMutableData+Unicode.h
 src/Data/NSMutableData.h
 src/MulleObjCLoader+MulleObjCValueFoundation.h
 src/MulleObjCValueFoundation.h
+src/_MulleObjCValueTaggedPointer.h
 src/String/_MulleObjCASCIIString.h
 src/String/_MulleObjCCheatingASCIIString.h
 src/String/_MulleObjCTaggedPointerChar5String.h
@@ -97,7 +98,10 @@ src/String/NSString.h
 src/String/mulle-chardata.h
 src/Value/_MulleObjCConcreteNumber.h
 src/Value/_MulleObjCConcreteValue.h
+src/Value/_MulleObjCTaggedPointerDoubleNumber.h
+src/Value/_MulleObjCTaggedPointerFloatNumber.h
 src/Value/_MulleObjCTaggedPointerIntegerNumber.h
+src/Value/_NSNumberHash.h
 src/Value/NSNumber+NSCoder.h
 src/Value/NSNumber+NSString.h
 src/Value/NSNumber.h

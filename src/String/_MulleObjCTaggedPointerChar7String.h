@@ -38,7 +38,7 @@
 
 
 
-@interface _MulleObjCTaggedPointerChar7String : NSString < MulleObjCTaggedPointer>
+@interface _MulleObjCTaggedPointerChar7String : NSString < MulleObjCTaggedPointer, MulleObjCValueProtocols>
 
 - (NSUInteger) mulleGetASCIICharacters:(char *) buf
                              maxLength:(NSUInteger) maxLength;
@@ -55,9 +55,10 @@ MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *MulleObjCTaggedPointerChar7StringWithCharacters( unichar *s, NSUInteger length);
 
 
+
 static inline NSString   *_MulleObjCTaggedPointerChar7StringFromValue( NSUInteger value)
 {
-   return( (NSString *) MulleObjCCreateTaggedPointerWithUnsignedIntegerValueAndIndex( value, 0x3));
+   return( (NSString *) MulleObjCCreateTaggedPointerWithUnsignedIntegerValueAndIndex( value, MulleObjCChar7TPSIndex));
 }
 
 

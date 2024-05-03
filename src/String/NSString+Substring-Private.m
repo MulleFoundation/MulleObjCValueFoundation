@@ -3,6 +3,7 @@
 #import "NSString.h"
 #import "NSString+ClassCluster.h"
 
+#import "_MulleObjCValueTaggedPointer.h"
 #import "NSString+Substring-Private.h"
 
 #import "_MulleObjCTaggedPointerChar5String.h"
@@ -31,35 +32,6 @@ NSString   *_mulleNewUTF8StringWithStringContext( char *start,
       return( @"");
    return( [[ctxt->stringClass alloc] mulleInitWithUTF8Characters:start
                                                            length:length]);
-}
-
-
-//
-// src must be known to be ASCII, and contain no zeroes
-//
-static enum mulle_utf_charinfo    _mulle_ascii_quickinfo( char *src, size_t len)
-{
-   char   _c;
-   char   *start;
-   char   *sentinel;
-
-   assert( len);
-
-   if( len <= mulle_char7_get_maxlength())
-      return( mulle_utf_is_char7);
-
-   if( len > mulle_char5_get_maxlength())
-      return( mulle_utf_is_not_char5_or_char7);
-
-   start    = src;
-   sentinel = &start[ len];
-   for( ; src < sentinel; src++)
-   {
-      _c = *src;
-      if( ! mulle_utf16_is_char5character( _c))
-         return( mulle_utf_is_not_char5_or_char7);
-   }
-   return( mulle_utf_is_char5);
 }
 
 
@@ -113,7 +85,7 @@ NSString   *_mulleNewUTF16StringWithStringContext( mulle_utf16_t *start,
    // try to benefit from TPS
 
 #ifdef __MULLE_OBJC_TPS__
-   switch( _mulle_utf16_charinfo( start, length))
+   switch( _mulle_utf16_quickinfo( start, length))
    {
    case mulle_utf_is_char7 :
       return( MulleObjCTaggedPointerChar7StringWithUTF16Characters( start,
@@ -150,7 +122,7 @@ NSString   *_mulleNewUTF32StringWithStringContext( mulle_utf32_t *start,
    // try to benefit from TPS
 
 #ifdef __MULLE_OBJC_TPS__
-   switch( _mulle_utf32_charinfo( start, length))
+   switch( _mulle_utf32_quickinfo( start, length))
    {
    case mulle_utf_is_char7 :
       return( MulleObjCTaggedPointerChar7StringWithCharacters( start,
