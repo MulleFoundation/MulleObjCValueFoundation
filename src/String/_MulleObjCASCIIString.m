@@ -127,7 +127,7 @@ static void   grab_utf32( id self,
    if( length > maxLength)
       length = maxLength;
 
-   grab_utf32( self, data, buf, NSMakeRange( index, length));
+   grab_utf32( self, data, buf, NSRangeMake( index, length));
    return( length);
 }
 
@@ -724,7 +724,7 @@ static void   utf32to8cpy( char *dst, mulle_utf32_t *src, NSUInteger len)
    if( ! _shadow)
    {
       allocator = MulleObjCInstanceGetAllocator( self);
-      mulle_buffer_init_with_capacity( &buffer, _length + 1, allocator);
+      mulle_buffer_init( &buffer, _length + 1, allocator);
       mulle_buffer_add_bytes( &buffer, _storage, _length);
       s = mulle_buffer_extract_string( &buffer);
       mulle_buffer_done( &buffer);

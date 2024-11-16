@@ -41,7 +41,7 @@
 // If this really pains, maybe split it up into _MulleObjCConcreteValueMutableContent
 // and _MulleObjCConcreteValueImmutableContent ?
 //
-@interface _MulleObjCConcreteValue : NSValue <MulleObjCImmutable>
+@interface _MulleObjCConcreteValue : NSValue < MulleObjCImmutableProtocols>
 {
    NSUInteger  _size;
 }

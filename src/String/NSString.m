@@ -286,7 +286,6 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 }
 
 
-
 // keep UTF8String: as (char *)
 + (instancetype) stringWithUTF8String:(char *) s
 {
@@ -491,7 +490,7 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
 - (void) getCharacters:(unichar *) buf
 {
    [self getCharacters:buf
-                 range:NSMakeRange( 0, [self length])];  // don't use -1!
+                 range:NSRangeMake( 0, [self length])];  // don't use -1!
 }
 
 
@@ -540,7 +539,7 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
    size = length * 4 + 1; // unichar explodes max to 4 bytes
    buf  = mulle_allocator_malloc( NULL, size);
    [self getCharacters:(unichar *) buf
-                 range:NSMakeRange( 0, length)];
+                 range:NSRangeMake( 0, length)];
 
    // mulle_utf32_t can't become larger than 4 bytes max
    // so we can actually inplace convert
@@ -596,7 +595,7 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
 {
    NSRange   range;
 
-   range = NSMakeRange( index, [self length] - index);
+   range = NSRangeMake( index, [self length] - index);
    return( [self substringWithRange:range]);
 }
 
@@ -605,7 +604,7 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
 {
    NSRange   range;
 
-   range = NSMakeRange( 0, index);
+   range = NSRangeMake( 0, index);
    return( [self substringWithRange:range]);
 }
 

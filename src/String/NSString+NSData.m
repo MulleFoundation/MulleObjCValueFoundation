@@ -360,7 +360,7 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
                                                             length:info.utf16len]);
 
    /* convert to utf32 */
-   mulle_buffer_init_with_capacity( &buffer, info.utf32len * sizeof( mulle_utf32_t), allocator);
+   mulle_buffer_init( &buffer, info.utf32len * sizeof( mulle_utf32_t), allocator);
 
    mulle_utf16_bufferconvert_to_utf32( info.start,
                                        info.utf16len,
@@ -803,7 +803,7 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
    tmp_buf    = [tmp_data mutableBytes];
 
    [self getCharacters:tmp_buf
-                 range:NSMakeRange( 0, tmp_length)];
+                 range:NSRangeMake( 0, tmp_length)];
 
    if( mulle_utf32_information( tmp_buf, tmp_length, &info))
       MulleObjCThrowInvalidArgumentExceptionUTF8String( "invalid UTF32");
@@ -891,7 +891,7 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
       *p++ = mulle_utf32_get_bomcharacter();
 
    [self getCharacters:p
-                 range:NSMakeRange( 0, length)];
+                 range:NSRangeMake( 0, length)];
    p = &p[ length];
 
    if( withZero)

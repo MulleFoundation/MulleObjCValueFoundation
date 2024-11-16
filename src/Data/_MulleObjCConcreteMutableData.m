@@ -56,7 +56,7 @@ static void   append_via_tmp_buffer( _MulleObjCConcreteMutableData *self,
    if( length == (NSUInteger) -1)
       length = strlen( bytes);
 
-   mulle_flexbuffer_do( tmp, 128, length)
+   mulle_alloca_do( tmp, char, length)
    {
       memcpy( tmp, bytes, length);
       mulle_buffer_add_bytes( &self->_storage, tmp, length);
@@ -87,7 +87,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    data = NSAllocateObject( self, 0, NULL);
 
    allocator = MulleObjCInstanceGetAllocator( data);
-   mulle_buffer_init_with_capacity( &data->_storage, capacity, allocator);
+   mulle_buffer_init( &data->_storage, capacity, allocator);
 
    return( data);
 }
@@ -103,7 +103,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    data = NSAllocateObject( self, 0, NULL);
 
    allocator = MulleObjCInstanceGetAllocator( data);
-   mulle_buffer_init_with_capacity( &data->_storage, capacity, allocator);
+   mulle_buffer_init( &data->_storage, capacity, allocator);
    _mulle__buffer_grow( (struct mulle__buffer *) &data->_storage, capacity, allocator);
 
    return( data);
@@ -118,8 +118,8 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    data = NSAllocateObject( self, 0, NULL);
 
    allocator = MulleObjCInstanceGetAllocator( data);
-   mulle_buffer_init_with_capacity( &data->_storage, length, allocator);
-   mulle_buffer_set_length( &data->_storage, length);
+   mulle_buffer_init( &data->_storage, length, allocator);
+   mulle_buffer_set_length( &data->_storage, length, MULLE_BUFFER_NO_ZEROFILL);
 
    return( data);
 }
@@ -140,7 +140,7 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
       length = strlen( buf);
 
    allocator = MulleObjCInstanceGetAllocator( data);
-   mulle_buffer_init_with_capacity( &data->_storage, length, allocator);
+   mulle_buffer_init( &data->_storage, length, allocator);
    append_bytes( data, buf, length);
 
    return( data);
@@ -217,7 +217,7 @@ static struct mulle_data   mulleGetMutableData( _MulleObjCConcreteMutableData *s
    // though
    //
    data.length = mulle_buffer_get_capacity( &self->_storage);
-   mulle_buffer_set_length( &self->_storage, data.length);
+   mulle_buffer_set_length( &self->_storage, data.length, MULLE_BUFFER_NO_ZEROFILL);
    data.bytes  = mulle_buffer_get_bytes( &self->_storage);
    return( data);
 }
@@ -310,7 +310,7 @@ static void   *
       return;
    }
 
-   mulle_buffer_zero_to_length( &_storage, length);
+   mulle_buffer_set_length( &_storage, length, MULLE_BUFFER_SHRINK_OR_ZEROFILL);
 }
 
 
@@ -328,7 +328,7 @@ static void   *
       return;
    }
 
-   mulle_buffer_set_length( &_storage, length);
+   mulle_buffer_set_length( &_storage, length, MULLE_BUFFER_NO_ZEROFILL);
 }
 
 @end

@@ -195,7 +195,7 @@ static NSString  *
    struct mulle_data     data;
 
    assert( length);
-   mulle_buffer_init( &buffer, allocator);
+   mulle_buffer_init( &buffer, 0, allocator);
 
    // make intital alloc large enough for optimal case
    mulle_buffer_guarantee( &buffer, length * sizeof( mulle_utf16_t));

@@ -155,7 +155,7 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
    if( length > maxLength)
       length = maxLength;
-   length = grab_ascii_char7_range( self, length, buf, NSMakeRange( 0, length));
+   length = grab_ascii_char7_range( self, length, buf, NSRangeMake( 0, length));
    return( length);
 }
 
@@ -282,7 +282,7 @@ static NSUInteger   grab_ascii_char7( _MulleObjCTaggedPointerChar7String *self,
 
    length = MulleObjCTaggedPointerChar7StringGetLength( self);
    s      = MulleObjCCallocAutoreleased( length + 1, sizeof( char));
-   grab_ascii_char7_range( self, length, s, NSMakeRange( 0, length));
+   grab_ascii_char7_range( self, length, s, NSRangeMake( 0, length));
    // final byte already zero by calloc
    return( (char *) s);
 }

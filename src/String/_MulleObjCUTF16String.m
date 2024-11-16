@@ -92,7 +92,7 @@
       MULLE_C_UNUSED( flag);
 
       allocator = MulleObjCInstanceGetAllocator( self);
-      mulle_buffer_init_with_capacity( &buffer, data.length * 2 + 1, allocator);
+      mulle_buffer_init( &buffer, data.length * 2 + 1, allocator);
       mulle_utf16_bufferconvert_to_utf8( data.characters,
                                          data.length,
                                          &buffer,
