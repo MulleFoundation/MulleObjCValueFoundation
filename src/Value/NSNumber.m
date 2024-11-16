@@ -480,7 +480,7 @@ static inline id   initWithFloat( NSNumber *self, float value)
    //
    // Then the cast can not "overflow"
    //
-   if( value >= (float) -((1L<<23)+1) && value <= (double) ((1L<<23)+1))
+   if( value >= (float) LONG_MIN && value <= (float) LONG_MAX)
    {
       l_val = (long) value;
       if( (float) l_val == value)
@@ -515,7 +515,7 @@ static inline id   initWithDouble( NSNumber *self, double value)
    //
    // Then the cast can not "overflow"
    //
-   if( value >= (double) -((1LL<<52)+1) && value <= (double) ((1LL<<52)+1))
+   if( value >= (double) LLONG_MIN && value <= (double) LLONG_MAX)
    {
       ll_val = (long long) value;
       if( (double) ll_val == value)
@@ -546,11 +546,10 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 
    //
    // don't want to link against -lm so keep to C for calculations
-   // we only check integers known to fit into IEE-754 FP
    //
-   // Then the cast can not "overflow"
+   // Pre-test so the cast can not "overflow"
    //
-   if( value >= (long double) -((1LL<<52)+1) && value <= (long double) ((1LL<<52)+1))
+   if( value >= (long double) LLONG_MIN && value <= (long double) LLONG_MAX)
    {
       ll_val = (long long) value;
       if( (long double) ll_val == value)
@@ -1151,139 +1150,139 @@ bail:
  * MulleObject Support
  */
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectLongSetter( MulleObject *self,
-                                      mulle_objc_methodid_t _cmd,
-                                      void *_param)
+static void   _MulleDynamicObjectLongSetter( MulleDynamicObject *self,
+                                             mulle_objc_methodid_t _cmd,
+                                             void *_param)
 {
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( long));
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( long));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectUnsignedLongSetter( MulleObject *self,
-                                              mulle_objc_methodid_t _cmd,
-                                              void *_param)
+static void   _MulleDynamicObjectUnsignedLongSetter( MulleDynamicObject *self,
+                                                     mulle_objc_methodid_t _cmd,
+                                                     void *_param)
 {
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( unsigned long));
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( unsigned long));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectLongLongSetter( MulleObject *self,
-                                          mulle_objc_methodid_t _cmd,
-                                          void *_param)
-{
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( long long));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectUnsignedLongLongSetter( MulleObject *self,
-                                                  mulle_objc_methodid_t _cmd,
-                                                  void *_param)
-{
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( unsigned long long));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectFloatSetter( MulleObject *self,
-                                       mulle_objc_methodid_t _cmd,
-                                       void *_param)
-{
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( float));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectDoubleSetter( MulleObject *self,
-                                        mulle_objc_methodid_t _cmd,
-                                        void *_param)
-{
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( double));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectLongDoubleSetter( MulleObject *self,
-                                            mulle_objc_methodid_t _cmd,
-                                            void *_param)
-{
-   _MulleObjectNumberSetter( self, _cmd, _param, @encode( long double));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectNumberSetterWillChange( MulleObject *self,
-                                                  mulle_objc_methodid_t _cmd,
-                                                  void *_param,
-                                                  char *objcType)
-{
-   _mulle_objc_object_call_inline_full( self, MULLE_OBJC_WILLCHANGE_METHODID, self);
-   _MulleObjectNumberSetter( self, _cmd, _param, objcType);
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectLongSetterWillChange( MulleObject *self,
-                                                mulle_objc_methodid_t _cmd,
-                                                void *_param)
-{
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( long));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectUnsignedLongSetterWillChange( MulleObject *self,
-                                                        mulle_objc_methodid_t _cmd,
-                                                        void *_param)
-{
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( unsigned long));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectLongLongSetterWillChange( MulleObject *self,
-                                                    mulle_objc_methodid_t _cmd,
-                                                    void *_param)
-{
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( long long));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectUnsignedLongLongSetterWillChange( MulleObject *self,
-                                                            mulle_objc_methodid_t _cmd,
-                                                            void *_param)
-{
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( unsigned long long));
-}
-
-
-MULLE_C_NONNULL_FIRST
-static void   _MulleObjectFloatSetterWillChange( MulleObject *self,
+static void   _MulleDynamicObjectLongLongSetter( MulleDynamicObject *self,
                                                  mulle_objc_methodid_t _cmd,
                                                  void *_param)
 {
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( float));
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( long long));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectDoubleSetterWillChange( MulleObject *self,
-                                                  mulle_objc_methodid_t _cmd,
-                                                  void *_param)
+static void   _MulleDynamicObjectUnsignedLongLongSetter( MulleDynamicObject *self,
+                                                         mulle_objc_methodid_t _cmd,
+                                                         void *_param)
 {
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( double));
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( unsigned long long));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectLongDoubleSetterWillChange( MulleObject *self,
-                                                      mulle_objc_methodid_t _cmd,
-                                                      void *_param)
+static void   _MulleDynamicObjectFloatSetter( MulleDynamicObject *self,
+                                              mulle_objc_methodid_t _cmd,
+                                              void *_param)
 {
-   _MulleObjectNumberSetterWillChange( self, _cmd, _param, @encode( long double));
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( float));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectDoubleSetter( MulleDynamicObject *self,
+                                               mulle_objc_methodid_t _cmd,
+                                               void *_param)
+{
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( double));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectLongDoubleSetter( MulleDynamicObject *self,
+                                                   mulle_objc_methodid_t _cmd,
+                                                   void *_param)
+{
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( long double));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectNumberSetterWillChange( MulleDynamicObject *self,
+                                                         mulle_objc_methodid_t _cmd,
+                                                         void *_param,
+                                                         char *objcType)
+{
+   _mulle_objc_object_call_inline_full( self, MULLE_OBJC_WILLCHANGE_METHODID, self);
+   _MulleDynamicObjectNumberSetter( self, _cmd, _param, objcType);
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectLongSetterWillChange( MulleDynamicObject *self,
+                                                       mulle_objc_methodid_t _cmd,
+                                                       void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectUnsignedLongSetterWillChange( MulleDynamicObject *self,
+                                                                mulle_objc_methodid_t _cmd,
+                                                                void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( unsigned long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectLongLongSetterWillChange( MulleDynamicObject *self,
+                                                           mulle_objc_methodid_t _cmd,
+                                                           void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( long long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectUnsignedLongLongSetterWillChange( MulleDynamicObject *self,
+                                                                   mulle_objc_methodid_t _cmd,
+                                                                   void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( unsigned long long));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectFloatSetterWillChange( MulleDynamicObject *self,
+                                                        mulle_objc_methodid_t _cmd,
+                                                        void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( float));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectDoubleSetterWillChange( MulleDynamicObject *self,
+                                                         mulle_objc_methodid_t _cmd,
+                                                         void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( double));
+}
+
+
+MULLE_C_NONNULL_FIRST
+static void   _MulleDynamicObjectLongDoubleSetterWillChange( MulleDynamicObject *self,
+                                                             mulle_objc_methodid_t _cmd,
+                                                             void *_param)
+{
+   _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( long double));
 }
 
 
@@ -1300,28 +1299,28 @@ static void   _MulleObjectLongDoubleSetterWillChange( MulleObject *self,
    switch( *type)
    {
    case _C_LNG      : return( (IMP) (isObservable
-                                     ? _MulleObjectLongSetterWillChange
-                                     : _MulleObjectLongSetter));
+                                     ? _MulleDynamicObjectLongSetterWillChange
+                                     : _MulleDynamicObjectLongSetter));
    case _C_ULNG     : return( (IMP) (isObservable
-                                     ? _MulleObjectUnsignedLongSetterWillChange
-                                     : _MulleObjectUnsignedLongSetter));
+                                     ? _MulleDynamicObjectUnsignedLongSetterWillChange
+                                     : _MulleDynamicObjectUnsignedLongSetter));
    case _C_LNG_LNG  : return( (IMP) (isObservable
-                                     ? _MulleObjectLongLongSetterWillChange
-                                     : _MulleObjectLongLongSetter));
+                                     ? _MulleDynamicObjectLongLongSetterWillChange
+                                     : _MulleDynamicObjectLongLongSetter));
 
    case _C_ULNG_LNG : return( (IMP) (isObservable
-                                     ? _MulleObjectUnsignedLongLongSetterWillChange
-                                     : _MulleObjectUnsignedLongLongSetter));
+                                     ? _MulleDynamicObjectUnsignedLongLongSetterWillChange
+                                     : _MulleDynamicObjectUnsignedLongLongSetter));
 
    case _C_DBL      : return( (IMP) (isObservable
-                                     ? _MulleObjectDoubleSetterWillChange
-                                     : _MulleObjectDoubleSetter));
+                                     ? _MulleDynamicObjectDoubleSetterWillChange
+                                     : _MulleDynamicObjectDoubleSetter));
    case _C_FLT      : return( (IMP) (isObservable
-                                     ? _MulleObjectFloatSetterWillChange
-                                     : _MulleObjectFloatSetter));
+                                     ? _MulleDynamicObjectFloatSetterWillChange
+                                     : _MulleDynamicObjectFloatSetter));
    case _C_LNG_DBL  : return( (IMP) (isObservable
-                                     ? _MulleObjectLongDoubleSetterWillChange
-                                     : _MulleObjectLongDoubleSetter));
+                                     ? _MulleDynamicObjectLongDoubleSetterWillChange
+                                     : _MulleDynamicObjectLongDoubleSetter));
    }
    return( 0);
 }

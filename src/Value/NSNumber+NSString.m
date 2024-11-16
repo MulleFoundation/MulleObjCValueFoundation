@@ -131,9 +131,15 @@
       return( [NSString stringWithFormat:@"%0.7g", [self doubleValue]]); // sic
    case _C_DBL :
       return( [NSString stringWithFormat:@"%0.16g", [self doubleValue]]);
+   // this is not one less, presumably still compatible (comment written much later)
    case _C_LNG_DBL :
       return( [NSString stringWithFormat:@"%0.21Lg", [self longDoubleValue]]);
    }
+}
+
+- (char *) UTF8String
+{
+   return( [[self description] UTF8String]);
 }
 
 

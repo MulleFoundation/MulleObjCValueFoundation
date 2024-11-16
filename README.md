@@ -59,15 +59,31 @@ and later libraries.
 
 ## Add
 
+**This project is a component of the [MulleFoundation](//github.com/MulleFoundation/MulleFoundation) library.
+As such you usually will *not* add or install it individually, unless you
+specifically do not want to link against `MulleFoundation`.**
+
+
+### Add as an individual component
+
 Use [mulle-sde](//github.com/mulle-sde) to add MulleObjCValueFoundation to your project:
 
 ``` sh
 mulle-sde add github:MulleFoundation/MulleObjCValueFoundation
 ```
 
-## Install
+To only add the sources of MulleObjCValueFoundation with dependency
+sources use [clib](https://github.com/clibs/clib):
 
-### Install with mulle-sde
+
+``` sh
+clib install --out src/MulleFoundation MulleFoundation/MulleObjCValueFoundation
+```
+
+Add `-isystem src/MulleFoundation` to your `CFLAGS` and compile all the sources that were downloaded with your project.
+
+
+## Install
 
 Use [mulle-sde](//github.com/mulle-sde) to build and install MulleObjCValueFoundation and all dependencies:
 
@@ -76,7 +92,7 @@ mulle-sde install --prefix /usr/local \
    https://github.com/MulleFoundation/MulleObjCValueFoundation/archive/latest.tar.gz
 ```
 
-### Manual Installation
+### Legacy Installation
 
 Install the requirements:
 

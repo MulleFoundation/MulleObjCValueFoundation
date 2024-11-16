@@ -18,13 +18,6 @@
 - (NSString *) description;
 
 //
-// -debugDescription is marked as thread safe, it is assumed that ONLY
-// the debugger calls it and that therefore all other threads are stopped
-// We don't want a TAO check in the debugger.
-//
-- (NSString *) debugDescription  MULLE_OBJC_THREADSAFE_METHOD;
-
-//
 // mulleTestDescription can be the same as description, but shouldn't present
 // any pointer addresses or other text that varies between test runs
 //
@@ -38,7 +31,5 @@
 
 @end
 
-// useful to set to 1 for tests, since it suppresses the varying pointer value
-MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-BOOL   MulleDebugDescriptionEllideAddressOutput;
+
 

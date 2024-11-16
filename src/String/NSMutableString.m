@@ -426,7 +426,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 
    // use non-compacting version
    [self mulleGetNonCompactedCharacters:buf
-                                  range:NSMakeRange( 0, _length)];
+                                  range:NSRangeMake( 0, _length)];
 
    if( ! allocator)
    {
@@ -557,7 +557,7 @@ static inline void   getCharactersInRange( NSMutableString *self,
          grab_len = length - range.location;
 
       [s getCharacters:buf
-                 range:NSMakeRange( range.location, grab_len)];
+                 range:NSRangeMake( range.location, grab_len)];
 
       buf            = &buf[ grab_len];
 
@@ -768,7 +768,7 @@ static inline void   getCharactersInRange( NSMutableString *self,
    {
       subRange.location = 0;
       subRange.length   = aRange.location;
-      s[ i++]           = [self substringWithRange:NSMakeRange( 0, aRange.location)];
+      s[ i++]           = [self substringWithRange:NSRangeMake( 0, aRange.location)];
    }
 
    if( [replacement length])

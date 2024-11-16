@@ -11,20 +11,56 @@
 
 @class NSString;
 
-MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-Class       NSClassFromString( NSString *s);
 
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-SEL         NSSelectorFromString( NSString *s);
+Class       MulleObjCClassFromString( NSString *s);
 
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-NSString   *NSStringFromClass( Class cls);
+SEL         MulleObjCSelectorFromString( NSString *s);
 
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-NSString   *NSStringFromSelector( SEL sel);
+NSString   *MulleObjCStringFromClass( Class cls);
 
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
-NSString   *NSStringFromRange( NSRange range);
+NSString   *MulleObjCStringFromSelector( SEL sel);
+
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
+NSString   *MulleObjCStringFromRange( NSRange range);
+
+
+// in order on darwin to not clobber the links symbols of foundation
+// we only use MulleObjC prefix, but the static inline gives the 
+// familiar name
+static inline Class   NSClassFromString( NSString *s)
+{
+   return( MulleObjCClassFromString( s));
+}
+
+
+static inline SEL   NSSelectorFromString( NSString *s)
+{
+   return( MulleObjCSelectorFromString( s));
+}
+
+
+static inline NSString   *NSStringFromClass( Class cls)
+{
+   return( MulleObjCStringFromClass( cls));
+}
+
+
+static inline NSString   *NSStringFromSelector( SEL sel)
+{
+   return( MulleObjCStringFromSelector( sel));
+}
+
+
+static inline NSString   *NSStringFromRange( NSRange range)
+{
+   return( MulleObjCStringFromRange( range));
+}
+
+
 
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString   *

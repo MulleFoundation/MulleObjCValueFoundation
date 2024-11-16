@@ -350,7 +350,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
 {
    NSRange   range;
 
-   range = NSMakeRange( 0, length);
+   range = NSRangeMake( 0, length);
    range = MulleObjCValidateRangeAgainstLength( range, [self length]);
    // need assert
    memcpy( buf, [self bytes], range.length);
@@ -413,7 +413,7 @@ static void   *mulle_memrmem( unsigned char *a, size_t a_len,
    other_length = [other length];
    length       = range.length;
    if( ! length || ! other_length || other_length > length)
-      return( NSMakeRange( NSNotFound, 0));
+      return( NSRangeMake( NSNotFound, 0));
 
    start       = [self bytes];
    bytes       = &start[ range.location];
@@ -426,12 +426,12 @@ static void   *mulle_memrmem( unsigned char *a, size_t a_len,
       {
          location = length - other_length;
          if( ! memcmp( &bytes[ location], other_bytes, other_length))
-            return( NSMakeRange( range.location + location, other_length));
+            return( NSRangeMake( range.location + location, other_length));
       }
       else
       {
          if( ! memcmp( bytes, other_bytes, other_length))
-            return( NSMakeRange( range.location, other_length));
+            return( NSRangeMake( range.location, other_length));
       }
    }
    else
@@ -440,17 +440,17 @@ static void   *mulle_memrmem( unsigned char *a, size_t a_len,
       {
          found = mulle_memrmem( bytes, length, other_bytes, other_length);
          if( found)
-            return( NSMakeRange( found - start, other_length));
+            return( NSRangeMake( found - start, other_length));
       }
       else
       {
          found = memmem( bytes, length, other_bytes, other_length);
          if( found)
-            return( NSMakeRange( found - start, other_length));
+            return( NSRangeMake( found - start, other_length));
       }
    }
 
-   return( NSMakeRange( NSNotFound, 0));
+   return( NSRangeMake( NSNotFound, 0));
 }
 
 

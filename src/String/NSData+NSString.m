@@ -79,7 +79,7 @@ static inline unsigned int   hex( unsigned int c)
    bytes     = [self bytes];
    allocator = MulleObjCInstanceGetAllocator( self);
 
-   mulle_buffer_init_with_capacity( &buffer, length * 3, allocator);
+   mulle_buffer_init( &buffer, length * 3, allocator);
 
    mulle_buffer_add_string( &buffer, "<");
 
@@ -133,7 +133,7 @@ static inline unsigned int   hex( unsigned int c)
 }
 
 
-- (NSString *) debugDescription
+- (NSString *) debugDescription     MULLE_OBJC_THREADSAFE_METHOD
 {
    NSUInteger               length;
    struct mulle_allocator   *allocator;
@@ -148,7 +148,7 @@ static inline unsigned int   hex( unsigned int c)
    bytes     = [self bytes];
    allocator = MulleObjCInstanceGetAllocator( self);
 
-   mulle_buffer_init_with_capacity( &buffer, length * 4, allocator);
+   mulle_buffer_init( &buffer, length * 4, allocator);
    mulle_buffer_hexdump( &buffer, bytes, length, 0, 0);
    mulle_buffer_add_byte( &buffer, 0);
    data = mulle_buffer_extract_data( &buffer);

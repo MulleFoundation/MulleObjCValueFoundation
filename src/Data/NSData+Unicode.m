@@ -127,7 +127,7 @@ static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
       }
    }
 
-   mulle_buffer_init_with_capacity( &buf, length * 3, allocator);
+   mulle_buffer_init( &buf, length * 3, allocator);
    mulle_utf16_bufferconvert_to_utf8( srcBytes,
                                       length,
                                       &buf,

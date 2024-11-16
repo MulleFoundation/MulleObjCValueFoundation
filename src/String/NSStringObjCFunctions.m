@@ -17,19 +17,19 @@
 
 @class NSString;
 
-Class   NSClassFromString( NSString *s)
+Class   MulleObjCClassFromString( NSString *s)
 {
    return( MulleObjCLookupClassByNameUTF8String( [s UTF8String]));
 }
 
 
-SEL   NSSelectorFromString( NSString *s)
+SEL   MulleObjCSelectorFromString( NSString *s)
 {
    return( MulleObjCCreateSelectorUTF8String( [s UTF8String]));
 }
 
 
-NSString   *NSStringFromClass( Class cls)
+NSString   *MulleObjCStringFromClass( Class cls)
 {
    char   *s;
 
@@ -45,7 +45,7 @@ NSString   *NSStringFromClass( Class cls)
 }
 
 
-NSString   *NSStringFromSelector( SEL sel)
+NSString   *MulleObjCStringFromSelector( SEL sel)
 {
    char   *s;
 
@@ -60,7 +60,7 @@ NSString   *NSStringFromSelector( SEL sel)
 }
 
 
-NSString   *NSStringFromProtocol( PROTOCOL proto)
+NSString   *MulleObjCStringFromProtocol( PROTOCOL proto)
 {
    char   *s;
 
@@ -75,7 +75,7 @@ NSString   *NSStringFromProtocol( PROTOCOL proto)
 }
 
 
-NSString   *NSStringFromRange( NSRange range)
+NSString   *MulleObjCStringFromRange( NSRange range)
 {
    // Apple does it with {}
    return( [NSString stringWithFormat:@"{ %lu, %lu }",

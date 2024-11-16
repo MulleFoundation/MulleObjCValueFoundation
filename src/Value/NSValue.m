@@ -228,21 +228,21 @@
 
 
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectRangeSetter( MulleObject *self,
-                                       mulle_objc_methodid_t _cmd,
-                                       void *_param)
+static void   _MulleDynamicObjectRangeSetter( MulleDynamicObject *self,
+                                              mulle_objc_methodid_t _cmd,
+                                              void *_param)
 {
-   _MulleObjectValueSetter( self, _cmd, _param, @encode( NSRange));
+   _MulleDynamicObjectValueSetter( self, _cmd, _param, @encode( NSRange));
 }
 
 
 MULLE_C_NONNULL_FIRST
-static void   _MulleObjectRangeSetterWillChange( MulleObject *self,
-                                                 mulle_objc_methodid_t _cmd,
-                                                 void *_param)
+static void   _MulleDynamicObjectRangeSetterWillChange( MulleDynamicObject *self,
+                                                        mulle_objc_methodid_t _cmd,
+                                                       void *_param)
 {
    _mulle_objc_object_call_inline_full( self, MULLE_OBJC_WILLCHANGE_METHODID, self);
-   _MulleObjectValueSetter( self, _cmd, _param, @encode( NSRange));
+   _MulleDynamicObjectValueSetter( self, _cmd, _param, @encode( NSRange));
 }
 
 
@@ -256,8 +256,8 @@ static void   _MulleObjectRangeSetterWillChange( MulleObject *self,
 
    if( _mulle_objc_ivarsignature_is_compatible( type, @encode( NSRange)))
       return( (IMP) (isObservable
-                     ? _MulleObjectRangeSetterWillChange
-                     : _MulleObjectRangeSetter));
+                     ? _MulleDynamicObjectRangeSetterWillChange
+                     : _MulleDynamicObjectRangeSetter));
    return( 0);
 }
 

@@ -64,7 +64,7 @@
       length = maxLength;
 
    [self getCharacters:buf
-                 range:NSMakeRange( index, length)];
+                 range:NSRangeMake( index, length)];
    return( length);
 }
 
