@@ -1,3 +1,32 @@
+## 0.23.0
+
+
+feat: enhance string enumeration and tagged pointer support
+
+* Add improved string enumeration capabilities
+  - Add MulleStringFor and MulleStringReverseFor macros for faster character access
+  - Support undo/redo operations for parser development
+  - Add mulleGetNonCompactedCharacters:range: for direct string access
+
+* Enhance tagged pointer support
+  - Enable double and float tagged pointer support for 32/64-bit
+  - Fix TPS (Tagged Pointer String) compatibility for 32-bit systems
+  - Optimize char5/char7 string handling
+
+* Improve build system and configuration
+  - Add TAO (Thread Affine Objects) debug support via `OBJC_TAO_DEBUG_ENABLED`
+  - Update CMake configuration for better cross-platform support
+  - Fix Windows compatibility issues
+
+* Code cleanup and optimization
+  - Remove redundant string paging functionality
+  - Improve string character enumeration performance
+  - Update version to 0.23.0
+
+* fixed TPS for 32 bit
+* enable double and float TPS
+
+
 ## 0.22.0
 
 * new character enumeration macros MulleStringFor and MulleStringReverseFor gives you access to unichars faster and more convenient than characterAtIndex: with added undo/redo support for writing parsers
