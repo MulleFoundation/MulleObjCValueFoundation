@@ -1,3 +1,7 @@
+### 0.23.1
+
+* adapted to changed names in MulleObjC
+
 ## 0.23.0
 
 

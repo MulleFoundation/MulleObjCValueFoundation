@@ -54,19 +54,22 @@ struct _MulleObjCCheatingASCIIStringStorage
 
 
 
-static inline id   _MulleObjCCheatingASCIIStringStorageGetObject( struct _MulleObjCCheatingASCIIStringStorage *p)
+static inline id
+   _MulleObjCCheatingASCIIStringStorageGetObject( struct _MulleObjCCheatingASCIIStringStorage *p)
 {
    return( (id) _mulle_objc_objectheader_get_object( &p->_header));
 }
 
 
-static inline char  *_MulleObjCCheatingASCIIStringStorageGetStorage( struct _MulleObjCCheatingASCIIStringStorage *p)
+static inline char  *
+   _MulleObjCCheatingASCIIStringStorageGetStorage( struct _MulleObjCCheatingASCIIStringStorage *p)
 {
    return( p->_storage);
 }
 
 
-static inline size_t  _MulleObjCCheatingASCIIStringStorageGetLength( struct _MulleObjCCheatingASCIIStringStorage *p)
+static inline size_t
+   _MulleObjCCheatingASCIIStringStorageGetLength( struct _MulleObjCCheatingASCIIStringStorage *p)
 {
    return( p->_length);
 }
@@ -76,9 +79,10 @@ static inline size_t  _MulleObjCCheatingASCIIStringStorageGetLength( struct _Mul
 // the cheating ASCII string is always zero terminated
 // size is the length of the string plus zero termination
 //
-static inline id   _MulleObjCCheatingASCIIStringStorageInit( struct _MulleObjCCheatingASCIIStringStorage *storage,
-                                                             char *buf,
-                                                             NSUInteger length)
+static inline id
+   _MulleObjCCheatingASCIIStringStorageInit( struct _MulleObjCCheatingASCIIStringStorage *storage,
+                                             char *buf,
+                                             NSUInteger length)
 {
    _MulleObjCCheatingASCIIString   *p;
    Class                           cls;
@@ -87,9 +91,9 @@ static inline id   _MulleObjCCheatingASCIIStringStorageInit( struct _MulleObjCCh
 
    p = _MulleObjCCheatingASCIIStringStorageGetObject( storage);
 
-   MulleObjCObjectConstantify( p);
    cls = [_MulleObjCCheatingASCIIString class];
-   MulleObjCObjectSetClass( p, cls);
+   MulleObjCInstanceSetClass( p, cls);
+   MulleObjCInstanceConstantify( p);
    _mulle_objc_objectheader_set_thread( &storage->_header, mulle_thread_self());
    storage->_storage = buf;
    storage->_length  = length;
