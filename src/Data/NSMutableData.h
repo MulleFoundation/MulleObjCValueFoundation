@@ -39,13 +39,6 @@
 
 
 
-@interface NSData ( NSMutableCopying) < NSMutableCopying>
-
-- (id) mutableCopy;
-
-@end
-
-
 @interface NSMutableData : NSData < MulleObjCClassCluster, MulleObjCThreadUnsafe>
 
 + (instancetype) dataWithCapacity:(NSUInteger) aNumItems;

@@ -403,7 +403,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 
 #pragma mark - NSCopying
 
-- (id) copy
+- (id) immutableCopy
 {
    struct mulle_allocator   *allocator;
    unichar                  *buf;
@@ -414,7 +414,7 @@ static void   shrinkWithStrings( NSMutableString *self,
 
    // ez and cheap copy, use it, (its immutable anyway)
    if( self->_count == 1)
-      return( (id) [self->_storage[ 0] copy]);
+      return( (id) [self->_storage[ 0] immutableCopy]);
 
    allocator = NULL;
    buf       = tmp;
@@ -450,6 +450,12 @@ static void   shrinkWithStrings( NSMutableString *self,
    return( [_MulleObjCAllocatorUTF32String newWithUTF32CharactersNoCopy:buf
                                                                  length:_length
                                                               allocator:allocator]);
+}
+
+
+- (id) copy
+{
+   return( [self immutableCopy]);
 }
 
 
@@ -842,24 +848,12 @@ static void   mulleConvertStringsToUTF8( NSString **strings,
    return( (char *) _shadow);
 }
 
-
-- (id) mutableCopy
-{
-   return( [[NSMutableString alloc] initWithStrings:_storage
-                                              count:_count]);
-}
-
 @end
 
 
 # pragma mark - NSString ( NSMutableString)
 
 @implementation NSString ( NSMutableString)
-
-- (id) mutableCopy
-{
-   return( [[NSMutableString alloc] initWithString:self]);
-}
 
 
 #pragma mark - mutation constructors

@@ -276,15 +276,6 @@ static NSData  *_newData( void *buf, NSUInteger length)
 }
 
 
-#pragma mark - NSCopying
-
-
-- (id) copy
-{
-   return( [self retain]);
-}
-
-
 #pragma mark - hash and equality
 
 - (NSUInteger) hash

@@ -1057,12 +1057,6 @@ bail:
 }
 
 
-- (id) copy
-{
-   return( [self retain]);
-}
-
-
 #pragma mark - value conversion from primitives
 
 - (BOOL) boolValue

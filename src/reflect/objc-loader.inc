@@ -1,6 +1,5 @@
       { @selector( NSConstantString), MULLE_OBJC_NO_CATEGORYID },      // 02cf74f7;NSConstantString;;
       { @selector( NSData), @selector( NSCoder) },      // 8fce7861;NSData;100c54ba;NSCoder
-      { @selector( NSData), @selector( NSMutableCopying) },      // 8fce7861;NSData;4aa86031;NSMutableCopying
       { @selector( NSData), @selector( NSString) },      // 8fce7861;NSData;1994a171;NSString
       { @selector( NSData), @selector( _Unicode) },      // 8fce7861;NSData;ac921392;_Unicode
       { @selector( NSData), MULLE_OBJC_NO_CATEGORYID },      // 8fce7861;NSData;;

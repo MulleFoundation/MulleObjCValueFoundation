@@ -42,11 +42,11 @@
 
 
 //
-// a NSNumber is known to be immutable, but a NSValue could contain a
+// a NSNumber is known to be invariant, but a NSValue could contain a
 // pointer to something... Nevertheless all values are "copied" in and
 // the whole object is thread safe.
 //
-@interface NSValue : NSObject < MulleObjCClassCluster, MulleObjCThreadSafe>
+@interface NSValue : NSObject < MulleObjCClassCluster, MulleObjCImmutable, MulleObjCThreadSafe>
 {
 }
 

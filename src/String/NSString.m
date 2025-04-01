@@ -746,12 +746,6 @@ static BOOL   hasSuffix( NSString *self, NSUInteger length,
 }
 
 
-- (id) copy
-{
-   return( [self retain]);
-}
-
-
 
 #pragma mark - simplest substring
 
