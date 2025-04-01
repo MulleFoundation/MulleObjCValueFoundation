@@ -186,6 +186,12 @@
 }
 
 
+- (id) immutableCopy
+{
+   return( (id) [[NSData alloc] initWithData:self]);
+}
+
+
 - (void) replaceBytesInRange:(NSRange) range
                    withBytes:(void *) replacementBytes
                       length:(NSUInteger) replacementLength
@@ -233,12 +239,3 @@
 
 @end
 
-
-@implementation NSData( NSMutableCopying)
-
-- (id) mutableCopy
-{
-   return( [[NSMutableData alloc] initWithData:self]);
-}
-
-@end

@@ -89,7 +89,7 @@
 @end
 
 
-@interface NSString ( NSMutableString) < NSMutableCopying>
+@interface NSString ( NSMutableString)
 
 - (NSString *) stringByAppendingString:(NSString *) other;
 

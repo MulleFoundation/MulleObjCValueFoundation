@@ -51,22 +51,22 @@
 
 @implementation NSObject( NSString)
 
+// this is like MulleObjC does it for UTF8 just for NSString here
++ (NSString *) description
+{
+   return( NSStringFromClass( self));
+}
+
 - (NSString *) description
 {
-   return( NSStringFromClass( [self class]));
+   return( [NSString stringWithUTF8String:MulleObjCObjectUTF8String( self)]);
 }
 
 
 //
-// Having it this way around and not description calling UTF8String
-// is convenient, as most classes will probably not want to use a 
-// mulle_buffer to construct a UTF8String for the benefit of the description.
-// For those that do, they should also override descrition with:
-// - (NSString *) description
-// {
-//    return( [NSString stringWithUTF8String:[self UTF8String]]);
-// }
-
+// It's assumed Foundation users will prefer writing -description over
+// UTF8String
+//
 - (char *) UTF8String
 {
    return( [[self description] UTF8String]);

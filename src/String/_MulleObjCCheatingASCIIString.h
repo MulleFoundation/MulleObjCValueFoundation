@@ -94,7 +94,7 @@ static inline id
    cls = [_MulleObjCCheatingASCIIString class];
    MulleObjCInstanceSetClass( p, cls);
    MulleObjCInstanceConstantify( p);
-   _mulle_objc_objectheader_set_thread( &storage->_header, mulle_thread_self());
+   MulleObjCInstanceSetThreadAffinity( p, mulle_thread_self());
    storage->_storage = buf;
    storage->_length  = length;
    storage->_shadow  = 0;

@@ -174,12 +174,6 @@
 }
 
 
-- (id) copy
-{
-   return( [self retain]);
-}
-
-
 - (BOOL) isEqual:(id) other
 {
    if( self == other)

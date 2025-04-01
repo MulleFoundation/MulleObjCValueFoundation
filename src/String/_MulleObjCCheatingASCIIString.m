@@ -55,13 +55,17 @@
 //
 // the only way to keep a cheating string
 //
-- (id) copy
+- (id) immutableCopy
 {
    return( _MulleObjCNewASCIIStringWithASCIICharacters( _storage,
                                                         _length,
                                                         MulleObjCObjectGetUniverse( self)));
 }
 
+- (id) copy
+{
+   return( [self immutableCopy]);
+}
 
 static NSUInteger  mulleGetASCIICharacters( _MulleObjCCheatingASCIIString *self,
                                             char *buf,
