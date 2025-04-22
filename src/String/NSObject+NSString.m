@@ -65,7 +65,7 @@
 
 //
 // It's assumed Foundation users will prefer writing -description over
-// UTF8String
+// -UTF8String
 //
 - (char *) UTF8String
 {
@@ -101,8 +101,8 @@
 // 
 - (NSString *) debugDescription                   MULLE_OBJC_THREADSAFE_METHOD
 {
-   NSString         *contents;
-   NSUInteger       length;
+   NSString     *contents;
+   NSUInteger   length;
 
    @try
    {
