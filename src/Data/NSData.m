@@ -284,25 +284,31 @@ static NSData  *_newData( void *buf, NSUInteger length)
    char        *buf;
    char        *sentinel;
    uintptr_t   hash;
+   void        *hash_state;
 
-   length   = [self length];
-   buf      = (char *) [self bytes];
-   sentinel = &buf[ length > 0x400 ? 0x400 : length]; // touch at most a page
+   length     = [self length];
+   buf        = (char *) [self bytes];
+   sentinel   = &buf[ length > 0x400 ? 0x400 : length]; // touch at most a page
+   hash_state = NULL;
 
    // this hashes 4*32 bytes max
-   hash = 0x1848;
    while( length > 32)
    {
-      hash = mulle_data_hash_chained( mulle_data_make( buf, 32), hash);
+      mulle_data_hash_chained( mulle_data_make( buf, 32), &hash_state);
       buf  = &buf[ 0x100];
       if( buf >= sentinel)
+      {
+         hash = mulle_data_hash_chained( mulle_data_make( NULL, 0), &hash_state);
          return( (NSUInteger) hash);
+      }
 
       length -= 0x100;
    }
 
    // small and large data goes here
-   hash = mulle_data_hash_chained( mulle_data_make( buf, length), hash);
+   mulle_data_hash_chained( mulle_data_make( buf, length), &hash_state);
+
+   hash = mulle_data_hash_chained( mulle_data_make( NULL, 0), &hash_state);
    return( (NSUInteger) hash);
 }
 

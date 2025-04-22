@@ -10,6 +10,7 @@
       { @selector( NSMutableData), MULLE_OBJC_NO_CATEGORYID },      // 5d7fdc81;NSMutableData;;
       { @selector( NSMutableString), @selector( NSData) },      // 63662493;NSMutableString;8fce7861;NSData
       { @selector( NSMutableString), MULLE_OBJC_NO_CATEGORYID },      // 63662493;NSMutableString;;
+      { @selector( NSNull), @selector( NSString) },      // f0c42d79;NSNull;1994a171;NSString
       { @selector( NSNumber), @selector( NSCoder) },      // 8ba34f39;NSNumber;100c54ba;NSCoder
       { @selector( NSNumber), @selector( NSString) },      // 8ba34f39;NSNumber;1994a171;NSString
       { @selector( NSNumber), MULLE_OBJC_NO_CATEGORYID },      // 8ba34f39;NSNumber;;

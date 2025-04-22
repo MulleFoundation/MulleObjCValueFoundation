@@ -30,6 +30,7 @@ src/String/NSMethodSignature+NSString.m
 src/String/NSMutableData+NSString.m
 src/String/NSMutableString+NSData.m
 src/String/NSMutableString.m
+src/String/NSNull+NSString.m
 src/String/NSObject+NSString.m
 src/String/NSString+ClassCluster.m
 src/String/NSString+Enumerator.m
