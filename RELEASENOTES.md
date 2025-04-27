@@ -1,3 +1,9 @@
+### 0.23.2
+
+
+* NSDate gains -copy from MulleObjCImmutable
+* mutableCopy methods exiled to Foundation
+
 ### 0.23.1
 
 * adapted to changed names in MulleObjC
