@@ -9,7 +9,7 @@ int   main( void)
 {
    NSString   *value;
 
-   value = [NSString object];
+   value = [NSString instance];
 
    return( 0);
 }
