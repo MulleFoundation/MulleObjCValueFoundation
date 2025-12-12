@@ -248,7 +248,7 @@ static void   _MulleDynamicObjectRangeSetterWillChange( MulleDynamicObject *self
    type         = _mulle_objc_signature_skip_type_qualifier( type);
    isObservable = bits & _mulle_objc_property_observable;
 
-   if( _mulle_objc_ivarsignature_is_compatible( type, @encode( NSRange)))
+   if( _mulle_objc_ivarsignature_is_binary_compatible( type, @encode( NSRange)))
       return( (IMP) (isObservable
                      ? _MulleDynamicObjectRangeSetterWillChange
                      : _MulleDynamicObjectRangeSetter));

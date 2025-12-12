@@ -74,7 +74,7 @@ enum MulleNumberIsEqualType
 };
 
 
-@interface NSNumber : NSValue < NSCopying, MulleObjCClassCluster>
+@interface NSNumber : NSValue < NSCopying, MulleObjCImmutableCopying, MulleObjCClassCluster>
 {
 }
 

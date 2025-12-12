@@ -9,7 +9,7 @@ int   main( void)
 {
    NSData   *value;
 
-   value = [NSData object];
+   value = [NSData instance];
 
    return( 0);
 }
