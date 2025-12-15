@@ -4,6 +4,9 @@
 # import <MulleObjCValueFoundation/MulleObjCValueFoundation.h>
 #endif
 
+
+#ifdef _C_LNG_DBL
+
 #include <limits.h>
 #include <float.h>
 #include <math.h>
@@ -31,8 +34,12 @@ static long double  values[] =
 
 #define sizeof_array( array) ( sizeof( array) / sizeof( array[ 0]))
 
+#endif
+
+
 int   main( void)
 {
+#ifdef _C_LNG_DBL
    NSNumber      *nr;
    NSString      *s;
    NSInteger     i;
@@ -56,5 +63,9 @@ int   main( void)
          return( 1);
       }
    }
+#else
+   printf( "_C_LNG_DBL not defined, no test for you!\n");
+#endif
    return( 0);
 }
+

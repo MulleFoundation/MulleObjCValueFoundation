@@ -49,16 +49,26 @@
 + (instancetype) stringWithFormat:(NSString *) format
                   mulleVarargList:(mulle_vararg_list) arguments
 {
-   return( [[[self alloc] initWithFormat:format
-                         mulleVarargList:arguments] autorelease]);
+   NSString  *s;
+
+   s = [self alloc];
+   s = [s initWithFormat:format
+         mulleVarargList:arguments];
+   s = [s autorelease];
+   return( s);
 }
 
 
 + (instancetype) mulleStringWithFormat:(NSString *) format
                              arguments:(va_list) args
 {
-   return( [[[self alloc] initWithFormat:format
-                               arguments:args] autorelease]);
+   NSString  *s;
+
+   s = [self alloc];
+   s = [s initWithFormat:format
+               arguments:args];
+   s = [s autorelease];
+   return( s);
 }
 
 //

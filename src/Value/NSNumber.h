@@ -69,7 +69,10 @@ static inline int   _ns_superquad_compare( _ns_superquad a, _ns_superquad b)
 enum MulleNumberIsEqualType
 {
    MulleNumberIsEqualDefault,
+   MulleNumberIsEqualDouble,
+#ifdef _C_LNG_DBL
    MulleNumberIsEqualLongDouble,
+#endif
    MulleNumberIsEqualLongLong
 };
 
@@ -98,7 +101,9 @@ enum MulleNumberIsEqualType
 // anyway, but that seems to be more a bug than a feature right now.
 //
 + (instancetype) numberWithDouble:(double) value;
+#ifdef _C_LNG_DBL
 + (instancetype) numberWithLongDouble:(long double) value;
+#endif
 + (instancetype) numberWithBool:(BOOL) value;
 
 - (NSComparisonResult) compare:(id) other;
@@ -118,7 +123,9 @@ enum MulleNumberIsEqualType
 - (instancetype) initWithUnsignedLongLong:(unsigned long long) value;
 - (instancetype) initWithFloat:(float) value;
 - (instancetype) initWithDouble:(double) value;
+#ifdef _C_LNG_DBL
 - (instancetype) initWithLongDouble:(long double) value;
+#endif
 - (instancetype) initWithBool:(BOOL) value;
 
 - (BOOL) boolValue;
@@ -147,7 +154,9 @@ enum MulleNumberIsEqualType
 
 - (NSInteger) integerValue;
 - (double) doubleValue;
+#ifdef _C_LNG_DBL
 - (long double) longDoubleValue;
+#endif
 - (long long) longLongValue;
 
 @end

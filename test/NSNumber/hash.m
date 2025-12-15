@@ -42,12 +42,14 @@ int  main( void)
       fails++;
    }
 
+#ifdef _C_LNG_DBL
    value = [NSNumber numberWithLongDouble:1848.0];
    if( [value hash] != hash)
    {
       printf( "numberWithInt: and numberWithLongDouble: differ\n");
       fails++;
    }
+#endif
 
    return( fails);
 }
