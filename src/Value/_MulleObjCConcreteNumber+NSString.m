@@ -222,29 +222,20 @@ static struct _MulleStringContext   empty;
 
 @implementation _MulleObjCFloatNumber( NSString)
 
-// TODO: there is possibly a problem here, that we don't have a true
-//       float representation
 - (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
 {
-   struct mulle_asciidata   rval;
-
-   assert( data->length >= 8 + 6);  //-e+123
-
-   rval.length = snprintf( data->characters, data->length, "%0.8g", _value);
-   assert( rval.length < data->length);
-
-   rval.characters = data->characters;
-   *data = rval;
+   assert( data->length >= MULLE__DTOSTR_BUFFER_SIZE);  //-e+123
+   data->length  = mulle_dtostr( _value, data->characters); //  "%0.8g"
 }
 
 
 - (NSString *) stringValue
 {
-   char                     tmp[ 32];
+   char                     tmp[ MULLE__DTOSTR_BUFFER_SIZE];
    struct mulle_asciidata   data;
 
-   data = mulle_asciidata_make( tmp, sizeof( tmp));
-   [self _mulleConvertToASCIICharacters:&data];
+   data.characters = tmp;
+   data.length     = mulle_dtostr( _value, tmp);
    assert( data.length < sizeof( tmp));
    return( [_mulleNewASCIIStringWithStringContext( data.characters,
                                                    &data.characters[ data.length],
@@ -255,29 +246,21 @@ static struct _MulleStringContext   empty;
 
 @implementation _MulleObjCDoubleNumber( NSString)
 
-// TODO: there is possibly a problem here, that we don't have a true
-//       float representation
 - (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
 {
-   struct mulle_asciidata   rval;
-
-   assert( data->length >= 17 + 6);  //-e+123
-
-   rval.length = snprintf( data->characters, data->length, "%0.17g", _value);
-   assert( rval.length < data->length);
-
-   rval.characters = data->characters;
-   *data = rval;
+   assert( data->length >= MULLE__DTOSTR_BUFFER_SIZE);
+   data->length  = mulle_dtostr( _value, data->characters); //  "%0.17g"
 }
+
 
 
 - (NSString *) stringValue
 {
-   char                     tmp[ 32];
+   char                     tmp[ MULLE__DTOSTR_BUFFER_SIZE];
    struct mulle_asciidata   data;
 
-   data = mulle_asciidata_make( tmp, sizeof( tmp));
-   [self _mulleConvertToASCIICharacters:&data];
+   data.characters = tmp;
+   data.length     = mulle_dtostr( _value, tmp);
    assert( data.length < sizeof( tmp));
    return( [_mulleNewASCIIStringWithStringContext( data.characters,
                                                    &data.characters[ data.length],
@@ -287,6 +270,7 @@ static struct _MulleStringContext   empty;
 @end
 
 
+#ifdef _C_LNG_DBL
 @implementation _MulleObjCLongDoubleNumber( NSString)
 
 - (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
@@ -298,7 +282,7 @@ static struct _MulleStringContext   empty;
    assert( rval.length < data->length);
 
    rval.characters = data->characters;
-   *data = rval;
+   *data           = rval;
 }
 
 
@@ -316,6 +300,8 @@ static struct _MulleStringContext   empty;
 }
 
 @end
+#endif
+
 
 
 @implementation _MulleObjCTaggedPointerIntegerNumber( NSString)
@@ -368,6 +354,7 @@ struct mulle_asciidata
                                                  &empty);
    return( [s autorelease]);
 }
+
 
 @end
 

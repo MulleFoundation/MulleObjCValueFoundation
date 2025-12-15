@@ -122,8 +122,10 @@
       mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCFloatNumber));
    config->numbersubclasses[ _NSNumberClassClusterDoubleType]     =
       mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCDoubleNumber));
+#ifdef _C_LNG_DBL
    config->numbersubclasses[ _NSNumberClassClusterLongDoubleType] =
       mulle_objc_universe_lookup_infraclass_nofail( universe, @selector( _MulleObjCLongDoubleNumber));
+#endif
 }
 
 
@@ -538,6 +540,7 @@ static inline id   initWithDouble( NSNumber *self, double value)
 }
 
 
+#ifdef _C_LNG_DBL
 static inline id   initWithLongDouble( NSNumber *self, long double value)
 {
    struct _mulle_objc_universefoundationinfo   *config;
@@ -562,7 +565,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    self = [config->numbersubclasses[ _NSNumberClassClusterLongDoubleType] newWithLongDouble:value];
    return( self);
 }
-
+#endif
 
 // MEMO: unless value is an integer we want to keep precision via
 //       @encode( float) intact, especially for back and forth string
@@ -581,11 +584,12 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 }
 
 
+#ifdef _C_LNG_DBL
 - (instancetype) initWithLongDouble:(long double) value
 {
    return( initWithLongDouble( self, value));
 }
-
+#endif
 
 #pragma mark - NSValue init
 
@@ -614,7 +618,9 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
 
    case _C_FLT      : return( [self initWithFloat:*(float *) value]);
    case _C_DBL      : return( [self initWithDouble:*(double *) value]);
+#ifdef _C_LNG_DBL
    case _C_LNG_DBL  : return( [self initWithLongDouble:*(long double *) value]);
+#endif
    default          : MulleObjCThrowInvalidArgumentExceptionUTF8String( "unknown type '%c'", type[ 0]);
    }
 }
@@ -788,7 +794,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    return( obj);
 }
 
-
+#ifdef _C_LNG_DBL
 + (instancetype) numberWithLongDouble:(long double) value
 {
    NSNumber   *obj;
@@ -798,6 +804,7 @@ static inline id   initWithLongDouble( NSNumber *self, long double value)
    obj = [obj autorelease];
    return( obj);
 }
+#endif
 
 
 #pragma mark - operations
@@ -891,7 +898,9 @@ static int  simplify_type_for_comparison( int type)
    int64_t         a64, b64;
    _ns_superquad   a128, b128;
    double          da, db;
+#ifdef _C_LNG_DBL
    long double     lda, ldb;
+#endif
    int             type;
    int             other_type;
 
@@ -922,7 +931,9 @@ static int  simplify_type_for_comparison( int type)
       case _C_LNG_LNG   : goto do_64_64_diff;
       case _C_SUPERQUAD : goto do_128_128_diff;
       case _C_DBL       : goto do_d_d_diff;
+#ifdef _C_LNG_DBL
       case _C_LNG_DBL   : goto do_ld_ld_diff;
+#endif
       }
 
    case _C_LNG_LNG :
@@ -933,7 +944,9 @@ static int  simplify_type_for_comparison( int type)
       case _C_LNG_LNG   : goto do_64_64_diff;
       case _C_SUPERQUAD : goto do_128_128_diff;
       case _C_DBL       : goto do_d_d_diff;
+#ifdef _C_LNG_DBL
       case _C_LNG_DBL   : goto do_ld_ld_diff;
+#endif
       }
 
 
@@ -945,11 +958,15 @@ static int  simplify_type_for_comparison( int type)
       case _C_LNG_LNG   :
       case _C_SUPERQUAD : goto do_128_128_diff;
       case _C_DBL       : goto do_d_d_diff;
+#ifdef _C_LNG_DBL
       case _C_LNG_DBL   : goto do_ld_ld_diff;
+#endif
       }
 
    case _C_DBL          : goto do_d_d_diff;
+#ifdef _C_LNG_DBL
    case _C_LNG_DBL      : goto do_ld_ld_diff;
+#endif
    }
 
    // TODO: check for unsigned comparison
@@ -988,6 +1005,7 @@ do_d_d_diff :
       return( NSOrderedSame);
    return( da < db ? NSOrderedAscending : NSOrderedDescending);
 
+#ifdef _C_LNG_DBL
 do_ld_ld_diff :
    lda = [self longDoubleValue];
    ldb = [other longDoubleValue];
@@ -1003,6 +1021,7 @@ do_ld_ld_diff :
    if( lda == ldb)
       return( NSOrderedSame);
    return( lda < ldb ? NSOrderedAscending : NSOrderedDescending);
+#endif
 
 bail:
    MulleObjCThrowInternalInconsistencyExceptionUTF8String( "unknown objctype");
@@ -1046,8 +1065,10 @@ bail:
       {
       case MulleNumberIsEqualLongLong   :
          return( [self longLongValue] == [other longLongValue]);
+#ifdef _C_LNG_DBL
       case MulleNumberIsEqualLongDouble :
          return( [self longDoubleValue] == [other longDoubleValue]);
+#endif
       default :
          break;
       }
@@ -1197,6 +1218,7 @@ static void   _MulleDynamicObjectDoubleSetter( MulleDynamicObject *self,
 }
 
 
+#ifdef _C_LNG_DBL
 MULLE_C_NONNULL_FIRST
 static void   _MulleDynamicObjectLongDoubleSetter( MulleDynamicObject *self,
                                                    mulle_objc_methodid_t _cmd,
@@ -1204,6 +1226,7 @@ static void   _MulleDynamicObjectLongDoubleSetter( MulleDynamicObject *self,
 {
    _MulleDynamicObjectNumberSetter( self, _cmd, _param, @encode( long double));
 }
+#endif
 
 
 MULLE_C_NONNULL_FIRST
@@ -1271,6 +1294,7 @@ static void   _MulleDynamicObjectDoubleSetterWillChange( MulleDynamicObject *sel
 }
 
 
+#ifdef _C_LNG_DBL
 MULLE_C_NONNULL_FIRST
 static void   _MulleDynamicObjectLongDoubleSetterWillChange( MulleDynamicObject *self,
                                                              mulle_objc_methodid_t _cmd,
@@ -1278,8 +1302,7 @@ static void   _MulleDynamicObjectLongDoubleSetterWillChange( MulleDynamicObject 
 {
    _MulleDynamicObjectNumberSetterWillChange( self, _cmd, _param, @encode( long double));
 }
-
-
+#endif
 
 
 - (IMP) setterImplementationForObjCType:(char *) type
@@ -1312,9 +1335,11 @@ static void   _MulleDynamicObjectLongDoubleSetterWillChange( MulleDynamicObject 
    case _C_FLT      : return( (IMP) (isObservable
                                      ? _MulleDynamicObjectFloatSetterWillChange
                                      : _MulleDynamicObjectFloatSetter));
+#ifdef _C_LNG_DBL
    case _C_LNG_DBL  : return( (IMP) (isObservable
                                      ? _MulleDynamicObjectLongDoubleSetterWillChange
                                      : _MulleDynamicObjectLongDoubleSetter));
+#endif
    }
    return( 0);
 }

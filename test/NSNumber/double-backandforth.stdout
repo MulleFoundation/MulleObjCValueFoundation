@@ -1,7 +1,7 @@
 |objc|"12.2"
 	-> (double) 12.199999999999999
 	|-> (NSNumber *) @12.2
-	|-> (NSString *) @"12.199999999999999" (-stringValue)
+	|-> (NSString *) @"12.2" (-stringValue)
 	|-> (double) 12.199999999999999
 	||-> (NSString *) @"12.2" (-description)
 	||-> (double) 12.199999999999999
@@ -9,7 +9,7 @@
 |objc|"11.7"
 	-> (double) 11.699999999999999
 	|-> (NSNumber *) @11.7
-	|-> (NSString *) @"11.699999999999999" (-stringValue)
+	|-> (NSString *) @"11.7" (-stringValue)
 	|-> (double) 11.699999999999999
 	||-> (NSString *) @"11.7" (-description)
 	||-> (double) 11.699999999999999
@@ -17,7 +17,7 @@
 |objc|"11.0000007"
 	-> (double) 11.000000699999999
 	|-> (NSNumber *) @11.0000007
-	|-> (NSString *) @"11.000000699999999" (-stringValue)
+	|-> (NSString *) @"11.0000007" (-stringValue)
 	|-> (double) 11.000000699999999
 	||-> (NSString *) @"11.0000007" (-description)
 	||-> (double) 11.000000699999999
@@ -32,11 +32,11 @@
 
 |objc|"11.000000000000005"
 	-> (double) 11.000000000000005
-	|-> (NSNumber *) @11.00000000000001
+	|-> (NSNumber *) @11.000000000000005
 	|-> (NSString *) @"11.000000000000005" (-stringValue)
 	|-> (double) 11.000000000000005
-	||-> (NSString *) @"11.00000000000001" (-description)
-	||-> (double) 11.000000000000011
+	||-> (NSString *) @"11.000000000000005" (-description)
+	||-> (double) 11.000000000000005
 
 |objc|"11.0000000000000005"
 	-> (double) 11

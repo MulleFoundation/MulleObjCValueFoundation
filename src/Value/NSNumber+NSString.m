@@ -40,6 +40,9 @@
 #import "NSString.h"
 #import "NSString+Sprintf.h"
 
+#import "_MulleObjCValueTaggedPointer.h"
+#import "NSString+Substring-Private.h"
+
 // std-c dependencies
 #import "import-private.h"
 
@@ -49,6 +52,8 @@
 
 @implementation NSNumber (NSString)
 
+static struct _MulleStringContext   empty;
+
 //
 // default implementation, actually it's kinda good enough
 // but there are also overrides in _MulleObjCConcreteNumber+NSString.m
@@ -56,9 +61,11 @@
 // back when parsing it. -description is a bit more lenient with respect
 // to FP numbers
 //
-- (NSString *) stringValue
+static NSString   *NSNumberStringValue( NSNumber *self)
 {
-   char   *type;
+   char                     *type;
+   char                     tmp[ MULLE__DTOSTR_BUFFER_SIZE];
+   struct mulle_asciidata   data;
 
    type = [self objCType];
    switch( *type)
@@ -84,58 +91,43 @@
     * 2^23 = 16,777,216
     */
    case _C_FLT :
-      return( [NSString stringWithFormat:@"%0.8g", [self doubleValue]]);
-
    // https://en.wikipedia.org/wiki/Double-precision_floating-point_format
    // 2^52=4,503,599,627,370,496 and 2^53=9,007,199,254,740,992
    // so at most 16 significant digits for IEEE 754, so why do we need
    // 17, I don't now but check float-core and double-core tests
    case _C_DBL :
-      return( [NSString stringWithFormat:@"%0.17g", [self doubleValue]]);
+      // everything got easier with mulle_dtostr
+      data.characters = tmp;
+      data.length     = mulle_dtostr( [self doubleValue], tmp);
+      assert( data.length < sizeof( tmp));
+      return( [_mulleNewASCIIStringWithStringContext( data.characters,
+                                                      &data.characters[ data.length],
+                                                      &empty) autorelease]);
 
+#ifdef _C_LNG_DBL
    case _C_LNG_DBL :
       //
       // https://en.wikipedia.org/wiki/Extended_precision#x86_extended_precision_format
       // https://www.mymathtables.com/numbers/power-exponentiation/power-of-2.html
       // 2^65 = 36,893,488,147,419,103,000
       return( [NSString stringWithFormat:@"%0.21Lg", [self longDoubleValue]]);
+#endif
    }
+}
+
+// info former times -description was "nice" and stringValue was accurate
+// but now both are nice and accurate
+- (NSString *) stringValue
+{
+   return( NSNumberStringValue( self));
 }
 
 
 - (NSString *) description
 {
-   char   *type;
-
-   type = [self objCType];
-   switch( *type)
-   {
-   default :
-      return( [NSString stringWithFormat:@"%ld", [self longValue]]);
-
-   case _C_UCHR :
-   case _C_USHT :
-   case _C_UINT :
-   case _C_ULNG :
-      return( [NSString stringWithFormat:@"%lu", [self unsignedLongValue]]);
-
-   case _C_LNG_LNG :
-      return( [NSString stringWithFormat:@"%lld", [self longLongValue]]);
-   case _C_ULNG_LNG :
-      return( [NSString stringWithFormat:@"%llu", [self unsignedLongLongValue]]);
-
-   // these values are intentionally one less, as the output is Apple compatible
-   // and it is documented thusly. The non-lossy value is stringValue
-   //
-   case _C_FLT :
-      return( [NSString stringWithFormat:@"%0.7g", [self doubleValue]]); // sic
-   case _C_DBL :
-      return( [NSString stringWithFormat:@"%0.16g", [self doubleValue]]);
-   // this is not one less, presumably still compatible (comment written much later)
-   case _C_LNG_DBL :
-      return( [NSString stringWithFormat:@"%0.21Lg", [self longDoubleValue]]);
-   }
+   return( NSNumberStringValue( self));
 }
+
 
 - (char *) UTF8String
 {

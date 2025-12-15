@@ -549,7 +549,11 @@ static struct
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
 {
+#ifdef _C_LNG_DBL
    return( MulleNumberIsEqualLongDouble);
+#else
+   return( MulleNumberIsEqualDouble);
+#endif
 }
 
 @end
@@ -630,7 +634,11 @@ static struct
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
 {
+#ifdef _C_LNG_DBL
    return( MulleNumberIsEqualLongDouble);
+#else
+   return( MulleNumberIsEqualDouble);
+#endif
 }
 
 @end
@@ -700,7 +708,11 @@ static struct
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
 {
+#ifdef _C_LNG_DBL
    return( MulleNumberIsEqualLongDouble);
+#else
+   return( MulleNumberIsEqualDouble);
+#endif
 }
 
 @end

@@ -55,7 +55,11 @@
 
 - (enum MulleNumberIsEqualType) __mulleIsEqualType
 {
+#ifdef _C_LNG_DBL
    return( MulleNumberIsEqualLongDouble);
+#else
+   return( MulleNumberIsEqualDouble);
+#endif
 }
 
 
@@ -77,15 +81,23 @@
       return( YES);
 
    otherType = [other __mulleIsEqualType];
+#ifdef _C_LNG_DBL
    if( otherType != MulleNumberIsEqualDefault)
    {
       if( MulleNumberIsEqualLongDouble != otherType)
          return( NO);
-
       value = (long double) _MulleObjCTaggedPointerFloatNumberGetFloatValue( self);
       return( value == [other longDoubleValue]);
    }
-
+#else
+   if( otherType != MulleNumberIsEqualDefault)
+   {
+      if( MulleNumberIsEqualDouble != otherType)
+         return( NO);
+      value = (double) _MulleObjCTaggedPointerFloatNumberGetFloatValue( self);
+      return( value == [other doubleValue]);
+   }
+#endif
    return( [other compare:self] == NSOrderedSame);
 }
 

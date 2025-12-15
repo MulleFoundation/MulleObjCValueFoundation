@@ -46,7 +46,9 @@ enum _NSNumberClassClusterNumberType
    _NSNumberClassClusterUInt64Type     = 5,
    _NSNumberClassClusterFloatType      = 6,
    _NSNumberClassClusterDoubleType     = 7,
+#ifdef _C_LNG_DBL
    _NSNumberClassClusterLongDoubleType = 8,
+#endif
    _NSNumberClassClusterNumberTypeMax
 };
 
