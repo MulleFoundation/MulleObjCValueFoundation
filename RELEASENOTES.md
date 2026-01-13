@@ -1,3 +1,14 @@
+## 0.24.0
+
+
+
+* with the use of `mulle_dtostr` the distinction between -description (portable=) and -stringValue (exact) became moot
+
+
+* NSNumber now conforms to MulleObjCImmutableCopying protocol
+* NSValue property setter uses binary compatibility check for NSRange
+
+
 ### 0.23.2
 
 
