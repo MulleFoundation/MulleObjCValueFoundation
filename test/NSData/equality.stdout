@@ -1,0 +1,19 @@
+equal isEqualToData: 1
+different content isEqualToData: 0
+different length isEqualToData: 0
+empty isEqualToData: 1
+isEqual NSData: 1
+isEqual NSString: 0
+isEqual nil: 0
+same data same hash: 1
+reversed data different hash: 1
+empty hash non-zero: 1
+8-byte hash equal: 1
+large hash equal: 1
+sub length: 3
+sub[0]: 30
+sub[1]: 40
+sub[2]: 50
+full sub isEqualToData: 1
+empty sub length: 0
+mutable vs immutable isEqual: 1

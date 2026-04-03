@@ -1,0 +1,30 @@
+empty length: 0
+isNSData: 1
+isNSMutableData: 0
+8-byte length: 8
+8-byte[0]: 1
+8-byte[7]: 8
+16-byte length: 16
+16-byte[0]: 10
+16-byte[15]: 25
+tiny length: 4
+tiny[0]: a
+tiny[3]: d
+medium length: 300
+medium[0]: 0x11
+medium[299]: 0x22
+large length: 70000
+large[0]: 0xaa
+large[69999]: 0xbb
+initWithData immutable length: 8
+initWithData immutable[0]: 1
+initWithData mutable length: 5
+initWithData mutable[0]: 42
+initWithData mutable[4]: 99
+nocopy length: 4
+nocopy[0]: 7
+getBytes all: 11 22 77 88
+getBytes:4: 11 22 33 44 / 0
+getBytes:range 2,3: 33 44 55 / 0
+mulleCData length: 4
+mulleCData[0]: 1

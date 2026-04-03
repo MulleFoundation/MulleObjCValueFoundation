@@ -1,0 +1,41 @@
+char -1 charValue: -1
+char -1 intValue: -1
+char -1 boolValue: 1
+uchar 200 unsignedCharValue: 200
+uchar 200 intValue: 200
+short -1000 shortValue: -1000
+short -1000 intValue: -1000
+ushort 60000 unsignedShortValue: 60000
+int 42 intValue: 42
+int 42 shortValue: 42
+int 42 charValue: 42
+int 42 longValue: 42
+int 42 floatValue approx: yes
+int 42 doubleValue approx: yes
+int 42 boolValue: 1
+int 42 unsignedIntValue: 42
+int 42 unsignedLongValue: 42
+int 42 integerValue: 42
+int 42 unsignedIntegerValue: 42
+int 42 longLongValue: 42
+int 42 unsignedLongLongValue: 42
+uint 100 unsignedIntValue: 100
+uint 100 intValue: 100
+long 1000 longValue: 1000
+ulong 999 unsignedLongValue: 999
+integer 77 integerValue: 77
+uinteger 88 unsignedIntegerValue: 88
+ll 55 longLongValue: 55
+ull 66 unsignedLongLongValue: 66
+bool YES boolValue: 1
+bool YES intValue: 1
+bool NO boolValue: 0
+int 0 boolValue: 0
+initWithBytes int32 intValue: 12345
+initWithBytes double approx: yes
+isEqual nil: 0
+isEqual string: 0
+compare 10 vs 20: ascending
+compare 20 vs 10: descending
+compare 10 vs 10: same
+small int objCType: q

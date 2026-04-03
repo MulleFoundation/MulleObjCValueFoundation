@@ -59,12 +59,12 @@ int   main( void)
       converted  = [s mulleLongDoubleValue];
       if( value != converted && ! (isnan( value) && isnan( converted)))
       {
-         fprintf( stderr, "fail: %Lg -> %s -> %Lg\n", value, [s UTF8String], converted);
+         mulle_fprintf( stderr, "fail: %Lg -> %s -> %Lg\n", value, [s UTF8String], converted);
          return( 1);
       }
    }
 #else
-   printf( "_C_LNG_DBL not defined, no test for you!\n");
+   mulle_printf( "_C_LNG_DBL not defined, no test for you!\n");
 #endif
    return( 0);
 }

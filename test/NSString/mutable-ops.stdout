@@ -1,0 +1,23 @@
+initWithCapacity empty length: 0
+after append Hello: Hello
+after append World: Hello, World
+after mulleAppendUTF8: Hello, World foo
+after appendFormat: Hello, World foo 42
+after setString: Reset
+after replace World->Mulle: Hello Mulle
+after insert at front: Say: Hello Mulle
+after delete ' World': Hello
+substringWithRange(6,5): World
+removePrefix 'Hello ': World
+removePrefix 'Foo' (no match): Hello World
+removeSuffix ' World': Hello
+removeSuffix 'Bar' (no match): Hello World
+mulleGetUTF8Characters: Test
+getChars: ABC
+compacted: Hello World
+initWithStrings 3: foobarbaz
+initWithFormat: 1-2
+mulleInitWithUTF8Chars: mulle
+stringByAppendingString: Hello World
+copy immutable: CopyMe
+copy isKindOfString: 1

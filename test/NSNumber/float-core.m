@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include <mulle-sprintf/mulle-sprintf.h>
 
 int ACCURACY=8;
 
@@ -17,18 +18,21 @@ union fu
 static void   print_column( union fu v, char *name)
 {
    auto char   buf[ 64];
+   auto char   out[ 128];
    union fu    check;
+   int         len;
 
-   printf( "0x%08lx : %0.*g", (unsigned long) v.u, ACCURACY, v.f);
+   len = mulle_sprintf( out, "0x%08lx : %0.*g", (unsigned long) v.u, ACCURACY, v.f);
    if( name)
-      printf( " (%s)", name);
+      len += mulle_sprintf( &out[ len], " (%s)", name);
 
-   sprintf( buf, "%0.*g", ACCURACY, v.f);
+   mulle_sprintf( buf, "%0.*g", ACCURACY, v.f);
    check.f = strtod( buf, NULL);
    if( check.f != v.f && ! (isnan( check.f) && isnan( v.f)))
-      printf( " ***FAIL*** (%s -> 0x%08lx : %0.8g)",
+      len += mulle_sprintf( &out[ len], " ***FAIL*** (%s -> 0x%08lx : %0.8g)",
                      buf, (unsigned long) check.u, check.f);
-   printf( "\n");
+   mulle_sprintf( &out[ len], "\n");
+   fputs( out, stdout);
 }
 
 

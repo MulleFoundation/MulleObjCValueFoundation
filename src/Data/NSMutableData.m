@@ -113,6 +113,7 @@
                                    length:(NSUInteger) length
                             sharingObject:(id) owner
 {
+   MULLE_C_UNUSED( owner );
    self = [_MulleObjCConcreteMutableData mulleNewWithBytes:bytes
                                                     length:length];
    return( self);

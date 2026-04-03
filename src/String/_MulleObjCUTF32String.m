@@ -259,12 +259,8 @@
    return( _storage[ index]);
 }
 
-- (unichar) :(NSUInteger)index
-{
-   if( index >= _length)
-      MulleObjCThrowInvalidIndexException( index);
-   return( _storage[ index]);
-}
+
+@method_implementation -: = -characterAtIndex:;
 
 
 - (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data
@@ -310,13 +306,7 @@
    return( _storage[ index]);
 }
 
-
-- (unichar) :(NSUInteger)index
-{
-   if( index >= _length)
-      MulleObjCThrowInvalidIndexException( index);
-   return( _storage[ index]);
-}
+@method_implementation -: = -characterAtIndex:;
 
 
 - (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data

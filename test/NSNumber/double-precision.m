@@ -43,7 +43,7 @@ int   main( void)
    {
       nr  = [NSNumber numberWithDouble:values[ i]];
       
-      printf( "%%0.17g=%0.17g --- %%0.16g=%0.16g --- %%g=%g ::: description=%s\n", 
+      mulle_printf( "%%0.17g=%0.17g --- %%0.16g=%0.16g --- %%g=%g ::: description=%s\n",
 			values[ i], 
 			values[ i], 
 			values[ i], 

@@ -1,0 +1,13 @@
+forward hello: loc=0 len=5
+forward world: loc=6 len=5
+forward xyz: loc=4294967295 len=0
+backward hello: loc=12 len=5
+backward xyz: loc=4294967295 len=0
+anchored-fwd hello at 0: loc=0 len=5
+anchored-fwd world at 0: loc=4294967295 len=0
+anchored-bwd hello at end: loc=12 len=5
+anchored-bwd world at end: loc=4294967295 len=0
+sub-range world in [6,5]: loc=6 len=5
+sub-range world in [0,5]: loc=4294967295 len=0
+needle longer than range: loc=4294967295 len=0
+empty needle: loc=4294967295 len=0

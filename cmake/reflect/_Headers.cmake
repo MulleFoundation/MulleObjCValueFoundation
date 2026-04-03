@@ -74,7 +74,7 @@ src/Data/NSData+Unicode.h
 src/Data/NSData.h
 src/Data/NSMutableData+Unicode.h
 src/Data/NSMutableData.h
-src/MulleObjCLoader+MulleObjCValueFoundation.h
+src/MulleObjCDeps+MulleObjCValueFoundation.h
 src/MulleObjCValueFoundation.h
 src/_MulleObjCValueTaggedPointer.h
 src/String/_MulleObjCASCIIString.h

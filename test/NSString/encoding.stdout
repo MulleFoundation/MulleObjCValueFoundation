@@ -1,0 +1,24 @@
+fastestEncoding: 4
+smallestEncoding: 4
+canBeASCII: no
+canBeUTF8: yes
+canBeUTF16: yes
+cafe canBeASCII: no
+utf8 data length: 5
+ascii data length: 5
+utf8 bom data length: 8
+utf16 data length: 6
+utf8 byte length: 5
+ascii byte length: 5
+roundtrip utf8: RoundTrip
+initWithBytes utf8: Bytes
+initWithBytes ascii: ASCII
+mulleStringWithData: DataFactory
+mulleStringWithUTF8Data: UTF8Data
+encoding name utf8: UTF8
+encoding name ascii: ASCII
+encoding name utf16: UTF16
+parse utf8: 4
+parse ascii: 1
+encoding count: 9
+getBytes: Hello used=5

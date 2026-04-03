@@ -12,11 +12,11 @@ int   main( void)
 
    value = [NSNumber numberWithBool:YES];
    s     = [value stringValue];
-   printf( "%s\n", [s UTF8String]);
+   mulle_printf( "%s\n", [s UTF8String]);
 
    value = [NSNumber numberWithBool:NO];
    s     = [value stringValue];
-   printf( "%s\n", [s UTF8String]);
+   mulle_printf( "%s\n", [s UTF8String]);
 
    return( 0);
 }

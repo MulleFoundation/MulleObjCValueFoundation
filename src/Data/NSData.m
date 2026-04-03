@@ -306,7 +306,8 @@ static NSData  *_newData( void *buf, NSUInteger length)
    }
 
    // small and large data goes here
-   mulle_data_hash_chained( mulle_data_make( buf, length), &hash_state);
+   if( buf) // needs if buf == NULL, this would preempt early
+      mulle_data_hash_chained( mulle_data_make( buf, length), &hash_state);
 
    hash = mulle_data_hash_chained( mulle_data_make( NULL, 0), &hash_state);
    return( (NSUInteger) hash);
@@ -374,8 +375,36 @@ static NSData  *_newData( void *buf, NSUInteger length)
 
 
 // layme brute forcer
-static void   *mulle_memrmem( unsigned char *a, size_t a_len,
-                              unsigned char *b, size_t b_len)
+#ifdef _WIN32
+static inline void   *memmem( unsigned char *haystack,
+                              size_t haystack_len,
+                              unsigned char *needle,
+                              size_t needle_len)
+{
+   size_t          i;
+   unsigned char   *h;
+   unsigned char   *n;
+
+   if( ! needle_len)
+     return( (void *) haystack);
+
+   if( haystack_len < needle_len)
+      return( NULL);
+
+   h = haystack;
+   n = needle;
+
+   for( i = 0; i <= haystack_len - needle_len; i++)
+   {
+      if( h[i] == n[0] && memcmp(h + i, n, needle_len) == 0)
+         return( (void *)(h + i));
+   }
+   return( NULL);
+}
+#endif
+
+static inline void   *mulle_memrmem( unsigned char *a, size_t a_len,
+                                     unsigned char *b, size_t b_len)
 {
    unsigned char   *a_curr;
    unsigned char   first_b;

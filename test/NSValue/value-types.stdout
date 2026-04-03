@@ -1,0 +1,14 @@
+pointer objCType : ^v
+pointerValue match : YES
+range objCType : {mulle_range=QQ}
+rangeValue location=5 length=10
+nonretained objCType : =
+nonretainedObjectValue match : YES
+struct objCType : {TestPoint=ii}
+getValue x=3 y=7
+rect getValue origin=(1,2) size=(100,200)
+isEqualToValue same range : YES
+isEqualToValue diff range : NO
+isEqual same pointer : YES
+hash != 0 : YES
+getValue:size: int=42

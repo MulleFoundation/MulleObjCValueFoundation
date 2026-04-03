@@ -1,0 +1,25 @@
+isEqual same: yes
+isEqual diff: no
+isEqualToString: yes
+isEqualToString diff: no
+hash nonzero: yes
+same hash: yes
+hasPrefix: yes
+noPrefix: no
+hasSuffix: yes
+noSuffix: no
+substringFrom: World
+substringTo: Hello
+substringRange: lo Wo
+append: Hello World
+UTF8String: ABC
+length: 3
+char0: A
+char2: C
+getChars: ABC
+getUTF8Chars: ABC len=3
+initWithChars: XYZ
+mulleInitUTF8: mulle
+mulleInitOrNil valid: valid
+removePrefix: World
+removeSuffix: Hello

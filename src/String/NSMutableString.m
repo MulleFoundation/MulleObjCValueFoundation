@@ -527,10 +527,7 @@ static inline unichar   characterAtIndex( NSMutableString *self, NSUInteger inde
 }
 
 
-- (unichar) :(NSUInteger) index
-{
-   return( characterAtIndex( self, index));
-}
+@method_implementation -: = -characterAtIndex:;
 
 
 static inline void   getCharactersInRange( NSMutableString *self,

@@ -1,4 +1,5 @@
 # MulleObjCValueFoundation Library Documentation for AI
+<!-- Keywords: values, boxing -->
 
 ## 1. Introduction & Purpose
 

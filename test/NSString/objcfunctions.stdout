@@ -1,0 +1,7 @@
+class: yes
+class name: NSString
+selector: yes
+selector name: length
+range: { 3, 5 }
+combined: setName:
+combined no colon: getValue

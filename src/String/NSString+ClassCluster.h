@@ -54,6 +54,8 @@
 
 // mulle additions
 
+- (instancetype) mulleInitWithUTF16String:(mulle_utf16_t *) s;
+
 - (instancetype) mulleInitWithUTF8Characters:(char *) s
                                       length:(NSUInteger) len;
 
@@ -89,7 +91,10 @@ MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *_MulleObjCNewASCIIStringWithASCIICharacters( char *s,
                                                         NSUInteger length,
                                                         struct _mulle_objc_universe *universe);
-
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
+NSString  *_MulleObjCNewASCIIStringWithUTF16Characters( mulle_utf16_t *s,
+                                                        NSUInteger length,
+                                                        struct _mulle_objc_universe *universe);
 MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
                                                         NSUInteger length,
@@ -101,6 +106,13 @@ static inline NSString  *
                                                NSUInteger length)
 {
    return( _MulleObjCNewASCIIStringWithASCIICharacters( s, length, MulleObjCGetUniverse()));
+}
+
+static inline NSString  *
+   MulleObjCNewASCIIStringWithUTF16Characters( mulle_utf16_t *s,
+                                               NSUInteger length)
+{
+   return( _MulleObjCNewASCIIStringWithUTF16Characters( s, length, MulleObjCGetUniverse()));
 }
 
 

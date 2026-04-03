@@ -191,6 +191,9 @@ typedef mulle_utf32_t  unichar;
                        bufferSize:(NSUInteger) size;
 - (void) mulleGetUTF8String:(char *) buf;
 
+- (mulle_utf16_t *) mulleUTF16String;
++ (instancetype) mulleStringWithUTF16String:(mulle_utf16_t *) s;
+
 @end
 
 

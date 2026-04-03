@@ -1,0 +1,50 @@
+utf16 UTF8String: über
+utf16 length: 4
+utf16 mulleUTF8StringLength: 5
+utf16 hash nonzero: yes
+utf16 char[0]=0x00fc
+utf16 char[1]=b
+naïve UTF8String: naïve
+naïve length: 5
+isEqual same: yes
+isEqual diff: no
+isEqualToString same: yes
+naïve hasPrefix na: yes
+naïve hasSuffix ve: yes
+naïve hasPrefix ber: no
+naïve substr[2,2]: ïv
+naïve substringFrom(3): ve
+naïve substringTo(2): na
+naïve getCharacters[0..2]: 0x006e 0x0061 0x00ef
+naïve getCharacters full len=5
+naïve mulleGetUTF8Characters: naïve len=6
+naïve utf8 data len: 6
+naïve utf16 data len: 12
+utf16 append: übernaïve
+gruss UTF8String: Grüß
+gruss length: 4
+gruss char[2]=0x00fc
+gruss char[3]=0x00df
+emoji UTF8String len: 4
+emoji length: 1
+emoji mulleUTF8StringLength: 4
+emoji char[0]=0x1f600
+emoji hash nonzero: yes
+emoji isEqual same: yes
+emoji isEqualToString same: yes
+mixed UTF8String: Hi 😀
+mixed length: 4
+mixed mulleUTF8StringLength: 7
+mixed getCharacters[0]=H
+mixed getCharacters[3]=0x1f600
+mixed substr[0,2]: Hi
+mixed substringFrom(3): 😀
+mixed hasPrefix Hi: yes
+mixed utf8 data len: 7
+mixed utf32 data len: 20
+mixed mulleGetUTF8Chars len=7
+two-emoji length: 2
+two-emoji char[0]=0x1f600
+two-emoji char[1]=0x1f60e
+two-emoji getCharsRange: 0x1f600 0x1f60e
+two-emoji full range is-same: yes

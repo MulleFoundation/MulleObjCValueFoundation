@@ -1,0 +1,5 @@
+format int: 42
+format string: hello world
+format cs ul: test 99
+initWithFormat: x=3 y=7
+appendFormat: base-5

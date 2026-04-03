@@ -46,7 +46,7 @@ int   main( void)
    for( i = 0; i < sizeof_array( strings); i++)
    {
       if( i)
-         printf( "\n");
+         mulle_printf( "\n");
 
       v1  = strtod( strings[ i], NULL);
       nr  = [NSNumber numberWithDouble:v1];
@@ -55,7 +55,7 @@ int   main( void)
       v2  = [s2 doubleValue];
       s3  = [nr description];
       v3  = [s3 doubleValue];
-      printf( "|objc|\"%s\"\n"
+      mulle_printf( "|objc|\"%s\"\n"
               "\t-> (double) %0.17g\n"
               "\t|-> (NSNumber *) @%s\n"
               "\t|-> (NSString *) @\"%s\" (-stringValue)\n"

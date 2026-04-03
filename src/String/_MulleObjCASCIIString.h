@@ -57,6 +57,8 @@
 
 + (instancetype) newWithASCIICharacters:(char *) chars
                                  length:(NSUInteger) length;
++ (instancetype) newWithUTF16Characters:(mulle_utf16_t *) chars
+                                 length:(NSUInteger) length;
 + (instancetype) newWithUTF32Characters:(mulle_utf32_t *) chars
                                  length:(NSUInteger) length;
 @end

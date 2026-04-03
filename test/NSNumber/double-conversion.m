@@ -47,7 +47,7 @@ int   main( void)
       converted  = [s doubleValue];
       if( value != converted && ! (isnan( value) && isnan( converted)))
       {
-         fprintf( stderr, "fail: %g -> %s -> %g\n", value, [s UTF8String], converted);
+         mulle_fprintf( stderr, "fail: %g -> %s -> %g\n", value, [s UTF8String], converted);
          return( 1);
       }
    }

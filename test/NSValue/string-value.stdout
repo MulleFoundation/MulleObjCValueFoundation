@@ -1,0 +1,2 @@
+range description: (struct mulle_range) { 3, 5 }
+rect description: (struct TestRect) { 1, 2, 3, 4 }

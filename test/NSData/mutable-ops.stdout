@@ -1,0 +1,44 @@
+capacity initial length: 0
+isNSMutableData: 1
+isNSData: 1
+dataWithLength:8 length: 8
+mulleNonZeroedDataWithLength:16 length: 16
+append length: 4
+append[0]: 1
+append[3]: 4
+after appendData length: 7
+after appendData[4]: 5
+after appendData[6]: 7
+shrink length: 3
+shrink[0]: 1
+shrink[2]: 3
+grow length: 6
+grow[3] zeroed: 1
+grow[5] zeroed: 1
+zero length: 0
+increaseLengthBy length: 5
+increaseLengthBy[0]: 0xaa
+increaseLengthBy[3] zeroed: 1
+increaseLengthBy[4] zeroed: 1
+mutableBytes[0]: 42
+mutableBytes[3]: 99
+replace same: len=6 [2]=10 [3]=20
+replace shorter: len=4 [0]=1 [1]=99 [2]=5 [3]=6
+replace longer: len=6 [0]=1 [1]=10 [2]=11 [3]=12 [4]=3 [5]=4
+reset: len=6 [1]=2 [2]=0 [3]=0 [4]=0 [5]=6
+setData length: 4
+setData[0]: 7
+setData[3]: 10
+mulleMutableData length: 4
+mulleMutableData[0]: 11
+mulleCData from mutable length: 4
+mulleCData from mutable[0]: 55
+mutable copy isNSMutableData: 1
+mutable copy length: 4
+mutable copy modified[0]: 99
+original unchanged[0]: 1
+copy of mutable isNSMutableData: 0
+copy of mutable isNSData: 1
+initWithData mutable length: 4
+initWithData mutable isNSMutableData: 1
+mulleSetLengthDontZero:0 length: 0

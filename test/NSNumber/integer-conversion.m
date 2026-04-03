@@ -34,7 +34,7 @@ int   main( void)
       converted  = [s integerValue];
       if( value != converted)
       {
-         fprintf( stderr, "fail: %ld -> %s -> %ld\n", (long) value, [s UTF8String], (long) converted);
+         mulle_fprintf( stderr, "fail: %ld -> %s -> %ld\n", (long) value, [s UTF8String], (long) converted);
          return( 1);
       }
    }
