@@ -1,0 +1,14 @@
+empty length: 0
+after appends: Hello, World
+length: 12
+char[0]: H
+char[7]: W
+substr: Hello
+appendFormat: val=42
+after replace: Hello Mulle
+after delete: Hello
+after setString: replaced
+mulleAppendCharacters: ABC
+initWithStrings: foobarbaz
+copy is NSString: yes
+immutableCopy length: 4

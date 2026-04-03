@@ -98,6 +98,56 @@ static void   _NSThrowInvalidUTF8Exception( char *s,
 }
 
 
+static void   _NSThrowInvalidUTF16Exception( mulle_utf16_t *s,
+                                             size_t len,
+                                             struct mulle_utf_information *info,
+                                             struct mulle_allocator *allocator)
+{
+   struct mulle_buffer   buffer;
+   auto char             space[ 256];
+   mulle_utf16_t         *p;
+   mulle_utf16_t         *invalid;
+
+   invalid = (mulle_utf16_t *) info->invalid;
+   if( s > (mulle_utf16_t *) info->invalid)
+   {
+      if( allocator)
+         mulle_allocator_free( allocator, s);
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "UT16 internal corruption, no data can be shown");
+   }
+
+   p   = invalid;
+   p  -= 2;
+   if( p < s)
+      p = s;
+
+   len = &s[ len] - invalid;
+   if( len > 2)
+      len = 2;
+
+   mulle_buffer_init_with_static_bytes( &buffer, space, sizeof( space), NULL);
+   mulle_buffer_hexdump_line( &buffer,
+                              (uint8_t *) p, (invalid - p) * sizeof( mulle_utf16_t),
+                              (size_t) (s - p) * sizeof( mulle_utf16_t),
+                              mulle_buffer_hexdump_no_ascii);
+   mulle_buffer_add_string( &buffer, " > ");
+   mulle_buffer_hexdump_line( &buffer,
+                              (uint8_t *) invalid,
+                              len * sizeof( mulle_utf16_t),
+                              (size_t) (invalid - s) * sizeof( mulle_utf16_t),
+                              mulle_buffer_hexdump_no_offset|mulle_buffer_hexdump_no_ascii);
+   mulle_buffer_zero_last_byte( &buffer);
+
+   if( allocator)
+      mulle_allocator_free( allocator, s);
+
+   MulleObjCThrowInvalidArgumentExceptionUTF8String( "Invalid UTF16 (0x%x): %s",
+                                                     *invalid,
+                                                     space);
+}
+
+
+
 static void   _NSThrowInvalidUTF32Exception( mulle_utf32_t *s,
                                              size_t len,
                                              struct mulle_utf_information *info,
@@ -319,6 +369,48 @@ static NSString  *newStringWithUTF8Characters( char *buf,
 }
 
 
+static NSString  *newStringWithUTF16Characters( mulle_utf16_t *buf,
+                                                NSUInteger len,
+                                                struct mulle_allocator *allocator,
+                                                struct _mulle_objc_universe *universe)
+{
+   struct mulle_utf_information   info;
+
+   if( ! len)
+      return( @"");
+
+   if( mulle_utf16_information( buf, len, &info))
+      _NSThrowInvalidUTF16Exception( buf, len, &info, allocator);
+
+#ifdef __MULLE_OBJC_TPS__
+   if( MulleObjCChar7TPSIndex <= mulle_objc_get_taggedpointer_mask()
+       && info.is_ascii
+       && info.utf16len <= mulle_char7_get_maxlength())
+   {
+      return( MulleObjCTaggedPointerChar7StringWithUTF16Characters( info.start,
+                                                                    info.utf16len));
+   }
+   if( MulleObjCChar7TPSIndex <= mulle_objc_get_taggedpointer_mask()
+       && info.is_char5
+       && info.utf16len <= mulle_char5_get_maxlength())
+   {
+      return( MulleObjCTaggedPointerChar5StringWithUTF16Characters( info.start,
+                                                                    info.utf16len));
+   }
+#endif
+
+   if( info.is_ascii)
+      return( _MulleObjCNewASCIIStringWithUTF16Characters( buf,
+                                                           info.utf8len,
+                                                           universe));
+
+   if( info.is_utf15)
+      return( MulleObjCNewUTF16StringWithUTF8Information( &info, allocator));
+
+   return( MulleObjCNewUTF16StringWithUTF8Information( &info, allocator));
+}
+
+
 static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
                                                 NSUInteger len,
                                                 struct mulle_allocator *allocator,
@@ -403,6 +495,27 @@ static NSString  *newStringWithUTF32Characters( mulle_utf32_t *buf,
 
 
 #pragma mark - mulle public class cluster init
+
+
+- (instancetype) mulleInitWithUTF16String:(mulle_utf16_t *) s
+{
+   struct mulle_allocator       *allocator;
+   struct _mulle_objc_universe  *universe;
+
+   assert( [self __isClassClusterObject]);
+
+   if( ! s)
+      MulleObjCThrowInvalidArgumentExceptionUTF8String( "argument must not be null");
+
+   allocator = MulleObjCInstanceGetAllocator( self);
+   universe  = MulleObjCObjectGetUniverse( self);
+   self      = newStringWithUTF16Characters( s,
+                                             mulle_utf16_strlen( s),
+                                             allocator,
+                                             universe);
+   return( self);
+}
+
 
 //
 // this is a mulle addition, public method

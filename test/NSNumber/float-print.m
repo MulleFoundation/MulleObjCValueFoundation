@@ -51,25 +51,25 @@ int   main( void)
 
       if( ([nr doubleValue] != value || [nr2 doubleValue] != value) && ! (isnan( value)))
       {
-         fprintf( stderr, "value double fail: %g -> %g / %g\n", value, [nr doubleValue],  [nr2 doubleValue]);
+         mulle_fprintf( stderr, "value double fail: %g -> %g / %g\n", value, [nr doubleValue],  [nr2 doubleValue]);
          return( 1);
       }
 
       if( ([nr floatValue] != value || [nr2 floatValue] != value) && ! (isnan( value)))
       {
-         fprintf( stderr, "value float fail: %g -> %g / %g\n", value, [nr floatValue],  [nr2 floatValue]);
+         mulle_fprintf( stderr, "value float fail: %g -> %g / %g\n", value, [nr floatValue],  [nr2 floatValue]);
          return( 1);
       }
 
       if( ([nr doubleValue] != dvalue || [nr2 doubleValue] != dvalue) && ! (isnan( dvalue)))
       {
-         fprintf( stderr, "dvalue double fail: %g -> %g / %g\n", dvalue, [nr doubleValue],  [nr2 doubleValue]);
+         mulle_fprintf( stderr, "dvalue double fail: %g -> %g / %g\n", dvalue, [nr doubleValue],  [nr2 doubleValue]);
          return( 1);
       }
 
       if( ([nr floatValue] != dvalue || [nr2 floatValue] != dvalue) && ! (isnan( dvalue)))
       {
-         fprintf( stderr, "dvalue float fail: %g -> %g / %g\n", dvalue, [nr floatValue],  [nr2 floatValue]);
+         mulle_fprintf( stderr, "dvalue float fail: %g -> %g / %g\n", dvalue, [nr floatValue],  [nr2 floatValue]);
          return( 1);
       }
    }

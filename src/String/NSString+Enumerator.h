@@ -75,6 +75,7 @@ struct MulleStringEnumerator
 };
 
 
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 void   _MulleStringEnumeratorInit( struct MulleStringEnumerator *rover, NSString *s);
 
 
@@ -143,7 +144,7 @@ static inline BOOL   _MulleStringEnumeratorUndoNext( struct MulleStringEnumerato
       return( NO);
    }
 
-   q = &((char *) rover->_curr)[ - (int) rover->_size * 2];
+   q = &((char *) rover->_curr)[ - (intptr_t) rover->_size * 2];
 
    if( MULLE_C_UNLIKELY( q < (char *) rover->_start))
    {
@@ -183,7 +184,7 @@ static inline BOOL
    if( MULLE_C_UNLIKELY( rover->_curr == rover->_start))
       return( NO);
 
-   rover->_curr = &((char *) rover->_curr)[ - (int) rover->_size];
+   rover->_curr = &((char *) rover->_curr)[ - (intptr_t) rover->_size];
    if( c)
       *c = (*rover->_get)( rover->_curr);
    return( YES);

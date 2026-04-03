@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include <mulle-sprintf/mulle-sprintf.h>
+#include <mulle-sprintf/mulle-sprintf.h>
 
 // need 17 on linux to get back and forth conversion
 int ACCURACY=17;
@@ -18,18 +20,21 @@ union dll
 static void   print_column( union dll v, char *name)
 {
    auto char   buf[ 64];
+   auto char   out[ 128];
    union dll   check;
+   int         len;
 
-   printf( "0x%016llx : %0.*g", (unsigned long long) v.ll, ACCURACY, v.d);
+   len = mulle_sprintf( out, "0x%016llx : %0.*g", (unsigned long long) v.ll, ACCURACY, v.d);
    if( name)
-      printf( " (%s)", name);
+      len += mulle_sprintf( &out[ len], " (%s)", name);
 
-   sprintf( buf, "%0.*g", ACCURACY, v.d);
+   mulle_sprintf( buf, "%0.*g", ACCURACY, v.d);
    check.d = strtod( buf, NULL);
    if( check.d != v.d && ! (isnan( check.d) && isnan( v.d)))
-      printf( " ***FAIL*** (%s -> 0x%016llx : %0.17g)",
+      len += mulle_sprintf( &out[ len], " ***FAIL*** (%s -> 0x%016llx : %0.17g)",
                      buf, (unsigned long long) check.ll, check.d);
-   printf( "\n");
+   mulle_sprintf( &out[ len], "\n");
+   fputs( out, stdout);
 }
 
 

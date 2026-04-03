@@ -12,7 +12,7 @@ int   main( void)
 
    value = [NSNumber numberWithInteger:-200000000L];
    s     = [value stringValue];
-   printf( "%s\n", [s UTF8String]);
+   mulle_printf( "%s\n", [s UTF8String]);
 
    return( 0);
 }

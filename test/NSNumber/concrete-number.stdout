@@ -1,0 +1,137 @@
+int32max intValue: 2147483647
+int32max integerValue: 2147483647
+int32max longLongValue: 2147483647
+int32max unsignedLongLongValue: 2147483647
+int32max doubleValue: 2.14748e+09
+int32max floatValue: 2.14748e+09
+int32max charValue: -1
+int32max shortValue: -1
+int32max longValue: 2147483647
+int32max boolValue: 1
+int32max objCType: q
+int32max hash nonzero: yes
+int32min intValue: -2147483648
+int32min longLongValue: -2147483648
+int32min doubleValue: -2.14748e+09
+int32min boolValue: 1
+int32min objCType: q
+int32max vs int32min: descending
+int32min vs int32max: ascending
+int32max vs int32max: same
+int32max isEqual same: yes
+int32max isEqual diff: no
+int32max isEqualToNumber same: yes
+int32max isEqualToNumber diff: no
+uint32max intValue: -1
+uint32max unsignedLongLongValue: 4294967295
+uint32max doubleValue: 4.29497e+09
+uint32max boolValue: 1
+uint32max objCType: q
+uint32max hash nonzero: yes
+uint32max vs int32max: descending
+int64max longLongValue: 9223372036854775807
+int64max integerValue nonzero: yes
+int64max doubleValue: 9.22337e+18
+int64max floatValue: 9.22337e+18
+int64max boolValue: 1
+int64max objCType: q
+int64max hash nonzero: yes
+int64min longLongValue: -9223372036854775808
+int64min objCType: q
+int64max vs int64min: descending
+int64min vs int64max: ascending
+int64max vs int64max copy: same
+int64max isEqual same: yes
+int64max isEqual diff: no
+uint64max unsignedLongLongValue: 18446744073709551615
+uint64max boolValue: 1
+uint64max objCType: Q
+uint64max hash nonzero: yes
+int64max vs int32max: descending
+int32max vs int64max: ascending
+int32max stringValue: 2147483647
+int32min stringValue: -2147483648
+uint32max stringValue: 4294967295
+int64max stringValue: 9223372036854775807
+int64min stringValue: -9223372036854775808
+uint64max stringValue: 18446744073709551615
+int32max getValue: 2147483647
+int64max getValue: 9223372036854775807
+uint32max getValue: 4294967295
+uint64max getValue: 18446744073709551615
+boolYES boolValue: 1
+boolYES intValue: 1
+boolYES longLongValue: 1
+boolYES charValue: 1
+boolYES doubleValue approx: yes
+boolYES floatValue approx: yes
+boolYES objCType: B
+boolYES hash nonzero: yes
+boolYES __mulleIsBoolNumber: 1
+boolYES getValue: 1
+boolNO boolValue: 0
+boolNO intValue: 0
+boolNO longLongValue: 0
+boolNO charValue: 0
+boolNO doubleValue zero: yes
+boolNO floatValue zero: yes
+boolNO objCType: B
+boolNO __mulleIsBoolNumber: 1
+boolYES vs boolNO descending: yes
+boolNO vs boolYES ascending: yes
+boolYES isEqual boolYES: yes
+boolYES isEqual boolNO: no
+boolYES isEqualToNumber boolYES: yes
+boolYES isEqualToNumber boolNO: no
+float3.14 floatValue in (3,3.2): yes
+float3.14 doubleValue in (3,3.2): yes
+float3.14 integerValue: 3
+float3.14 longLongValue: 3
+float3.14 unsignedLongLongValue: 3
+float3.14 unsignedIntegerValue: 3
+float3.14 objCType: f
+float3.14 hash nonzero: yes
+float3.14 getValue in (3,3.2): yes
+float-2.5 floatValue in (-2.6,-2.4): yes
+float-2.5 longLongValue: -2
+floatNaN objCType: f
+double3.14 doubleValue in (3,3.2): yes
+double3.14 floatValue in (3,3.2): yes
+double3.14 longLongValue: 3
+double3.14 integerValue: 3
+double3.14 unsignedLongLongValue: 3
+double3.14 unsignedIntegerValue: 3
+double3.14 objCType: d
+double3.14 hash nonzero: yes
+double3.14 getValue in (3,3.2): yes
+double-2.5 doubleValue in (-2.6,-2.4): yes
+double-2.5 longLongValue: -2
+doubleNaN objCType: d
+uint32max charValue: -1
+uint32max shortValue: -1
+uint32max unsignedCharValue: 255
+uint32max unsignedShortValue: 65535
+uint32max unsignedIntValue: 4294967295
+uint32max unsignedLongValue nonzero: yes
+uint32max unsignedIntegerValue nonzero: yes
+uint32max longValue nonzero: yes
+uint32max integerValue nonzero: yes
+uint32max boolValue: 1
+uint64max charValue: -1
+uint64max shortValue: -1
+uint64max unsignedCharValue: 255
+uint64max unsignedShortValue: 65535
+uint64max unsignedIntValue: 4294967295
+uint64max unsignedLongValue nonzero: yes
+uint64max unsignedIntegerValue nonzero: yes
+uint64max longValue nonzero: yes
+uint64max integerValue nonzero: yes
+uint64max boolValue: 1
+int32max unsignedCharValue: 255
+int32max unsignedShortValue: 65535
+int32max unsignedIntValue: 2147483647
+int32max unsignedLongValue nonzero: yes
+int32max unsignedIntegerValue nonzero: yes
+int64max unsignedCharValue: 255
+int64max unsignedShortValue: 65535
+int64max unsignedIntValue: 4294967295

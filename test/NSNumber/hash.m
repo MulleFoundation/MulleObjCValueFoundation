@@ -18,27 +18,27 @@ int  main( void)
    value = [NSNumber numberWithInt:1849];
    if( [value hash] == hash)
    {
-      printf( "numberWithInt:1848 and numberWithInt:1849 should differ\n");
+      mulle_printf( "numberWithInt:1848 and numberWithInt:1849 should differ\n");
       fails++;
    }
    value = [NSNumber numberWithInteger:1848];
    if( [value hash] != hash)
    {
-      printf( "numberWithInt: and numberWithInteger: differ\n");
+      mulle_printf( "numberWithInt: and numberWithInteger: differ\n");
       fails++;
    }
 
    value = [NSNumber numberWithUnsignedInteger:1848];
    if( [value hash] != hash)
    {
-      printf( "numberWithInt: and numberWithUnsignedInteger: differ\n");
+      mulle_printf( "numberWithInt: and numberWithUnsignedInteger: differ\n");
       fails++;
    }
 
    value = [NSNumber numberWithDouble:1848.0];
    if( [value hash] != hash)
    {
-      printf( "numberWithInt: and numberWithDouble: differ\n");
+      mulle_printf( "numberWithInt: and numberWithDouble: differ\n");
       fails++;
    }
 
@@ -46,7 +46,7 @@ int  main( void)
    value = [NSNumber numberWithLongDouble:1848.0];
    if( [value hash] != hash)
    {
-      printf( "numberWithInt: and numberWithLongDouble: differ\n");
+      mulle_printf( "numberWithInt: and numberWithLongDouble: differ\n");
       fails++;
    }
 #endif

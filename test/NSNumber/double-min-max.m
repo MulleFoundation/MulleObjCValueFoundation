@@ -46,65 +46,65 @@ int   main( void)
       {
          nr2 = [NSNumber numberWithDouble:values[ j]];
 
-         printf( "C: %g <op> %g :",
+         mulle_printf( "C: %g <op> %g :",
                      values[ i],
                      values[ j]);
          if( values[ i] < values[ j])
-            printf( " <");
+            mulle_printf( " <");
          if( values[ i] == values[ j])
-            printf( " ==");
+            mulle_printf( " ==");
          if( values[ i] != values[ j])
-            printf( " !=");
+            mulle_printf( " !=");
          if( values[ i] > values[ j])
-            printf( " >");
-         printf( "\n");
+            mulle_printf( " >");
+         mulle_printf( "\n");
 
-         printf( "C: %g <op> %g :",
+         mulle_printf( "C: %g <op> %g :",
                      values[ j],
                      values[ i]);
          if( values[ j] < values[ i])
-            printf( " <");
+            mulle_printf( " <");
          if( values[ j] == values[ i])
-            printf( " ==");
+            mulle_printf( " ==");
          if( values[ j] != values[ i])
-            printf( " !=");
+            mulle_printf( " !=");
          if( values[ j] > values[ i])
-            printf( " >");
-         printf( "\n");
+            mulle_printf( " >");
+         mulle_printf( "\n");
 
 
          result = [nr1 compare:nr2];
-         printf( "   [%g compare:%g] : %s\n",
+         mulle_printf( "   [%g compare:%g] : %s\n",
                      values[ i],
                      values[ j],
                      _NSComparisonResultUTF8String( result));
 
          result = [nr2 compare:nr1];
-         printf( "   [%g compare:%g] : %s\n",
+         mulle_printf( "   [%g compare:%g] : %s\n",
                      values[ j],
                      values[ i],
                      _NSComparisonResultUTF8String( result));
 
          flag = [nr1 isEqual:nr2];
-         printf( "   [%g isEqual:%g] : %s\n",
+         mulle_printf( "   [%g isEqual:%g] : %s\n",
                      values[ i],
                      values[ j],
                      _MulleBoolUTF8String( flag));
 
          flag = [nr2 isEqual:nr1];
-         printf( "   [%g isEqual:%g] : %s\n",
+         mulle_printf( "   [%g isEqual:%g] : %s\n",
                      values[ j],
                      values[ i],
                      _MulleBoolUTF8String( flag));
 
          flag = [nr1 isEqualToNumber:nr2];
-         printf( "   [%g isEqualToNumber:%g] : %s\n",
+         mulle_printf( "   [%g isEqualToNumber:%g] : %s\n",
                      values[ i],
                      values[ j],
                      _MulleBoolUTF8String( flag));
 
          flag = [nr2 isEqualToNumber:nr1];
-         printf( "   [%g isEqualToNumber:%g] : %s\n",
+         mulle_printf( "   [%g isEqualToNumber:%g] : %s\n",
                      values[ j],
                      values[ i],
                      _MulleBoolUTF8String( flag));

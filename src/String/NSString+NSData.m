@@ -95,6 +95,7 @@
           encoding:(NSStringEncoding) encoding
            options:(NSStringEncodingConversionOptions) options
 {
+   MULLE_C_UNUSED( options );
    NSUInteger   length;
    void         *bytes;
    NSData       *data;
@@ -320,6 +321,7 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
 - (NSData *) dataUsingEncoding:(NSStringEncoding) encoding
           allowLossyConversion:(BOOL) flag
 {
+   MULLE_C_UNUSED( flag );
    return( [self mulleDataUsingEncoding:encoding
                         encodingOptions:MulleStringEncodingOptionDefault]);
 }

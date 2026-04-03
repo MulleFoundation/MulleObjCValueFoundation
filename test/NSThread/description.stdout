@@ -1,0 +1,6 @@
+description isKindOfNSString: 1
+description non-empty: 1
+mulleTestDescription isKindOfNSString: 1
+debugDescription non-empty: 1
+debugDescription is string: 1
+mulleDebugContentsDescription nil: 1

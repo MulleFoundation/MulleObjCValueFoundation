@@ -1,0 +1,5 @@
+initWithBytes UTF8: Hello, World!
+initWithBytes length: 13
+initWithBytes zero length: 0
+initWithBytesNoCopy NO: NoCopy
+initWithBytesNoCopy YES: Heap!

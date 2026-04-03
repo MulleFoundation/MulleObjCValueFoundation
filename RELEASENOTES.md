@@ -133,7 +133,7 @@ feat: enhance string enumeration and tagged pointer support
 
 ### 0.17.2
 
-* remove duplicate objc-loader.inc
+* remove duplicate objc-deps.inc
 
 ### 0.17.1
 

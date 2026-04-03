@@ -1,0 +1,5 @@
+data stringValue: <deadbeef>
+data description: <deadbeef>
+empty: <>
+mutable: <cafebabe>
+replaced: <48656c6c 6f3f576f 726c64>

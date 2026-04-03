@@ -1,0 +1,43 @@
+intValue: 42
+integerValue: 42
+longLongValue: 42
+doubleValue: 42
+floatValue: 42
+leading-space intValue: -99
+YES boolValue: 1
+true boolValue: 1
+0 boolValue: 0
+1 boolValue: 1
+append foobar: foobar
+append foobarbaz: foobarbaz
+isEqualToString same: yes
+isEqualToString diff: no
+isEqualToString empty: yes
+isEqualToString prefix-only: no
+hasPrefix Hello: yes
+hasPrefix World: no
+hasPrefix empty: yes
+hasSuffix !: yes
+hasSuffix World!: yes
+hasSuffix Hello: no
+substr empty range len: 0
+substr full range: abcdefg
+substr [2,3]: cde
+substringFrom(0): 0123456789
+substringFrom(9): 9
+substringTo(0) len: 0
+substringTo(5): 01234
+ascii length: 5
+ascii mulleUTF8StringLength: 5
+mulleGetUTF8String: hello len=5
+mulleGetUTF8CharactersRange: World len=5
+description: test
+8-char unichar UTF8String: ABCDEFGH
+8-char unichar length: 8
+mulleUTF16String[0]=65 [1]=66 [2]=67
+removePrefix: bar
+removeSuffix: foo
+removePrefix no-match: foobar
+stringValue: hello
+mulleGetUTF8Characters no-limit: test
+empty string length: 0

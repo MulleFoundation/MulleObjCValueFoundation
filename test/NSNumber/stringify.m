@@ -12,7 +12,7 @@ int   main( void)
 
    value = [NSNumber numberWithLongLong:-20000000000LL];
    s     = [value stringValue];
-   printf( "%s\n", [s UTF8String]);
+   mulle_printf( "%s\n", [s UTF8String]);
 
    return( 0);
 }

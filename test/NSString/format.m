@@ -10,6 +10,6 @@ int   main( void)
    NSString   *value;
 
    value = [NSString stringWithFormat:@"%d %@ %s %lu %tu %lld", 1, @2, "3", 4L, (NSUInteger) 5, 6LL];
-   printf( "%s\n", [value UTF8String]);
+   mulle_printf( "%s\n", [value UTF8String]);
    return( 0);
 }

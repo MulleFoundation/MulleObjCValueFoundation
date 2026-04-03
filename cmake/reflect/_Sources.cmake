@@ -60,5 +60,5 @@ src/Value/NSValue.m
 # contents selected with patternfile ??-source--stage2-sources
 #
 set( STAGE2_SOURCES
-src/MulleObjCLoader+MulleObjCValueFoundation.m
+src/MulleObjCDeps+MulleObjCValueFoundation.m
 )

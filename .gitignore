@@ -79,3 +79,9 @@ test*/**/*.test.*
 /*.md
 !/AGENTS.md
 !/README.md
+test/NSNumber/GCDAProfiling.c.o
+test/NSNumber/*.o
+test/00_noleak/MulleObjCDeps.html
+test/NSData/MulleObjCDeps.html
+.roam
+.graveyard

@@ -1,5 +1,5 @@
 //
-//  MulleObjCLoader+Foundation.h
+//  MulleObjCDeps+Foundation.h
 //  MulleObjCValueFoundation
 //
 //  Created by Nat! on 11.05.17.
@@ -8,5 +8,5 @@
 #import <MulleObjC/MulleObjC.h>
 
 
-@interface MulleObjCLoader( MulleObjCValueFoundation)
+@interface MulleObjCDeps( MulleObjCValueFoundation)
 @end

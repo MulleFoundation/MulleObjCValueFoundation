@@ -125,19 +125,8 @@ static inline NSUInteger
    return( (unichar) mulle_char5_get( value, (unsigned int) index));
 }
 
-- (unichar) :(NSUInteger) index
-{
-   uintptr_t    value;
-   NSUInteger   length;
+@method_implementation -: = -characterAtIndex:;
 
-   value  = _MulleObjCTaggedPointerChar5ValueFromString( self);
-   length = (NSUInteger) mulle_char5_strlen( value);
-
-   if( index >= length)
-      MulleObjCThrowInvalidIndexException( index);
-
-   return( (unichar) mulle_char5_get( value, (unsigned int) index));
-}
 
 
 static NSUInteger   grab_ascii_char5_range( id self, NSUInteger length, char *dst, NSRange range)

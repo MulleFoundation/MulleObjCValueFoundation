@@ -224,6 +224,21 @@ NSString  *_MulleObjCNewASCIIStringWithASCIICharacters( char *s,
                                                                           length:length]);
 }
 
+NSString  *_MulleObjCNewASCIIStringWithUTF16Characters( mulle_utf16_t *s,
+                                                        NSUInteger length,
+                                                        struct _mulle_objc_universe *universe)
+{
+   struct _mulle_objc_universefoundationinfo   *config;
+   enum _NSStringClassClusterStringSize        classIndex;
+
+   classIndex = MulleObjCStringClassIndexForLength( length);
+   assert( classIndex);
+
+   config = _mulle_objc_universe_get_universefoundationinfo( universe);
+   return( [(Class) config->stringsubclasses[ classIndex] newWithUTF16Characters:s
+                                                                          length:length]);
+}
+
 
 NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
                                                         NSUInteger length,
@@ -237,7 +252,7 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
    config = _mulle_objc_universe_get_universefoundationinfo( universe);
    return( [(Class) config->stringsubclasses[ classIndex] newWithUTF32Characters:s
-                                                                         length:length]);
+                                                                          length:length]);
 }
 
 
@@ -281,6 +296,18 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
    obj = [obj mulleInitWithCharactersNoCopy:s
                                     length:len
                                  allocator:allocator];
+   obj = [obj autorelease];
+   return( obj);
+}
+
+
++ (instancetype) mulleStringWithUTF16String:(mulle_utf16_t *) s
+{
+   NSString   *obj;
+
+   // written like this for debuggability (TAO)
+   obj = [self alloc];
+   obj = [obj mulleInitWithUTF16String:s];
    obj = [obj autorelease];
    return( obj);
 }
@@ -566,6 +593,45 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
 }
 
 
+- (mulle_utf16_t *) mulleUTF16String
+{
+   void           *buf;
+   mulle_utf16_t  *dst;
+   NSUInteger     length;
+   NSUInteger     size;
+   NSUInteger     used;
+   unichar        *src;
+   unichar        *sentinel;
+   unichar        c;
+
+   length = [self length];
+
+   size = sizeof( mulle_utf16_t) * (length * 2 + 1);
+   buf  = mulle_allocator_malloc( NULL, size);
+   [self getCharacters:(unichar *) ((char *) buf + size - sizeof( unichar) * length)
+                 range:NSRangeMake( 0, length)];
+
+   src      = (unichar *) ((char *) buf + size - sizeof( unichar) * length);
+   sentinel = &src[ length];
+   dst      = buf;
+
+   while( src < sentinel)
+   {
+      c   = *src++;
+      dst = mulle_utf32_as_utf16( c, dst);
+   }
+   *dst = 0;
+
+   used = (char *) dst - (char *) buf;
+   if( size - used >= 64)
+      buf = mulle_allocator_realloc( NULL, buf, used + sizeof( mulle_utf16_t));
+
+   MulleObjCAutoreleaseAllocation( buf, NULL);
+   return( buf);
+}
+
+
+
 - (NSUInteger) mulleUTF8StringLength
 {
    return( strlen( [self UTF8String]));
@@ -835,7 +901,7 @@ static char   *mulleUTF8StringWithLeadingSpacesRemoved( NSString *self)
 
 - (NSInteger) integerValue
 {
-   return( strtol( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
+   return( (NSInteger) strtoll( (char *) mulleUTF8StringWithLeadingSpacesRemoved( self), NULL, 0));
 }
 
 

@@ -1,0 +1,25 @@
+initWithCharacters UTF8: Hürß
+initWithCharacters length: 4
+initWithCharacters emoji char[0]=0x1f600
+noCopy:NO UTF8: Mulle
+noCopy:NO length: 5
+noCopy:YES UTF8: foo
+mulleInitOrNil valid: hello
+mulleInitOrNil bad: nil
+noCopy allocator NULL: ABCDEFG
+noCopy allocator NULL length: 7
+1-char: x
+5-char: abcde
+7-char: abcdefg
+8-char: abcdefgh
+11-char: hello world
+15-char: abcdefghijklmno
+300-char length: 300
+initWithString: copy me
+init empty length: 0
+classNoCopy: Mull
+mulleStringWithUTF16: ABC
+validUTF8 good: yes
+validUTF8 bad: no
+stringWithCharacters: ZAP
+mulleUTF8NoCopy: hello
