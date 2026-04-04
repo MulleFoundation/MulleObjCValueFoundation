@@ -523,6 +523,7 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
 
 - (BOOL) mulleFastGetASCIIData:(struct mulle_asciidata *) space
 {
+   MULLE_C_UNUSED( space);
    return( NO);
 }
 
@@ -531,18 +532,21 @@ struct mulle_utf8data  MulleStringUTF8Data( NSString *self,
 //
 - (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8data *) space
 {
+   MULLE_C_UNUSED( space);
    return( NO);
 }
 
 
 - (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) space
 {
+   MULLE_C_UNUSED( space);
    return( NO);
 }
 
 
 - (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) space
 {
+   MULLE_C_UNUSED( space);
    return( NO);
 }
 

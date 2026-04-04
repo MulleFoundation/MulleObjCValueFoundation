@@ -25,6 +25,7 @@
 
 - (void) decodeWithCoder:(NSCoder *) coder
 {
+   MULLE_C_UNUSED( coder);
 }
 
 @end
@@ -49,6 +50,7 @@
 
 - (instancetype) initWithCoder:(NSCoder *) coder
 {
+   MULLE_C_UNUSED( coder);
    abort(); // use NSNumber
    return( self);
 }
@@ -81,6 +83,7 @@
 
 - (instancetype) initWithCoder:(NSCoder *) coder
 {
+   MULLE_C_UNUSED( coder);
    abort(); // use NSNumber
    return( self);
 }
@@ -109,6 +112,7 @@
 
 - (instancetype) initWithCoder:(NSCoder *) coder
 {
+   MULLE_C_UNUSED( coder);
    abort(); // use NSNumber
    return( self);
 }
