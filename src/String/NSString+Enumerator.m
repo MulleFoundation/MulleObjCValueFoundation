@@ -45,6 +45,7 @@
 // default can't do it
 - (NSUInteger) _mulleFastGetData:(struct mulle_data *) data
 {
+   MULLE_C_UNUSED( data);
    return( 0);
 }
 

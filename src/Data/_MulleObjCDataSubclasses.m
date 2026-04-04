@@ -51,6 +51,7 @@
 {
    _MulleObjCZeroBytesData   *data;
 
+   MULLE_C_UNUSED( bytes);
    data = NSAllocateObject( self, 0, NULL);
    return( data);
 }

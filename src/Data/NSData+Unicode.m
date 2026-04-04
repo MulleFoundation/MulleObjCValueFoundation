@@ -42,6 +42,7 @@
 
 @implementation NSData( _Unicode)
 
+@dependency NSData(Unicode);
 
 static _MulleObjCByteOrderMark  byteOrderMark( uint8_t *p, size_t len)
 {
