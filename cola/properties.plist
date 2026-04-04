@@ -6,6 +6,7 @@
       name="MulleObjCValueFoundation";
       user="MulleFoundation";
       repo="MulleObjCValueFoundation";
+      version="0.25.0";
       homepage="https://github.com/MulleFoundation/MulleObjCValueFoundation";
       license="BSD-3-Clause";
    };
