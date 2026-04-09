@@ -8,6 +8,10 @@
 #include <stdint.h>
 #include <math.h>
 
+@interface NSNumber (Forward)
+- (BOOL) __mulleIsBoolNumber;
+@end
+
 
 int   main( void)
 {
