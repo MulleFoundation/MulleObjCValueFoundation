@@ -5,6 +5,10 @@
 # import <MulleObjC/NSDebug.h>
 #endif
 
+@interface NSThread (Forward)
+- (NSString *) mulleDebugContentsDescription;
+@end
+
 int   main( void)
 {
    @autoreleasepool

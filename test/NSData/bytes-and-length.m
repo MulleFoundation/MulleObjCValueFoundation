@@ -6,6 +6,11 @@
 
 #include <string.h>
 
+@interface NSData (Forward)
+- (BOOL) __isNSData;
+- (BOOL) __isNSMutableData;
+@end
+
 int   main( void)
 {
    NSData       *data;
