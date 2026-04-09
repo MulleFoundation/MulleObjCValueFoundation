@@ -71,7 +71,7 @@
 @end
 
 
-@interface NSValue (Subclasses)
+@interface NSValue ( SubclassesFuture)
 
 // subclass must implement a compatible hash
 // see _MulleObjCConcreteValue.h for details

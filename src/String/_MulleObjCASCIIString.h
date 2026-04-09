@@ -53,7 +53,7 @@
 @end
 
 
-@interface _MulleObjCASCIIString( _Subclasses)
+@interface _MulleObjCASCIIString( SubclassesFuture)
 
 + (instancetype) newWithASCIICharacters:(char *) chars
                                  length:(NSUInteger) length;

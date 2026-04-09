@@ -48,7 +48,7 @@
 @end
 
 
-@interface _MulleObjCUTF16String( _Subclasses)
+@interface _MulleObjCUTF16String( SubclassesFuture)
 
 + (instancetype) newWithUTF16Characters:(mulle_utf16_t *) bytes
                                  length:(NSUInteger) length;

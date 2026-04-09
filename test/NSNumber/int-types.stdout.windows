@@ -1,0 +1,27 @@
+bool YES  : boolValue=1 intValue=1 objCType=B
+bool NO   : boolValue=0 intValue=0 objCType=B
+char 127  : charValue=127 intValue=127 longValue=127 longLongValue=127 doubleValue=127
+char -1   : charValue=-1 intValue=-1
+short max : shortValue=32767 intValue=32767
+short min : shortValue=-32768 intValue=-32768
+int32 max : intValue=2147483647 longValue=2147483647 longLongValue=2147483647 doubleValue=2.14748e+09 boolValue=1 objCType=q
+int32 min : intValue=-2147483648 longValue=-2147483648 longLongValue=-2147483648 doubleValue=-2.14748e+09
+long max  : longValue=2147483647 intValue=2147483647
+llong big : longLongValue=2147483648 intValue=-2147483648 charValue=0 unsignedIntValue=2147483648 objCType=q
+llong min : longLongValue=-9223372036854775808 boolValue=1
+uchar 255 : unsignedCharValue=255 intValue=255
+ushort max: unsignedShortValue=65535 intValue=65535
+uint max  : unsignedIntValue=4294967295 unsignedLongValue=4294967295 unsignedLongLongValue=4294967295 doubleValue=4.29497e+09 objCType=q
+ulong max : unsignedLongValue=4294967295 longLongValue=4294967295
+ullong big: unsignedLongLongValue=4294967296 longLongValue=4294967296 objCType=q
+ullong max: unsignedLongLongValue=18446744073709551615 boolValue=1
+integer   : integerValue=2147483647
+uinteger  : unsignedIntegerValue=4294967295
+float 1.5 : floatValue=1.5 doubleValue=1.5 objCType=f
+double pi : floatValue=3.14 doubleValue=3.14 objCType=d
+int32 unsigned accessors: unsignedCharValue=255 unsignedShortValue=65535 unsignedIntValue=2147483647 unsignedLongValue=2147483647 unsignedIntegerValue=2147483647 unsignedLongLongValue=2147483647
+uint32 signed accessors: charValue=-1 shortValue=-1 intValue=-1 longValue=-1 integerValue=-1 longLongValue=4294967295
+initWithBool YES: boolValue=1
+initWithBool NO: boolValue=0
+isEqual int(42) double(42.0): YES
+isEqual int32max llong(int32max): YES

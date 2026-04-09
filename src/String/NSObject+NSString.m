@@ -51,9 +51,6 @@
 
 @implementation NSObject( NSString)
 
-@dependency NSObject(UTF8String);
-@dependency NSObject(NSDebug);
-
 // this is like MulleObjC does it for UTF8 just for NSString here
 + (NSString *) description
 {
@@ -137,6 +134,5 @@
 
    return( [NSString stringWithFormat:@"<%@ %p %@>", [self class], self, contents]);
 }
-
 
 @end

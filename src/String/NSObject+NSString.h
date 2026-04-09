@@ -23,7 +23,6 @@
 //
 - (NSString *) mulleTestDescription;
 - (char *) UTF8String;
-- (NSComparisonResult) mulleCompareDescription:(id) other;
 
 // this is intended to possibly output quoted for NSNumber and NSString
 // and "as is" for all others
@@ -32,4 +31,10 @@
 @end
 
 
+// we don't have compare: yet
+@interface NSObject( NSStringFuture)
+
+- (NSComparisonResult) mulleCompareDescription:(id) other;
+
+@end
 
