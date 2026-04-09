@@ -150,7 +150,7 @@ enum MulleNumberIsEqualType
 @end
 
 
-@interface NSNumber ( Subclasses)
+@interface NSNumber ( SubclassesFuture)
 
 - (NSInteger) integerValue;
 - (double) doubleValue;

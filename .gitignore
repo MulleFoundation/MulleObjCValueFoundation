@@ -85,3 +85,4 @@ test/00_noleak/MulleObjCDeps.html
 test/NSData/MulleObjCDeps.html
 .roam
 .graveyard
+*.tmp.*
