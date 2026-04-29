@@ -34,6 +34,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #import "NSString.h"
+#import "NSStringEncoding.h"
 
 #import "_MulleObjCUTF32String.h"
 
@@ -54,13 +55,6 @@
 
 @implementation _MulleObjCUTF32String
 
-
-- (NSUInteger) length
-{
-   return( _length);
-}
-
-
 - (NSUInteger) mulleUTF8StringLength
 {
    struct mulle_utf32data   data;
@@ -74,39 +68,36 @@
 }
 
 
-- (char *) UTF8String
+static char  *_MulleObjCUTF32StringGetUTF8String( _MulleObjCUTF32String *self,
+                                                  SEL _cmd,
+                                                  void *_param)
 {
    BOOL                     flag;
    char                     *s;
-   char                     *shadow;
    struct mulle_allocator   *allocator;
    struct mulle_buffer      buffer;
    struct mulle_utf32data   data;
 
-   shadow = _mulle_atomic_pointer_read( &self->_shadow);
-   if( ! _shadow)
-   {
-      flag = [self mulleFastGetUTF32Data:&data];
-      assert( flag);
-      MULLE_C_UNUSED( flag);
+   MULLE_C_UNUSED( _cmd);
+   MULLE_C_UNUSED( _param);
 
-      allocator = MulleObjCInstanceGetAllocator( self);
-      mulle_buffer_init( &buffer, data.length * 4 + 1, allocator);
-      mulle_utf32_bufferconvert_to_utf8( data.characters,
-                                         data.length,
-                                         &buffer,
-                                         mulle_buffer_add_bytes_callback);
-      s = mulle_buffer_extract_string( &buffer);
-      mulle_buffer_done( &buffer);
+   flag = [self mulleFastGetUTF32Data:&data];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
 
-      shadow = __mulle_atomic_pointer_cas( &self->_shadow, s, NULL);
-      if( shadow)
-         mulle_allocator_free( allocator, s);
-      else
-         shadow = s;
-   }
-   return( (char *) shadow);
+   allocator = MulleObjCInstanceGetAllocator( self);
+   mulle_buffer_init( &buffer, data.length * 4 + 1, allocator);
+   mulle_utf32_bufferconvert_to_utf8( data.characters,
+                                      data.length,
+                                      &buffer,
+                                      mulle_buffer_add_bytes_callback);
+   s = mulle_buffer_extract_string( &buffer);
+   mulle_buffer_done( &buffer);
+
+   return( s);
 }
+
+@method_implementation -UTF8String = _MulleObjCUTF32StringGetUTF8String;
 
 
 - (void) getCharacters:(unichar *) buf
@@ -196,15 +187,6 @@
    return( length);
 }
 
-
-- (void) dealloc
-{
-   if( _shadow)
-      MulleObjCInstanceDeallocateMemory( self, _shadow);
-   [super dealloc];
-}
-
-
 - (NSString *) substringWithRange:(NSRange) range
 {
    struct mulle_utf32data   data;
@@ -232,6 +214,49 @@
    }
    return( [super lengthOfBytesUsingEncoding:encoding]);
 }
+
+@end
+
+
+@implementation _MulleObjCUTF32ShadowingString
+
+- (NSUInteger) length
+{
+   return( _length);
+}
+
+
+- (char *) UTF8String
+{
+   char                     *s;
+   char                     *shadow;
+   struct mulle_allocator   *allocator;
+
+   shadow = _mulle_atomic_pointer_read( &self->_shadow);
+   if( ! _shadow)
+   {
+      s = _MulleObjCUTF32StringGetUTF8String( self, _cmd, self);
+
+      shadow = __mulle_atomic_pointer_cas( &self->_shadow, s, NULL);
+      if( shadow)
+      {
+         allocator = MulleObjCInstanceGetAllocator( self);
+         mulle_allocator_free( allocator, s);
+      }
+      else
+         shadow = s;
+   }
+   return( (char *) shadow);
+}
+
+
+- (void) dealloc
+{
+   if( _shadow)
+      MulleObjCInstanceDeallocateMemory( self, _shadow);
+   [super dealloc];
+}
+
 
 @end
 
@@ -360,6 +385,7 @@
    return( _storage[ index]);
 }
 
+@method_implementation -: = -characterAtIndex:;
 
 - (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data
 {

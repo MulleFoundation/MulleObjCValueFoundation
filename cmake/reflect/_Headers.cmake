@@ -88,6 +88,7 @@ src/String/NSMutableData+NSString.h
 src/String/NSMutableString.h
 src/String/NSObject+NSString.h
 src/String/NSString+ClassCluster.h
+src/String/NSStringEncoding.h
 src/String/NSString+Enumerator.h
 src/String/NSString+Hash.h
 src/String/NSString+NSCoder.h

@@ -39,7 +39,38 @@
 // shadow UTF8 string will have one, for UTF8String
 // access
 //
-@interface _MulleObjCUTF16String: NSString <MulleObjCValueProtocols>
+
+// this class is also the base for NSConstantStringUTF16, which cant be
+// allocated!
+@interface _MulleObjCUTF16String : NSString < MulleObjCValueProtocols>
+
+
+- (NSUInteger) mulleUTF8StringLength;
+
+- (char *) UTF8String;
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
+                            maxLength:(NSUInteger) maxLength;
+
+- (void) getCharacters:(unichar *) buf
+                 range:(NSRange) range;
+- (NSUInteger) _mulleFastGetData:(struct mulle_data *) data;
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength;
+- (NSString *) substringWithRange:(NSRange) range;
+- (NSUInteger) lengthOfBytesUsingEncoding:(NSStringEncoding) encoding;
+
+@end
+
+
+@interface _MulleObjCUTF16String( SubclassesFuture)
+
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) space;
+
+@end
+
+
+@interface _MulleObjCUTF16ShadowingString : _MulleObjCUTF16String <MulleObjCValueProtocols>
 {
    NSUInteger               _length;
    mulle_atomic_pointer_t   _shadow;
@@ -48,7 +79,7 @@
 @end
 
 
-@interface _MulleObjCUTF16String( SubclassesFuture)
+@interface _MulleObjCUTF16ShadowingString( SubclassesFuture)
 
 + (instancetype) newWithUTF16Characters:(mulle_utf16_t *) bytes
                                  length:(NSUInteger) length;
@@ -56,14 +87,14 @@
 @end
 
 
-@interface _MulleObjCGenericUTF16String : _MulleObjCUTF16String < MulleObjCValueProtocols>
+@interface _MulleObjCGenericUTF16String : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols>
 {
    mulle_utf16_t    _storage[ 1];
 }
 @end
 
 
-@interface _MulleObjCAllocatorUTF16String  : _MulleObjCUTF16String < MulleObjCValueProtocols>
+@interface _MulleObjCAllocatorUTF16String  : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols>
 {
    mulle_utf16_t            *_storage;
    struct mulle_allocator   *_allocator;
@@ -76,7 +107,7 @@
 @end
 
 
-@interface _MulleObjCSharedUTF16String : _MulleObjCUTF16String < MulleObjCValueProtocols>
+@interface _MulleObjCSharedUTF16String : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols>
 {
    mulle_utf16_t   *_storage;
    id               _sharingObject;

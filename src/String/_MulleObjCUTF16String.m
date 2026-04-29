@@ -35,6 +35,7 @@
 //
 
 #import "NSString.h"
+#import "NSStringEncoding.h"
 
 #import "_MulleObjCUTF16String.h"
 
@@ -53,14 +54,11 @@
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 
 
+//
+// we want to reuse this code in NSConstantString15, which has a different
+// layout than _MulleObjCUTF16String
+//
 @implementation _MulleObjCUTF16String
-
-
-- (NSUInteger) length
-{
-   return( _length);
-}
-
 
 - (NSUInteger) mulleUTF8StringLength
 {
@@ -75,40 +73,36 @@
 }
 
 
-- (char *) UTF8String
+static char  *_MulleObjCUTF16StringGetUTF8String( _MulleObjCUTF16String *self,
+                                                  SEL _cmd,
+                                                  void *_param)
 {
    BOOL                     flag;
    char                     *s;
-   char                     *shadow;
    struct mulle_allocator   *allocator;
    struct mulle_buffer      buffer;
    struct mulle_utf16data   data;
 
-   shadow = _mulle_atomic_pointer_read( &self->_shadow);
-   if( ! _shadow)
-   {
-      flag = [self mulleFastGetUTF16Data:&data];
-      assert( flag);
-      MULLE_C_UNUSED( flag);
+   MULLE_C_UNUSED( _cmd);
+   MULLE_C_UNUSED( _param);
 
-      allocator = MulleObjCInstanceGetAllocator( self);
-      mulle_buffer_init( &buffer, data.length * 2 + 1, allocator);
-      mulle_utf16_bufferconvert_to_utf8( data.characters,
-                                         data.length,
-                                         &buffer,
-                                         mulle_buffer_add_bytes_callback);
+   flag = [self mulleFastGetUTF16Data:&data];
+   assert( flag);
+   MULLE_C_UNUSED( flag);
 
-      s = mulle_buffer_extract_string( &buffer);
-      mulle_buffer_done( &buffer);
+   allocator = MulleObjCInstanceGetAllocator( self);
+   mulle_buffer_init( &buffer, data.length * 2 + 1, allocator);
+   mulle_utf16_bufferconvert_to_utf8( data.characters,
+                                      data.length,
+                                      &buffer,
+                                      mulle_buffer_add_bytes_callback);
 
-      shadow = __mulle_atomic_pointer_cas( &self->_shadow, s, NULL);
-      if( shadow)
-         mulle_allocator_free( allocator, s);
-      else
-         shadow = s;
-   }
-   return( (char *) shadow);
+   s = mulle_buffer_extract_string( &buffer);
+   mulle_buffer_done( &buffer);
+   return( s);
 }
+
+@method_implementation -UTF8String = _MulleObjCUTF16StringGetUTF8String;
 
 
 - (NSUInteger) mulleGetUTF8Characters:(char *) buf
@@ -134,7 +128,6 @@
    length = (NSUInteger) ((char *) ctxt.buf - buf);
    return( length);
 }
-
 
 - (void) getCharacters:(unichar *) buf
                  range:(NSRange) range
@@ -211,15 +204,6 @@
    return( length);
 }
 
-
-- (void) dealloc
-{
-   if( _shadow)
-      MulleObjCInstanceDeallocateMemory( self, _shadow);
-   [super dealloc];
-}
-
-
 - (NSString *) substringWithRange:(NSRange) range
 {
    struct mulle_utf16data   data;
@@ -248,6 +232,49 @@
    case NSUTF32StringEncoding : return( [self length] * sizeof( mulle_utf32_t));
    }
    return( [super lengthOfBytesUsingEncoding:encoding]);
+}
+
+@end
+
+
+
+@implementation _MulleObjCUTF16ShadowingString
+
+- (NSUInteger) length
+{
+   return( _length);
+}
+
+
+- (char *) UTF8String
+{
+   char                     *s;
+   char                     *shadow;
+   struct mulle_allocator   *allocator;
+
+   shadow = _mulle_atomic_pointer_read( &self->_shadow);
+   if( ! _shadow)
+   {
+      s = _MulleObjCUTF16StringGetUTF8String( self, _cmd, self);
+
+      shadow = __mulle_atomic_pointer_cas( &self->_shadow, s, NULL);
+      if( shadow)
+      {
+         allocator = MulleObjCInstanceGetAllocator( self);
+         mulle_allocator_free( allocator, s);
+      }
+      else
+         shadow = s;
+   }
+   return( (char *) shadow);
+}
+
+
+- (void) dealloc
+{
+   if( _shadow)
+      MulleObjCInstanceDeallocateMemory( self, _shadow);
+   [super dealloc];
 }
 
 @end

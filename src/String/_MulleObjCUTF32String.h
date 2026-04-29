@@ -33,9 +33,35 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
-
 @interface _MulleObjCUTF32String : NSString < MulleObjCValueProtocols>
+
+- (NSUInteger) mulleUTF8StringLength;
+
+- (char *) UTF8String;
+- (NSUInteger) mulleGetUTF8Characters:(char *) buf
+                            maxLength:(NSUInteger) maxLength;
+
+- (void) getCharacters:(unichar *) buf
+                 range:(NSRange) range;
+- (NSUInteger) _mulleFastGetData:(struct mulle_data *) data;
+- (NSUInteger) mulleGetCharacters:(unichar *) buf
+                        fromIndex:(NSUInteger) index
+                        maxLength:(NSUInteger) maxLength;
+- (NSString *) substringWithRange:(NSRange) range;
+- (NSUInteger) lengthOfBytesUsingEncoding:(NSStringEncoding) encoding;
+
+@end
+
+
+@interface _MulleObjCUTF32String( SubclassesFuture)
+
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) space;
+
+@end
+
+
+
+@interface _MulleObjCUTF32ShadowingString : _MulleObjCUTF32String < MulleObjCValueProtocols>
 {
    NSUInteger               _length;
    mulle_atomic_pointer_t   _shadow;
@@ -51,14 +77,14 @@
 @end
 
 
-@interface _MulleObjCGenericUTF32String : _MulleObjCUTF32String < MulleObjCValueProtocols>
+@interface _MulleObjCGenericUTF32String : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols>
 {
    mulle_utf32_t   _storage[ 1];
 }
 @end
 
 
-@interface _MulleObjCAllocatorUTF32String  : _MulleObjCUTF32String < MulleObjCValueProtocols>
+@interface _MulleObjCAllocatorUTF32String  : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols>
 {
    mulle_utf32_t            *_storage;
    struct mulle_allocator   *_allocator;
@@ -70,7 +96,7 @@
 @end
 
 
-@interface _MulleObjCSharedUTF32String  : _MulleObjCUTF32String < MulleObjCValueProtocols>
+@interface _MulleObjCSharedUTF32String  : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols>
 {
    mulle_utf32_t   *_storage;
    id               _sharingObject;

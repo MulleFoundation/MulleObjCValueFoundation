@@ -288,23 +288,23 @@ char   *MulleStringEncodingUTF8String( NSStringEncoding encoding)
       return( [self _utf8DataWithEncodingOptions:options]);
 
    case NSUTF16StringEncoding :
-      return( [self _utf16DataWithEndianness:native_end_first
+      return( [self _utf16DataWithEndianness:NSStringEncodingNativeEndFirst
                              encodingOptions:options]);
    case NSUTF16LittleEndianStringEncoding :
-      return( [self _utf16DataWithEndianness:little_end_first
+      return( [self _utf16DataWithEndianness:NSStringEncodingLittleEndFirst
                              encodingOptions:options]);
    case NSUTF16BigEndianStringEncoding :
-      return( [self _utf16DataWithEndianness:big_end_first
+      return( [self _utf16DataWithEndianness:NSStringEncodingBigEndFirst
                              encodingOptions:options]);
 
    case NSUTF32StringEncoding :
-      return( [self _utf32DataWithEndianness:native_end_first
+      return( [self _utf32DataWithEndianness:NSStringEncodingNativeEndFirst
                              encodingOptions:options]);
    case NSUTF32LittleEndianStringEncoding :
-      return( [self _utf32DataWithEndianness:little_end_first
+      return( [self _utf32DataWithEndianness:NSStringEncodingLittleEndFirst
                              encodingOptions:options]);
    case NSUTF32BigEndianStringEncoding :
-      return( [self _utf32DataWithEndianness:big_end_first
+      return( [self _utf32DataWithEndianness:NSStringEncodingBigEndFirst
                              encodingOptions:options]);
    }
 }
@@ -841,14 +841,14 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
    assert( ! mulle_buffer_has_overflown( &buffer));
    mulle_buffer_done( &buffer);
 
-   if( endianess == native_end_first)
+   if( endianess == NSStringEncodingNativeEndFirst)
       return( data);
 
 #ifdef __LITTLE_ENDIAN__
-   if( endianess == little_end_first)
+   if( endianess == NSStringEncodingLittleEndFirst)
       return( data);
 #else
-   if( endianess == big_end_first)
+   if( endianess == NSStringEncodingBigEndFirst)
       return( data);
 #endif
 
@@ -899,14 +899,14 @@ NSString   *_NSStringCreateWithBytes( void *allocator,
    if( withZero)
       *p = 0;
 
-   if( endianess == native_end_first)
+   if( endianess == NSStringEncodingNativeEndFirst)
       return( data);
 
 #ifdef __LITTLE_ENDIAN__
-   if( endianess == little_end_first)
+   if( endianess == NSStringEncodingLittleEndFirst)
       return( data);
 #else
-   if( endianess == big_end_first)
+   if( endianess == NSStringEncodingBigEndFirst)
       return( data);
 #endif
 
