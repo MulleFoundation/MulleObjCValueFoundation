@@ -34,8 +34,12 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #import "NSString.h"
+#import "NSStringEncoding.h"
+
+#import "NSString+Hash.h"
 
 #import "NSConstantString.h"
+
 
 // other files in this library
 
@@ -48,30 +52,6 @@
 
 @implementation NSConstantString
 
-#ifdef __MULLE_OBJC_TPS__
-+ (struct _mulle_objc_dependency *) dependencies
-{
-   static struct _mulle_objc_dependency   dependencies[] =
-   {
-      { @selector( _MulleObjCTaggedPointerChar7String), 0 },
-      { @selector( _MulleObjCTaggedPointerChar5String), 0 },
-      { @selector( NSThread), 0 },
-      { 0, 0 }
-   };
-   return( dependencies);
-}
-#endif
-
-
-+ (void) load
-{
-   struct _mulle_objc_universe   *universe;
-
-   universe = _mulle_objc_infraclass_get_universe( self);
-   _mulle_objc_universe_set_staticstringclass( universe, self, 0);
-}
-
-
 //
 //  http://lists.apple.com/archives/objc-language/2006/Jan/msg00013.html
 //
@@ -81,27 +61,28 @@
    return( _storage);
 }
 
-// the compiler may NOT place UTF8 chars into a NSConstantString
-- (BOOL) mulleFastGetASCIIData:(struct mulle_asciidata *) space
+
+static BOOL   NSConstantStringGetData( NSConstantString *self, SEL _cmd, void *_param)
 {
-   space->characters = _storage;
-   space->length     = _length;
+   struct mulle_asciidata *space = _param;
+
+   space->characters = self->_storage;
+   space->length     = self->_length;
    return( YES);
 }
 
 
-- (BOOL) mulleFastGetUTF8Data:(struct mulle_utf8data *) space
-{
-   space->characters = _storage;
-   space->length     = _length;
-   return( YES);
-}
+@method_implementation -mulleFastGetASCIIData: = NSConstantStringGetData;
+@method_implementation -mulleFastGetUTF8Data:  = NSConstantStringGetData;
 
 
-- (NSUInteger) mulleUTF8StringLength
+- (NSUInteger) length
 {
    return( _length);
 }
+
+@method_implementation -mulleUTF8StringLength = -length;
+
 
 
 - (unichar) characterAtIndex:(NSUInteger) index
@@ -112,11 +93,55 @@
 }
 
 
-- (unichar) :(NSUInteger) index
+@method_implementation -: = -characterAtIndex:;
+
+
+- (instancetype) retain
+{
+   return( self);
+}
+
+
+- (void) release
+{
+}
+
+@method_implementation -autorelease = -retain;
+
+
+- (void) dealloc
+{
+   assert( 0 && "deallocing a NSConstantString ???");
+}
+
+@end
+
+
+
+@implementation NSConstantStringUTF16
+
+- (unichar) characterAtIndex:(NSUInteger)index
 {
    if( index >= _length)
       MulleObjCThrowInvalidIndexException( index);
    return( _storage[ index]);
+}
+
+
+@method_implementation -: = -characterAtIndex:;
+
+
+- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) data
+{
+   data->characters = _storage;
+   data->length     = _length;
+   return( YES);
+}
+
+
+- (NSUInteger) hash
+{
+   return( MulleObjCStringHashUTF16Bit15( _storage, _length));
 }
 
 
@@ -131,21 +156,106 @@
    return( self);
 }
 
+@method_implementation -autorelease = -retain;
+
 
 - (void) release
 {
 }
 
 
-- (instancetype) autorelease
+- (void) dealloc
+{
+   assert( 0 && "deallocing a NSConstantString16 ???");
+}
+
+@end
+
+
+@implementation NSConstantStringUTF32
+
+
+- (unichar) characterAtIndex:(NSUInteger)index
+{
+   if( index >= _length)
+      MulleObjCThrowInvalidIndexException( index);
+   return( _storage[ index]);
+}
+
+
+@method_implementation -: = -characterAtIndex:;
+
+
+- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) data
+{
+   data->characters = _storage;
+   data->length     = _length;
+   return( YES);
+}
+
+
+- (NSUInteger) hash
+{
+   return( MulleObjCStringHashUTF32( _storage, _length));
+}
+
+
+- (NSUInteger) length
+{
+   return( _length);
+}
+
+
+- (instancetype) retain
 {
    return( self);
+}
+
+@method_implementation -autorelease = -retain;
+
+
+- (void) release
+{
 }
 
 
 - (void) dealloc
 {
-   assert( 0 && "deallocing a NSConstantString ???");
+   assert( 0 && "deallocing a NSConstantString16 ???");
+}
+
+@end
+
+
+// ------------------
+
+@interface NSConstantStringLoader
+@end
+
+
+@implementation NSConstantStringLoader
+
+@dependency NSThread;
+#ifdef __MULLE_OBJC_TPS__
+@dependency _MulleObjCTaggedPointerChar7String;
+@dependency _MulleObjCTaggedPointerChar5String;
+#endif
+
+
++ (void) load
+{
+   struct _mulle_objc_universe   *universe;
+   auto Class   classes[ 3] =
+   {
+      [NSConstantString class],
+      [NSConstantStringUTF16 class],
+      [NSConstantStringUTF32 class]
+   };
+
+   universe = _mulle_objc_infraclass_get_universe( self);
+   _mulle_objc_universe_set_staticstringclasses( universe,
+                                                 (struct _mulle_objc_infraclass **) classes,
+                                                 0);
 }
 
 @end

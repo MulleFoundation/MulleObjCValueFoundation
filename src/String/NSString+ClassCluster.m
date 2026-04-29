@@ -36,6 +36,8 @@
 
 #import "NSString+ClassCluster.h"
 
+#import "NSStringEncoding.h"
+
 // other files in this library
 #import "_MulleObjCValueTaggedPointer.h"
 #import "_MulleObjCTaggedPointerChar5String.h"

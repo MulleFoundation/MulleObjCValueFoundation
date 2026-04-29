@@ -34,6 +34,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #import "NSString.h"
+#import "NSStringEncoding.h"
 
 // other files in this library
 #import "NSString+Hash.h"

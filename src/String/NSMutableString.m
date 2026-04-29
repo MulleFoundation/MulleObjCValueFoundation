@@ -36,14 +36,16 @@
 #import "NSMutableString.h"
 
 // other files in this library
+#import "NSStringEncoding.h"
 #import "NSString+ClassCluster.h"
 #import "NSString+Enumerator.h"
 #import "NSString+Sprintf.h"
 #import "_MulleObjCValueTaggedPointer.h"
-#import "NSString+Substring-Private.h" // for quickinfo
 #import "_MulleObjCUTF32String.h"
 #import "_MulleObjCTaggedPointerChar7String.h"
 #import "_MulleObjCTaggedPointerChar5String.h"
+
+#import "NSString+Substring-Private.h" // for quickinfo
 
 // other library private stuff
 

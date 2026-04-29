@@ -67,10 +67,14 @@
 // It's assumed Foundation users will prefer writing -description over
 // -UTF8String
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+
 - (char *) UTF8String
 {
    return( [[self description] UTF8String]);
 }
+#pragma clang diagnostic pop
 
 
 // this is unqoted for NSData, NSDictionary etc.

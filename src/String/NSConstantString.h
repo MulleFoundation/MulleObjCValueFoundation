@@ -34,17 +34,37 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 #import "NSString.h"
+#import "NSStringEncoding.h"
 
 #import "_MulleObjCASCIIString.h"
-
+#import "_MulleObjCUTF16String.h"
+#import "_MulleObjCUTF32String.h"
 
 // named NSConstantString, because it's compatible...
 //
-// NSConstantString can not contain UTF8 characters though.
+// NSConstantString can not contain UTF8 characters though. Why ? because we
+// escalate UTF8 strings to UTF16.
 //
 @interface NSConstantString : _MulleObjCASCIIString < MulleObjCValueProtocols>
 {
    char           *_storage;   // ivar #0:: must be defined EXACTLY like this
+   unsigned int   _length;     // ivar #1:: must be defined EXACTLY like this
+}
+@end
+
+
+// this is really UTF15!!
+@interface NSConstantStringUTF16 : _MulleObjCUTF16String < MulleObjCValueProtocols>
+{
+   mulle_utf16_t  *_storage;   // ivar #0:: must be defined EXACTLY like this
+   unsigned int   _length;     // ivar #1:: must be defined EXACTLY like this
+}
+@end
+
+
+@interface NSConstantStringUTF32 : _MulleObjCUTF32String < MulleObjCValueProtocols>
+{
+   mulle_utf32_t  *_storage;   // ivar #0:: must be defined EXACTLY like this
    unsigned int   _length;     // ivar #1:: must be defined EXACTLY like this
 }
 @end

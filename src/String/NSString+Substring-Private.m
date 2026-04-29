@@ -2,6 +2,7 @@
 
 #import "NSString.h"
 #import "NSString+ClassCluster.h"
+#import "NSString+NSData.h" // for NSStringEncoding
 
 #import "_MulleObjCValueTaggedPointer.h"
 #import "NSString+Substring-Private.h"

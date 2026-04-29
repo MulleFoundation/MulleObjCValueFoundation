@@ -36,7 +36,6 @@
 
 #import "NSString.h"
 
-
 //
 // None of these routines are lenient, if the characters are not proper
 // UTF or ASCII. They will raise and exception.

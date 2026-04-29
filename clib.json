@@ -65,6 +65,7 @@
       "src/String/NSString+Substring-Private.m",
       "src/String/NSString.h",
       "src/String/NSString.m",
+      "src/String/NSStringEncoding.h",
       "src/String/NSStringObjCFunctions.h",
       "src/String/NSStringObjCFunctions.m",
       "src/String/NSThread+NSString.m",
