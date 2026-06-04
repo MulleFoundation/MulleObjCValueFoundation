@@ -34,7 +34,7 @@
 
 
 // we don't have compare: yet
-@interface NSObject( NSStringFuture)
+@interface NSObject( NSStringFuture) < MulleObjCFuture>
 
 - (NSComparisonResult) mulleCompareDescription:(id) other;
 

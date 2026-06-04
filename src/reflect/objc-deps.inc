@@ -23,7 +23,6 @@
       { @selector( NSObject), @selector( _NSMutableString) },      // b3a66256;NSObject;7bd64f0d;_NSMutableString
       { @selector( NSObject), @selector( _NSNumber) },      // b3a66256;NSObject;9343014d;_NSNumber
       { @selector( NSObject), @selector( _NSString) },      // b3a66256;NSObject;37e49041;_NSString
-      { @selector( NSObject), @selector( _NSValue) },      // b3a66256;NSObject;8fc3f568;_NSValue
       { @selector( NSString), @selector( ClassCluster) },      // 1994a171;NSString;d38b16ff;ClassCluster
       { @selector( NSString), @selector( Enumerator) },      // 1994a171;NSString;bd761fff;Enumerator
       { @selector( NSString), @selector( NSCoder) },      // 1994a171;NSString;100c54ba;NSCoder
@@ -35,7 +34,6 @@
       { @selector( NSThread), @selector( NSString) },      // c81b9c22;NSThread;1994a171;NSString
       { @selector( NSValue), @selector( NSCoder) },      // 96deaa7d;NSValue;100c54ba;NSCoder
       { @selector( NSValue), @selector( NSString) },      // 96deaa7d;NSValue;1994a171;NSString
-      { @selector( NSValue), MULLE_OBJC_NO_CATEGORYID },      // 96deaa7d;NSValue;;
       { @selector( _MulleObjCASCIIString), MULLE_OBJC_NO_CATEGORYID },      // b82142dd;_MulleObjCASCIIString;;
       { @selector( _MulleObjCAllocatorASCIIString), MULLE_OBJC_NO_CATEGORYID },      // b8b17987;_MulleObjCAllocatorASCIIString;;
       { @selector( _MulleObjCAllocatorData), MULLE_OBJC_NO_CATEGORYID },      // 888d9e62;_MulleObjCAllocatorData;;
@@ -48,7 +46,6 @@
       { @selector( _MulleObjCConcreteData), MULLE_OBJC_NO_CATEGORYID },      // 9971ffa3;_MulleObjCConcreteData;;
       { @selector( _MulleObjCConcreteMutableData), MULLE_OBJC_NO_CATEGORYID },      // 55d549c0;_MulleObjCConcreteMutableData;;
       { @selector( _MulleObjCConcreteValue), @selector( NSCoder) },      // 7aa5a738;_MulleObjCConcreteValue;100c54ba;NSCoder
-      { @selector( _MulleObjCConcreteValue), MULLE_OBJC_NO_CATEGORYID },      // 7aa5a738;_MulleObjCConcreteValue;;
       { @selector( _MulleObjCDoubleNumber), @selector( NSString) },      // ae25b758;_MulleObjCDoubleNumber;1994a171;NSString
       { @selector( _MulleObjCDoubleNumber), MULLE_OBJC_NO_CATEGORYID },      // ae25b758;_MulleObjCDoubleNumber;;
       { @selector( _MulleObjCEightBytesData), MULLE_OBJC_NO_CATEGORYID },      // 7ac60bf2;_MulleObjCEightBytesData;;

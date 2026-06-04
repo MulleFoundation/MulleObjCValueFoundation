@@ -40,9 +40,7 @@ src/generic/include-private.h
 #
 set( PRIVATE_HEADERS
 src/String/NSString+Substring-Private.h
-src/Value/_MulleObjCConcreteValue-Private.h
 src/Value/NSNumber-Private.h
-src/Value/NSValue-Private.h
 )
 
 #
@@ -98,7 +96,6 @@ src/String/NSString+Sprintf.h
 src/String/NSString.h
 src/String/mulle-chardata.h
 src/Value/_MulleObjCConcreteNumber.h
-src/Value/_MulleObjCConcreteValue.h
 src/Value/_MulleObjCTaggedPointerDoubleNumber.h
 src/Value/_MulleObjCTaggedPointerFloatNumber.h
 src/Value/_MulleObjCTaggedPointerIntegerNumber.h
@@ -107,7 +104,6 @@ src/Value/NSNumber+NSCoder.h
 src/Value/NSNumber+NSString.h
 src/Value/NSNumber.h
 src/Value/NSValue+NSCoder.h
-src/Value/NSValue.h
 src/reflect/_MulleObjCValueFoundation-versioncheck.h
 )
 

@@ -53,7 +53,7 @@
 @end
 
 
-@interface _MulleObjCUTF32String( SubclassesFuture)
+@interface _MulleObjCUTF32String( SubclassesFuture) < MulleObjCFuture>
 
 - (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) space;
 
@@ -69,7 +69,7 @@
 @end
 
 
-@interface _MulleObjCUTF32String( _Subclasses)
+@interface _MulleObjCUTF32String( _SubclassesFuture) < MulleObjCFuture>
 
 + (instancetype) newWithUTF32Characters:(mulle_utf32_t *) chars
                                  length:(NSUInteger) length;

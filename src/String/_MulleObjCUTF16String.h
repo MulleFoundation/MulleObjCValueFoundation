@@ -63,7 +63,7 @@
 @end
 
 
-@interface _MulleObjCUTF16String( SubclassesFuture)
+@interface _MulleObjCUTF16String( SubclassesFuture) < MulleObjCFuture>
 
 - (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) space;
 
@@ -79,7 +79,7 @@
 @end
 
 
-@interface _MulleObjCUTF16ShadowingString( SubclassesFuture)
+@interface _MulleObjCUTF16ShadowingString( SubclassesFuture) < MulleObjCFuture>
 
 + (instancetype) newWithUTF16Characters:(mulle_utf16_t *) bytes
                                  length:(NSUInteger) length;
