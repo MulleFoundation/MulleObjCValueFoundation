@@ -194,11 +194,8 @@ typedef mulle_utf32_t  unichar;
 - (mulle_utf16_t *) mulleUTF16String;
 + (instancetype) mulleStringWithUTF16String:(mulle_utf16_t *) s;
 
-@end
-
-
-@interface NSString( Subclasses)
-
+// subclasses:
+@optional
 - (unichar) :(NSUInteger) index;
 - (unichar) characterAtIndex:(NSUInteger) index;
 - (NSUInteger) length;
@@ -211,7 +208,7 @@ typedef mulle_utf32_t  unichar;
 @end
 
 
-@interface NSString ( Future)
+@interface NSString ( Future) < MulleObjCFuture>
 
 - (NSString *) stringByAppendingString:(NSString *) other;
 

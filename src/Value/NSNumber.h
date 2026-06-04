@@ -33,10 +33,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "NSValue.h"
+#import "import.h"
 
-
-@class MulleObject;
 
 // used by MulleObject
 #define NSNUMBER_DEFINED
@@ -150,7 +148,7 @@ enum MulleNumberIsEqualType
 @end
 
 
-@interface NSNumber ( SubclassesFuture)
+@interface NSNumber ( SubclassesFuture) < MulleObjCFuture>
 
 - (NSInteger) integerValue;
 - (double) doubleValue;

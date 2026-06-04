@@ -42,8 +42,8 @@
 // other files in this library
 #import "NSString.h"
 #import "NSString+Sprintf.h"
-#import "_MulleObjCValueTaggedPointer.h"
 #import "NSString+Substring-Private.h"
+#import "_MulleObjCValueTaggedPointer.h"
 
 // std-c dependencies
 #import "import-private.h"

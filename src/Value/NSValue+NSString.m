@@ -34,8 +34,6 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSValue.h"
-
 // other files in this library
 #import "NSObject+NSString.h"
 #import "NSString.h"

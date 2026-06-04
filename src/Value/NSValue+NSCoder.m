@@ -7,8 +7,8 @@
 //
 #import "NSValue+NSCoder.h"
 
-#import "_MulleObjCConcreteValue.h"
-#import "_MulleObjCConcreteValue-Private.h"
+#import <MulleObjC/_MulleObjCConcreteValue.h>
+#import <MulleObjC/_MulleObjCConcreteValue-Private.h>
 
 #import "import-private.h"
 

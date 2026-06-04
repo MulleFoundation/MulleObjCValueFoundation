@@ -236,6 +236,9 @@ static BOOL   NSConstantStringGetData( NSConstantString *self, SEL _cmd, void *_
 @implementation NSConstantStringLoader
 
 @dependency NSThread;
+@dependency NSConstantString;
+@dependency NSConstantStringUTF16;
+@dependency NSConstantStringUTF32;
 #ifdef __MULLE_OBJC_TPS__
 @dependency _MulleObjCTaggedPointerChar7String;
 @dependency _MulleObjCTaggedPointerChar5String;
@@ -244,18 +247,16 @@ static BOOL   NSConstantStringGetData( NSConstantString *self, SEL _cmd, void *_
 
 + (void) load
 {
-   struct _mulle_objc_universe   *universe;
-   auto Class   classes[ 3] =
-   {
-      [NSConstantString class],
-      [NSConstantStringUTF16 class],
-      [NSConstantStringUTF32 class]
-   };
+   struct _mulle_objc_universe    *universe;
+   struct _mulle_objc_infraclass  *classes[ MULLE_OBJC_STATICINSTANCE_CLASS_SLOTS];
+
+   memset( classes, 0, sizeof( classes));
+   classes[ 0] = (struct _mulle_objc_infraclass *) [NSConstantString class];
+   classes[ 1] = (struct _mulle_objc_infraclass *) [NSConstantStringUTF16 class];
+   classes[ 2] = (struct _mulle_objc_infraclass *) [NSConstantStringUTF32 class];
 
    universe = _mulle_objc_infraclass_get_universe( self);
-   _mulle_objc_universe_set_staticstringclasses( universe,
-                                                 (struct _mulle_objc_infraclass **) classes,
-                                                 0);
+   _mulle_objc_universe_set_staticinstanceclasses( universe, classes, 0);
 }
 
 @end

@@ -105,7 +105,7 @@ enum
 @end
 
 
-@interface NSData( SubclassesFuture)
+@interface NSData( SubclassesFuture) < MulleObjCFuture>
 
 - (NSUInteger) length;
 - (void *) bytes;
