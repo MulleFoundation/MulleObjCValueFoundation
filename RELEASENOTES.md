@@ -1,3 +1,9 @@
+## 0.26.0
+
+
+* moved NSValue to MulleObjC
+
+
 ## 0.25.0
 
 
