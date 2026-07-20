@@ -86,3 +86,5 @@ test/NSData/MulleObjCDeps.html
 .roam
 .graveyard
 *.tmp.*
+*.test.*
+.idea
