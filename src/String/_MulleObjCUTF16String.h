@@ -33,7 +33,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 //
 // these UTF16 classes do not store a trailing zero, but the
 // shadow UTF8 string will have one, for UTF8String

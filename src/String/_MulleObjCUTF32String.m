@@ -97,7 +97,16 @@ static char  *_MulleObjCUTF32StringGetUTF8String( _MulleObjCUTF32String *self,
    return( s);
 }
 
-@method_implementation -UTF8String = _MulleObjCUTF32StringGetUTF8String;
+- (char *) UTF8String
+{
+   char                     *s;
+   struct mulle_allocator   *allocator;
+
+   s         = _MulleObjCUTF32StringGetUTF8String( self, _cmd, self);
+   allocator = MulleObjCInstanceGetAllocator( self);
+   MulleObjCAutoreleaseAllocation( s, allocator);
+   return( s);
+}
 
 
 - (void) getCharacters:(unichar *) buf

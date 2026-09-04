@@ -2,7 +2,7 @@
 //  NSStringEncoding.h
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2011-2026 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2026 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011-2026 Codeon GmbH.
 //  All rights reserved.
 //
