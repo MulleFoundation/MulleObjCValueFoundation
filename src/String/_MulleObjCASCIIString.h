@@ -2,7 +2,7 @@
 //  _MulleObjCASCIIString.h
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2011 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2011 Codeon GmbH.
 //  All rights reserved.
 //
@@ -33,8 +33,6 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
-
 // ASCIICharacters are just the chars without trailing zero
 // ASCIIString always has a trailing zero
 // TODO: rewrite with size and ZeroTerminatedASCIICharacters so

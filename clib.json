@@ -6,7 +6,7 @@
    "license" : "BSD-3-Clause",
    "repo" : "MulleFoundation/MulleObjCValueFoundation",
    "src" : [
-      "asset/dox/TOC.md",
+      "asset/dox/api/toc/index.md",
       "src/Data/NSData+NSCoder.h",
       "src/Data/NSData+NSCoder.m",
       "src/Data/NSData+Unicode.h",

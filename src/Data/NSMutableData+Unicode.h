@@ -1,5 +1,5 @@
 //
-//  NSMutableData+Unicode.m
+//  NSMutableData+Unicode.h
 //  MulleObjCValueFoundation
 //
 //  Copyright (c) 2020 Nat! - Mulle kybernetiK.

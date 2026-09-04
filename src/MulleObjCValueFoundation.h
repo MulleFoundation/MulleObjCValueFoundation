@@ -1,8 +1,8 @@
 //
-//  MulleObjCFoundation.h
+//  MulleObjCValueFoundation.h
 //  MulleObjCValueFoundation
 //
-//  Copyright (c) 2016 Nat! - Mulle kybernetiK.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2016 Codeon GmbH.
 //  All rights reserved.
 //
@@ -33,10 +33,9 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #import "import.h"
 
-#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0UL << 20) | (26 << 8) | 0)
+#define MULLE_OBJC_VALUE_FOUNDATION_VERSION   ((0UL << 20) | (26 << 8) | 1)
 
 #import "_MulleObjCValueFoundation-export.h"
 #include "_MulleObjCValueFoundation-provide.h"

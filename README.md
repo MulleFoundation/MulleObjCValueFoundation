@@ -44,6 +44,12 @@ and later libraries.
 
 
 
+## Documentation & Guides
+
+* [API Summary](asset/dox/api/toc)
+* [Coder Guide](asset/howto/coder/mulle-obj-c-value-foundation)
+
+
 
 
 ## Requirements
