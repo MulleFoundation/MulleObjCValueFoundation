@@ -1,6 +1,6 @@
 {
    "name" : "MulleObjCValueFoundation",
-   "version" : "0.26.0",
+   "version" : "0.26.1",
    "description" : "💶 Value classes NSNumber, NSString, NSDate, NSData",
    "keywords" : [],
    "license" : "BSD-3-Clause",

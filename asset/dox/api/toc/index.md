@@ -22,7 +22,7 @@
 ### 3.1. Umbrella Header: `src/MulleObjCValueFoundation.h`
 
 - Purpose: Umbrella header that exports the public API and version macros.
-- Version macro: `MULLE_OBJC_VALUE_FOUNDATION_VERSION` (currently `((0UL << 20) | (26 << 8) | 0)`).
+- Version macro: `MULLE_OBJC_VALUE_FOUNDATION_VERSION` (currently `((0UL << 20) | (26 << 8) | 1)`).
 - Usage: `#import "MulleObjCValueFoundation.h"`
 
 ### 3.2. String Classes: `src/String/*.h`

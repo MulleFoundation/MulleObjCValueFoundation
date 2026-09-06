@@ -1,10 +1,5 @@
-## 0.26.1
-
-* fix: autorelease UTF8String buffers returned by UTF32 strings
-
-## 0.26.0
+### 0.26.1
 
 
 
-
-* moved NSValue to MulleObjC
+* `-UTF8String` on UTF-32 backed strings now returns a properly autoreleased character buffer, preventing memory leaks and dangling pointers
