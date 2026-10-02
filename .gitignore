@@ -125,3 +125,8 @@ test/.mulle/share/sde/howto/verifier/testing/quirks.md
 .kiro/
 TODO.md
 REVIEW.md
+*.orig
+.touch
+*.exp
+*.workspace
+*.*-workspace
