@@ -1,6 +1,6 @@
 {
    "name" : "MulleObjCValueFoundation",
-   "version" : "0.26.1",
+   "version" : "0.27.0",
    "description" : "💶 Value classes NSNumber, NSString, NSDate, NSData",
    "keywords" : [],
    "license" : "BSD-3-Clause",
@@ -105,6 +105,6 @@
    ],
    "dependencies" : {
       "mulle-objc/MulleObjC": "*",
-      "mulle-objc/mulle-objc-list": "*"
+      "mulle-objc/mulle-objc-tools": "*"
    }
 }

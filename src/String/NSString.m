@@ -259,17 +259,8 @@ NSString  *_MulleObjCNewASCIIStringWithUTF32Characters( mulle_utf32_t *s,
 
 # pragma mark - convenience constructors
 
-// obsolete
-+ (NSString *) string
-{
-   NSString   *obj;
 
-   // written like this for debuggability (TAO)
-   obj = [self alloc];
-   obj = [obj init];
-   obj = [obj autorelease];
-   return( obj);
-}
+@method_implementation +string = +instance;
 
 
 + (instancetype) stringWithCharacters:(unichar *) s

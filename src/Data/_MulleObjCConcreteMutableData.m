@@ -117,8 +117,14 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
    data = NSAllocateObject( self, 0, NULL);
 
    allocator = MulleObjCInstanceGetAllocator( data);
+   //
+   // mulleNewWithLength: is the zero filling entry point ("dataWithLength:").
+   // Use mulleNonZeroedDataWithLength: or mulleSetLengthDontZero: to opt out.
+   // The memset in _mulle__buffer_set_length is what makes the contents
+   // well defined, mulle_buffer_init alone just sets the grow size.
+   //
    mulle_buffer_init( &data->_storage, length, allocator);
-   mulle_buffer_set_length( &data->_storage, length, MULLE_BUFFER_NO_ZEROFILL);
+   mulle_buffer_set_length( &data->_storage, length, MULLE_BUFFER_SHRINK_OR_ZEROFILL);
 
    return( data);
 }
@@ -202,22 +208,33 @@ static void   append_bytes( _MulleObjCConcreteMutableData *self, void *bytes, NS
 
 static struct mulle_data   mulleGetMutableData( _MulleObjCConcreteMutableData *self)
 {
-   struct mulle_data   data;
+   struct mulle_data         data;
+   struct mulle_allocator    *allocator;
+   size_t                    capacity;
 
    data.bytes = mulle_buffer_get_bytes( &self->_storage);
-   if( data.bytes)
+   if( ! data.bytes)
    {
-      data.length = mulle_buffer_get_length( &self->_storage);
-      return( data);
+      //
+      // if initialized with capacity, now is the time to setup the buffer.
+      // Not sure this delayed action is ever worth it though.
+      //
+      // Only grow the storage, do not turn the recorded capacity into a
+      // length: a capacity is no content. Previously this promoted the
+      // capacity with MULLE_BUFFER_NO_ZEROFILL, so that -mutableBytes
+      // changed -length and exposed uninitialized bytes as data.
+      //
+      capacity  = mulle_buffer_get_capacity( &self->_storage);
+      allocator = mulle_buffer_get_allocator( &self->_storage);
+      if( capacity)
+         _mulle__buffer_grow( (struct mulle__buffer *) &self->_storage,
+                              capacity,
+                              allocator);
+
+      data.bytes = mulle_buffer_get_bytes( &self->_storage);
    }
-   //
-   // if initialized with capacity, now is the time
-   // to setup the buffer. Not sure this delayed action is ever worth it
-   // though
-   //
-   data.length = mulle_buffer_get_capacity( &self->_storage);
-   mulle_buffer_set_length( &self->_storage, data.length, MULLE_BUFFER_NO_ZEROFILL);
-   data.bytes  = mulle_buffer_get_bytes( &self->_storage);
+
+   data.length = mulle_buffer_get_length( &self->_storage);
    return( data);
 }
 

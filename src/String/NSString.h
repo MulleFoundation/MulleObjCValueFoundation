@@ -88,7 +88,6 @@ typedef mulle_utf32_t  unichar;
 {
 }
 
-// obsolete convenience: use +object!, must be typed for NSScanner ...
 + (instancetype) string;
 
 // As it turns out for class clusters, instance type is not really helpful

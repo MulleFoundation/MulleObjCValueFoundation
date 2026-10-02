@@ -54,5 +54,8 @@
 
 @end
 
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSNumber  *MulleNewNumberWithUTF8Data( struct mulle_utf8data text);
+
+MULLE_OBJC_VALUE_FOUNDATION_GLOBAL
 NSNumber  *MulleNewBoolWithUTF8Data( struct mulle_utf8data text);

@@ -1,7 +1,14 @@
 capacity initial length: 0
 isNSMutableData: 1
 isNSData: 1
+capacity mutableBytes non-NULL: 1
+capacity after mutableBytes length: 0
+empty after mutableBytes length: 0
 dataWithLength:8 length: 8
+dataWithLength:8 sum: 0
+initWithLength:5 length: 5
+initWithLength:5 sum: 0
+mulleSetLengthDontZero:8 length: 8
 mulleNonZeroedDataWithLength:16 length: 16
 append length: 4
 append[0]: 1

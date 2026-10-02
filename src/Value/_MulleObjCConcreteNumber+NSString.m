@@ -36,6 +36,8 @@
 #import "_MulleObjCConcreteNumber.h"
 #import "_MulleObjCValueTaggedPointer.h"
 #import "_MulleObjCTaggedPointerIntegerNumber.h"
+#import "_MulleObjCTaggedPointerFloatNumber.h"
+#import "_MulleObjCTaggedPointerDoubleNumber.h"
 
 
 // other files in this library
@@ -354,6 +356,30 @@ struct mulle_asciidata
    return( [s autorelease]);
 }
 
+
+@end
+
+
+@implementation _MulleObjCTaggedPointerFloatNumber( NSString)
+
+- (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
+{
+   assert( data->length >= MULLE__DTOSTR_BUFFER_SIZE);
+   data->length = mulle_dtostr( _MulleObjCTaggedPointerFloatNumberGetFloatValue( self),
+                                data->characters);
+}
+
+@end
+
+
+@implementation _MulleObjCTaggedPointerDoubleNumber( NSString)
+
+- (void) _mulleConvertToASCIICharacters:(struct mulle_asciidata *) data
+{
+   assert( data->length >= MULLE__DTOSTR_BUFFER_SIZE);
+   data->length = mulle_dtostr( _MulleObjCTaggedPointerDoubleNumberGetDoubleValue( self),
+                                data->characters);
+}
 
 @end
 

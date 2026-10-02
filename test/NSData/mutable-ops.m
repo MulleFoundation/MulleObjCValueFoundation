@@ -18,6 +18,8 @@ int   main( void)
    unsigned char      *bytes;
    struct mulle_data   cdata;
    NSRange             range;
+   NSUInteger          i;
+   unsigned int        sum;
 
    // dataWithCapacity / initWithCapacity
    mdata = [NSMutableData dataWithCapacity:64];
@@ -25,10 +27,40 @@ int   main( void)
    printf( "isNSMutableData: %d\n", (int) [mdata __isNSMutableData]);
    printf( "isNSData: %d\n", (int) [mdata __isNSData]);
 
-   // dataWithLength / initWithLength - length is correct
-   // Note: implementation uses MULLE_BUFFER_NO_ZEROFILL so content is unspecified
+   // mutableBytes is a getter: it may setup the storage for a capacity only
+   // data, but it must not promote the capacity into a length. It used to
+   // report length == capacity afterwards and hand out uninitialized bytes.
+   mdata = [NSMutableData dataWithCapacity:64];
+   bytes = (unsigned char *) [mdata mutableBytes];
+   printf( "capacity mutableBytes non-NULL: %d\n", (int) (bytes != NULL));
+   printf( "capacity after mutableBytes length: %lu\n", (unsigned long) [mdata length]);
+
+   // same for a data that was created with length 0
+   mdata = [NSMutableData data];
+   (void) [mdata mutableBytes];
+   printf( "empty after mutableBytes length: %lu\n", (unsigned long) [mdata length]);
+
+   // dataWithLength: / initWithLength: - length is correct and content is zeroed
    mdata = [NSMutableData dataWithLength:8];
    printf( "dataWithLength:8 length: %lu\n", (unsigned long) [mdata length]);
+   bytes = (unsigned char *) [mdata bytes];
+   sum   = 0;
+   for( i = 0; i < 8; i++)
+      sum += bytes[ i];
+   printf( "dataWithLength:8 sum: %u\n", sum);
+
+   mdata = [[[NSMutableData alloc] initWithLength:5] autorelease];
+   printf( "initWithLength:5 length: %lu\n", (unsigned long) [mdata length]);
+   bytes = (unsigned char *) [mdata bytes];
+   sum   = 0;
+   for( i = 0; i < 5; i++)
+      sum += bytes[ i];
+   printf( "initWithLength:5 sum: %u\n", sum);
+
+   // mulleSetLengthDontZero: on a length 0 data - the non zeroed counterpart
+   mdata = [NSMutableData data];
+   [mdata mulleSetLengthDontZero:8];
+   printf( "mulleSetLengthDontZero:8 length: %lu\n", (unsigned long) [mdata length]);
 
    // mulleNonZeroedDataWithLength - length set but not zeroed
    mdata = [NSMutableData mulleNonZeroedDataWithLength:16];

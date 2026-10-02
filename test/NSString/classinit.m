@@ -162,7 +162,7 @@ int   main( void)
       // init exercises generic ClassCluster path
       //
       {
-         s = [[[NSString alloc] init] autorelease];
+         s = [NSString instance];
          mulle_printf( "init empty length: %lu\n", (unsigned long) [s length]);
       }
 

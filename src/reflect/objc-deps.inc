@@ -69,8 +69,10 @@
       { @selector( _MulleObjCTaggedPointerChar5String), MULLE_OBJC_NO_CATEGORYID },      // 2a6d1009;_MulleObjCTaggedPointerChar5String;;
       { @selector( _MulleObjCTaggedPointerChar7String), MULLE_OBJC_NO_CATEGORYID },      // d68ecb24;_MulleObjCTaggedPointerChar7String;;
       { @selector( _MulleObjCTaggedPointerDoubleNumber), @selector( NSCoder) },      // 332cd0a3;_MulleObjCTaggedPointerDoubleNumber;100c54ba;NSCoder
+      { @selector( _MulleObjCTaggedPointerDoubleNumber), @selector( NSString) },      // 332cd0a3;_MulleObjCTaggedPointerDoubleNumber;1994a171;NSString
       { @selector( _MulleObjCTaggedPointerDoubleNumber), MULLE_OBJC_NO_CATEGORYID },      // 332cd0a3;_MulleObjCTaggedPointerDoubleNumber;;
       { @selector( _MulleObjCTaggedPointerFloatNumber), @selector( NSCoder) },      // 4ec9e1de;_MulleObjCTaggedPointerFloatNumber;100c54ba;NSCoder
+      { @selector( _MulleObjCTaggedPointerFloatNumber), @selector( NSString) },      // 4ec9e1de;_MulleObjCTaggedPointerFloatNumber;1994a171;NSString
       { @selector( _MulleObjCTaggedPointerFloatNumber), MULLE_OBJC_NO_CATEGORYID },      // 4ec9e1de;_MulleObjCTaggedPointerFloatNumber;;
       { @selector( _MulleObjCTaggedPointerIntegerNumber), @selector( NSCoder) },      // 1f557819;_MulleObjCTaggedPointerIntegerNumber;100c54ba;NSCoder
       { @selector( _MulleObjCTaggedPointerIntegerNumber), @selector( NSString) },      // 1f557819;_MulleObjCTaggedPointerIntegerNumber;1994a171;NSString

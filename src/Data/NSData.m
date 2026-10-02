@@ -232,10 +232,7 @@ static NSData  *_newData( void *buf, NSUInteger length)
 
 #pragma mark - construction conveniences
 
-+ (instancetype) data
-{
-   return( [[[self alloc] init] autorelease]);
-}
+@method_implementation +data = +instance;
 
 
 + (instancetype) dataWithBytes:(void *) buf
