@@ -38,6 +38,7 @@
 // shadow UTF8 string will have one, for UTF8String
 // access
 //
+#import "NSString+ClassCluster-Private.h"
 
 // this class is also the base for NSConstantStringUTF16, which cant be
 // allocated!
@@ -86,14 +87,14 @@
 @end
 
 
-@interface _MulleObjCGenericUTF16String : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols>
+@interface _MulleObjCGenericUTF16String : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols, MulleObjCUTF16StringPrimitive>
 {
    mulle_utf16_t    _storage[ 1];
 }
 @end
 
 
-@interface _MulleObjCAllocatorUTF16String  : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols>
+@interface _MulleObjCAllocatorUTF16String  : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols, MulleObjCUTF16StringPrimitive>
 {
    mulle_utf16_t            *_storage;
    struct mulle_allocator   *_allocator;
@@ -106,7 +107,7 @@
 @end
 
 
-@interface _MulleObjCSharedUTF16String : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols>
+@interface _MulleObjCSharedUTF16String : _MulleObjCUTF16ShadowingString < MulleObjCValueProtocols, MulleObjCUTF16StringPrimitive>
 {
    mulle_utf16_t   *_storage;
    id               _sharingObject;

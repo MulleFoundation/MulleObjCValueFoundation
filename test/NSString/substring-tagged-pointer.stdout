@@ -1,0 +1,21 @@
+"abcdefg" length: 7
+"abcdefg" characterAtIndex(1): b
+"abcdefg" UTF8String: abcdefg
+"abcdefg" mulleUTF8StringLength: 7
+"abcdefg" substringWithRange(2,3): cde
+"abcdefg" substringFromIndex(2): cdefg
+"abcdefg" substringToIndex(3): abc
+"abcdefg" getCharacters range: cde
+"abcdefg" mulleGetUTF8Characters range: bc
+"abcdabcdabcd" length: 12
+"abcdabcdabcd" characterAtIndex(1): b
+"abcdabcdabcd" UTF8String: abcdabcdabcd
+"abcdabcdabcd" mulleUTF8StringLength: 12
+"abcdabcdabcd" substringWithRange(2,3): cda
+"abcdabcdabcd" substringFromIndex(2): cdabcdabcd
+"abcdabcdabcd" substringToIndex(3): abc
+"abcdabcdabcd" getCharacters range: cda
+"abcdabcdabcd" mulleGetUTF8Characters range: bc
+8-char length: 8
+isEqualToString: yes
+hash: yes

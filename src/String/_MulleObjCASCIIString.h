@@ -37,6 +37,8 @@
 // ASCIIString always has a trailing zero
 // TODO: rewrite with size and ZeroTerminatedASCIICharacters so
 //       its understandable
+//
+#import "NSString+ClassCluster-Private.h"
 
 //
 // subclasses provide length
@@ -72,19 +74,19 @@
 // alignment) (and we like to keep/have the trailing zero)
 //
 //
-@interface _MulleObjC03LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjC03LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 @end
-@interface _MulleObjC07LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjC07LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 @end
-@interface _MulleObjC11LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjC11LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 @end
-@interface _MulleObjC15LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjC15LengthASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 @end
 
 #endif
 
 
-@interface _MulleObjCTinyASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjCTinyASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 {
    uint8_t   _length;         // 1 - 256
    char      _storage[ 3];
@@ -92,7 +94,7 @@
 @end
 
 
-@interface _MulleObjCGenericASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjCGenericASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 {
    NSUInteger   _length;         // 257-max
    char         _storage[ 1];
@@ -103,7 +105,7 @@
 // TODO: coalesce next three into one
 
 // does not have a trailing zero, this is an abstract class
-@interface _MulleObjCReferencingASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjCReferencingASCIIString : _MulleObjCASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 {
    NSUInteger                _length;
    char                      *_storage;
@@ -113,7 +115,7 @@
 
 
 // does not have a trailing zero
-@interface _MulleObjCAllocatorASCIIString  : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjCAllocatorASCIIString  : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 {
    struct mulle_allocator   *_allocator;
 }
@@ -125,7 +127,7 @@
 
 
 // does not have a trailing zero
-@interface _MulleObjCSharedASCIIString : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjCSharedASCIIString : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 {
    id   _sharingObject;
 }
@@ -137,7 +139,7 @@
 
 
 // does have a trailing zero
-@interface _MulleObjCAllocatorZeroTerminatedASCIIString  : _MulleObjCAllocatorASCIIString < MulleObjCValueProtocols>
+@interface _MulleObjCAllocatorZeroTerminatedASCIIString  : _MulleObjCAllocatorASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 
 + (instancetype) newWithZeroTerminatedASCIICharactersNoCopy:(char *) chars
                                                      length:(NSUInteger) length

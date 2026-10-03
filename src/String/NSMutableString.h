@@ -37,6 +37,8 @@
 
 #import "import.h"
 
+#import "NSString+ClassCluster-Private.h"
+
 
 //
 // NSMutableString in the MulleFoundation is a class to temporarily
@@ -44,7 +46,7 @@
 // NSMutableString can be slow. It is best to convert NSMutableString
 // to a regular NSString after construction with "copy/autorelease"
 //
-@interface NSMutableString : NSString < MulleObjCMutableValueProtocols>
+@interface NSMutableString : NSString < MulleObjCMutableValueProtocols, MulleObjCStringPrimitive>
 {
    NSUInteger     _length;
    unsigned int   _count;

@@ -49,6 +49,7 @@
       "src/String/NSNull+NSString.m",
       "src/String/NSObject+NSString.h",
       "src/String/NSObject+NSString.m",
+      "src/String/NSString+ClassCluster-Private.h",
       "src/String/NSString+ClassCluster.h",
       "src/String/NSString+ClassCluster.m",
       "src/String/NSString+Enumerator.h",

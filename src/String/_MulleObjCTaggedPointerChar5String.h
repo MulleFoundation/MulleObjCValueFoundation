@@ -33,7 +33,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-// private header don't include anything
+// private header, only pulls in the class cluster protocol
+#import "NSString+ClassCluster-Private.h"
 
 
 // Char5Characters is a subset of ASCII that fits into 5 bits
@@ -48,7 +49,7 @@
 // the 'self' contains the actual string and the isa only exists in
 // the runtime
 //
-@interface _MulleObjCTaggedPointerChar5String : NSString < MulleObjCTaggedPointer, MulleObjCValueProtocols>
+@interface _MulleObjCTaggedPointerChar5String : NSString < MulleObjCTaggedPointer, MulleObjCValueProtocols, MulleObjCStringPrimitive>
 
 - (NSUInteger) mulleGetASCIICharacters:(char *) buf
                              maxLength:(NSUInteger) maxLength;

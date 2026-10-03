@@ -33,11 +33,12 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-// private header don't include anything
+// private header, only pulls in the class cluster protocol
+#import "NSString+ClassCluster-Private.h"
 
 
 
-@interface _MulleObjCTaggedPointerChar7String : NSString < MulleObjCTaggedPointer, MulleObjCValueProtocols>
+@interface _MulleObjCTaggedPointerChar7String : NSString < MulleObjCTaggedPointer, MulleObjCValueProtocols, MulleObjCStringPrimitive>
 
 - (NSUInteger) mulleGetASCIICharacters:(char *) buf
                              maxLength:(NSUInteger) maxLength;

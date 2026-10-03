@@ -36,8 +36,10 @@
 // Can't do this because it's private
 // #import "_MulleObjCASCIIString.h"
 
+#import "NSString+ClassCluster-Private.h"
 
-@interface _MulleObjCCheatingASCIIString : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols>
+
+@interface _MulleObjCCheatingASCIIString : _MulleObjCReferencingASCIIString < MulleObjCValueProtocols, MulleObjCASCIIStringPrimitive>
 @end
 
 

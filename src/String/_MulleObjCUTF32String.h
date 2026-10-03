@@ -33,6 +33,8 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
+#import "NSString+ClassCluster-Private.h"
+
 @interface _MulleObjCUTF32String : NSString < MulleObjCValueProtocols>
 
 - (NSUInteger) mulleUTF8StringLength;
@@ -77,14 +79,14 @@
 @end
 
 
-@interface _MulleObjCGenericUTF32String : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols>
+@interface _MulleObjCGenericUTF32String : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols, MulleObjCUTF32StringPrimitive>
 {
    mulle_utf32_t   _storage[ 1];
 }
 @end
 
 
-@interface _MulleObjCAllocatorUTF32String  : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols>
+@interface _MulleObjCAllocatorUTF32String  : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols, MulleObjCUTF32StringPrimitive>
 {
    mulle_utf32_t            *_storage;
    struct mulle_allocator   *_allocator;
@@ -96,7 +98,7 @@
 @end
 
 
-@interface _MulleObjCSharedUTF32String  : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols>
+@interface _MulleObjCSharedUTF32String  : _MulleObjCUTF32ShadowingString < MulleObjCValueProtocols, MulleObjCUTF32StringPrimitive>
 {
    mulle_utf32_t   *_storage;
    id               _sharingObject;
