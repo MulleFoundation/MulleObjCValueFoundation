@@ -22,7 +22,7 @@
 ### 3.1. Umbrella Header: `src/MulleObjCValueFoundation.h`
 
 - Purpose: Umbrella header that exports the public API and version macros.
-- Version macro: `MULLE_OBJC_VALUE_FOUNDATION_VERSION` (currently `((0UL << 20) | (26 << 8) | 1)`).
+- Version macro: `MULLE_OBJC_VALUE_FOUNDATION_VERSION` (currently `((0UL << 20) | (27 << 8) | 0)`).
 - Usage: `#import "MulleObjCValueFoundation.h"`
 
 ### 3.2. String Classes: `src/String/*.h`
@@ -32,7 +32,7 @@
 A class to temporarily construct strings from other strings. Uses internal array of NSString pointers. Best practice: convert to a regular NSString after construction via copy/autorelease.
 
 ```
-@interface NSMutableString : NSString < MulleObjCMutableValueProtocols>
+@interface NSMutableString : NSString < MulleObjCMutableValueProtocols, MulleObjCStringPrimitive>
 ```
 
 Key methods:
@@ -92,6 +92,21 @@ Key methods:
 **Tagged-Pointer Strings**:
 - `_MulleObjCTaggedPointerChar5String` (5-char ASCII inline in pointer, 32+64bit)
 - `_MulleObjCTaggedPointerChar7String` (7-char ASCII inline in pointer, 64bit only)
+
+#### Class-Cluster Primitive Protocols (`NSString+ClassCluster-Private.h`)
+
+Private header (not for public consumption) collecting the primitive methods a concrete NSString class-cluster class must implement. A concrete class adopts the protocol matching its storage family, so the compiler warns if an implementation is missing.
+
+- `@protocol MulleObjCStringPrimitive < NSObject>` — base requirements:
+  - `- (NSUInteger) length;`
+  - `- (unichar) characterAtIndex:(NSUInteger) index;`
+  - `- (void) getCharacters:(unichar *) buffer range:(NSRange) range;`
+- `@protocol MulleObjCASCIIStringPrimitive < MulleObjCStringPrimitive>`:
+  - `- (BOOL) mulleFastGetASCIIData:(struct mulle_asciidata *) space;`
+- `@protocol MulleObjCUTF16StringPrimitive < MulleObjCStringPrimitive>`:
+  - `- (BOOL) mulleFastGetUTF16Data:(struct mulle_utf16data *) space;`
+- `@protocol MulleObjCUTF32StringPrimitive < MulleObjCStringPrimitive>`:
+  - `- (BOOL) mulleFastGetUTF32Data:(struct mulle_utf32data *) space;`
 
 #### `NSString` Categories
 
@@ -286,6 +301,7 @@ SubclassesFuture protocol:
 #### Number Categories
 
 **NSNumber+NSString.h** — `- (NSString *) stringValue;` and stringification.
+- Global functions: `NSNumber *MulleNewNumberWithUTF8Data( struct mulle_utf8data text);`, `NSNumber *MulleNewBoolWithUTF8Data( struct mulle_utf8data text);`
 
 **NSNumber+NSCoder.h** — NSCoding conformance.
 
