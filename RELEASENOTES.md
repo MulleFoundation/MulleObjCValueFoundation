@@ -1,6 +1,7 @@
 ## 0.27.0
 
 
+
 * Document the `MulleObjCStringPrimitive` protocol family (base, ASCII, UTF16, UTF32) that concrete `NSString` class-cluster classes must implement
 * Document new global constructors `MulleNewNumberWithUTF8Data` and `MulleNewBoolWithUTF8Data`
 * Note `NSMutableString` conformance to `MulleObjCStringPrimitive` and bump referenced version macro to 0.27.0
